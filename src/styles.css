@@ -1,1 +1,13 @@
-/* You can add global styles to this file, and also import other style files */
+:root{
+    --p-toggleswitch-handle-background: transparent;
+    --p-toggleswitch-handle-checked-background: transparent;
+    --p-toggleswitch-handle-hover-background: transparent;
+    --p-toggleswitch-handle-checked-hover-background: transparent;
+    font-family: 'Manrope';
+    font-size: small;
+}
+
+body{
+    background-color: var(--background-color);
+}
+

@@ -1,0 +1,22 @@
+#card {
+    width: 35%;
+}
+
+@media (max-width: 992px) {
+    #card {
+        width: 50%;
+    }
+}
+
+@media (max-width: 768px) {
+    #card {
+        width: 75%;
+    }
+}
+
+@media (max-width: 576px) {
+    #card {
+        width: 100%;
+        min-width: unset;
+    }
+}
