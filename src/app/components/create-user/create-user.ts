@@ -13,7 +13,7 @@ import {
 import { ButtonModule } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { InputTextModule } from 'primeng/inputtext';
-import { PasswordModule } from 'primeng/password';
+import { Password } from 'primeng/password';
 import { CommonModule } from '@angular/common';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { Divider } from 'primeng/divider';
@@ -24,15 +24,16 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import { HttpClientModule } from '@angular/common/http';
+import { ScrollerModule } from 'primeng/scroller';
 
 @Component({
   selector: 'app-create-user',
   imports: [
     FormsModule,
     Card,
+    Password,
     ButtonModule,
     InputTextModule,
-    PasswordModule,
     ReactiveFormsModule,
     CommonModule,
     Divider,
@@ -43,7 +44,8 @@ import { HttpClientModule } from '@angular/common/http';
     DatePickerModule,
     FileUploadModule,
     ToastModule,
-    HttpClientModule,
+    ScrollerModule,
+    HttpClientModule
   ],
   templateUrl: './create-user.html',
   styleUrl: './create-user.css',
@@ -55,6 +57,7 @@ export class CreateUser implements OnInit {
   userRolesOptions: any[];
   uploadedFiles: any[];
   activeStep: number;
+  typeSelected: number;
 
   constructor() {
     this.accountForm = new FormGroup({
@@ -65,7 +68,7 @@ export class CreateUser implements OnInit {
         Validators.maxLength(25),
         this.passwordStrengthValidator(),
       ]),
-      confirmPassword: new FormControl('', [Validators.required, this.passWordMatchesValidaor()])      
+      confirmPassword: new FormControl('', [Validators.required, this.passWordMatchesValidaor()])
     });
 
     this.userForm = new FormGroup({
@@ -95,6 +98,8 @@ export class CreateUser implements OnInit {
 
     this.activeStep = 1;
 
+    this.typeSelected = 1;
+
     this.uploadedFiles = [];
   }
 
@@ -120,11 +125,13 @@ export class CreateUser implements OnInit {
       case 0: {
         this.charityForm.reset();
         this.clearImage();
+        this.typeSelected = 1;
         break;
       }
       case 1: {
         this.userForm.reset();
         this.clearImage();
+        this.typeSelected = 2;
         break;
       }
     }
@@ -132,22 +139,23 @@ export class CreateUser implements OnInit {
 
   onSubmit() {
     let account = this.accountForm.value;
+    delete account.confirmPassword;
 
-    if(this.userForm.valid){
+    if (this.userForm.valid) {
       account = {
         ...account,
         ...this.userForm.value
       }
     }
-    if(this.charityForm.valid){
+    if (this.charityForm.valid) {
       account = {
         ...account,
         ...this.charityForm.value
       }
     }
-    
+
     console.log('accountForm:', this.accountForm.value);
-    console.log('userFormValid:', this.userForm.valid);    
+    console.log('userFormValid:', this.userForm.valid);
     console.log('userForm:', this.userForm.value);
     console.log('charityFormValid:', this.charityForm.valid);
     console.log('charityForm:', this.charityForm.value);
