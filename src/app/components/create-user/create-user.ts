@@ -2,7 +2,6 @@ import 'primeicons/primeicons.css';
 import { Component, OnInit } from '@angular/core';
 import {
   AbstractControl,
-  AsyncValidatorFn,
   FormControl,
   FormGroup,
   FormsModule,
@@ -18,8 +17,13 @@ import { PasswordModule } from 'primeng/password';
 import { CommonModule } from '@angular/common';
 import { SelectButtonModule } from 'primeng/selectbutton';
 import { Divider } from 'primeng/divider';
-import { Observable, of } from 'rxjs';
 import { MessageModule } from 'primeng/message';
+import { StepperModule } from 'primeng/stepper';
+import { TabsModule } from 'primeng/tabs';
+import { DatePickerModule } from 'primeng/datepicker';
+import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
+import { ToastModule } from 'primeng/toast';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-create-user',
@@ -33,46 +37,127 @@ import { MessageModule } from 'primeng/message';
     CommonModule,
     Divider,
     SelectButtonModule,
-    MessageModule
+    MessageModule,
+    StepperModule,
+    TabsModule,
+    DatePickerModule,
+    FileUploadModule,
+    ToastModule,
+    HttpClientModule,
   ],
   templateUrl: './create-user.html',
   styleUrl: './create-user.css',
 })
 export class CreateUser implements OnInit {
+  accountForm: FormGroup;
   userForm: FormGroup;
-  userTypeOptions: any[];
-  validForm: boolean;
+  charityForm: FormGroup;
+  userRolesOptions: any[];
+  uploadedFiles: any[];
+  activeStep: number;
 
   constructor() {
-    this.userForm = new FormGroup({
+    this.accountForm = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [
         Validators.required,
         Validators.minLength(8),
+        Validators.maxLength(25),
         this.passwordStrengthValidator(),
       ]),
-      confirmPassword: new FormControl('', [Validators.required, this.passWordMatchesValidaor()]),
-      type: new FormControl(0, [Validators.required]),
+      confirmPassword: new FormControl('', [Validators.required, this.passWordMatchesValidaor()])      
     });
-    this.userTypeOptions = [
-      { label: 'Organización', value: 1 },
-      { label: 'Usuario', value: 2 },
+
+    this.userForm = new FormGroup({
+      name: new FormControl('', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(25),
+      ]),
+      birthDate: new FormControl(''),
+      roles: new FormControl([], [Validators.required]),
+    });
+
+    this.charityForm = new FormGroup({
+      name: new FormControl('', [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(25),
+      ]),
+      fundationDate: new FormControl('')
+    });
+
+    this.userRolesOptions = [
+      { label: 'Donante', value: 1 },
+      { label: 'Donatario', value: 2 },
+      { label: 'Observador', value: 3 },
     ];
-    this.validForm = true;
+
+    this.activeStep = 1;
+
+    this.uploadedFiles = [];
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+  }
+
+  setImage(fileSelected: FileSelectEvent) {
+    if (this.uploadedFiles.length == 0) {
+      this.uploadedFiles.push(fileSelected.files[0]);
+    } else {
+      this.uploadedFiles[0] = fileSelected.files[0];
+    }
+  }
+
+  clearImage() {
+    if (this.uploadedFiles.length > 0) {
+      this.uploadedFiles.pop();
+    }
+  }
+
+  changeType(type: number) {
+    switch (type) {
+      case 0: {
+        this.charityForm.reset();
+        this.clearImage();
+        break;
+      }
+      case 1: {
+        this.userForm.reset();
+        this.clearImage();
+        break;
+      }
+    }
+  }
 
   onSubmit() {
-    console.log(this.userForm.value);
-    console.log(this.userForm.valid);
-    this.validForm = this.userForm.valid;
+    let account = this.accountForm.value;
+
+    if(this.userForm.valid){
+      account = {
+        ...account,
+        ...this.userForm.value
+      }
+    }
+    if(this.charityForm.valid){
+      account = {
+        ...account,
+        ...this.charityForm.value
+      }
+    }
+    
+    console.log('accountForm:', this.accountForm.value);
+    console.log('userFormValid:', this.userForm.valid);    
+    console.log('userForm:', this.userForm.value);
+    console.log('charityFormValid:', this.charityForm.valid);
+    console.log('charityForm:', this.charityForm.value);
+    console.log('account', account);
   }
 
   passWordMatchesValidaor(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {
-      if (!control.value || !this.userForm?.get('password')?.value) return null;
-      const password = this.userForm?.get('password')?.value;
+      if (!control.value || !this.accountForm?.get('password')?.value) return null;
+      const password = this.accountForm?.get('password')?.value;
       const confirmPassword = control.value;
       return password === confirmPassword ? null : { passwordMismatch: true };
     };
