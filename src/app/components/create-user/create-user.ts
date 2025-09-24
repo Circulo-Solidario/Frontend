@@ -177,7 +177,6 @@ export class CreateUser implements OnInit {
         this.imageUrl = response.data.url;
         this.image = this.uploadedFiles[0];
       } catch (error) {
-        console.log(error);
         errorSavingImage = true;
       }
     };
@@ -207,17 +206,14 @@ export class CreateUser implements OnInit {
     if (account.roles) {
       delete account.roles;
     }
-    //console.log('account', account);
     try {
       const response = await this.userService.registerUser(account);
-      console.log(response);
       this.messageService.add({ severity: 'success', summary: 'Usuario creado!', detail: 'Usuario creado correctamente' });
       if (errorSavingImage) {
         this.messageService.add({ severity: 'warn', summary: 'Error al guardar imagen', detail: 'Puedes cargar nuevamente la imagen desde la edición del perfil' });
       }
       this.postUser = false;
     } catch (error) {
-      console.log(error);
       this.messageService.add({ severity: 'error', summary: 'Error al crear usuario', detail: 'Por favor intente nuevamente...' });
       this.postUser = false;
     }
