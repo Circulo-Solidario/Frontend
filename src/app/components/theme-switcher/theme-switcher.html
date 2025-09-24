@@ -1,0 +1,5 @@
+<p-toggleswitch [(ngModel)]="checked" (onChange)="themeService.toggleTheme()">
+    <ng-template #handle let-checked="checked">
+        <i [ngClass]="[checked ? 'pi pi-moon' : 'pi pi-sun']"></i>
+    </ng-template>
+</p-toggleswitch>
