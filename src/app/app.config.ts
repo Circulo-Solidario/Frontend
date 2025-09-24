@@ -9,7 +9,7 @@ import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeuix/themes/aura';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HttpHandler, provideHttpClient } from '@angular/common/http';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -70,6 +70,6 @@ export const appConfig: ApplicationConfig = {
         firstDayOfWeek: 1,
       },
     }),
-    HttpClient
+    provideHttpClient()
   ],
 };
