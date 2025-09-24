@@ -1,10 +1,10 @@
 import { Component, signal } from '@angular/core';
-import { CreateUser } from "./components/create-user/create-user";
 import { ThemeSwitcher } from './components/theme-switcher/theme-switcher';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
-  imports: [CreateUser, ThemeSwitcher],
+  imports: [ThemeSwitcher, RouterOutlet],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })

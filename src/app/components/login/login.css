@@ -1,17 +1,17 @@
 @media (max-width: 1200px) {
-    #screen {
+    #screenWidth {
         width: 50%;
     }
 }
 
 @media (max-width: 768px) {
-    #screen {
+    #screenWidth {
         width: 75%;
     }
 }
 
 @media (max-width: 576px) {
-    #screen {
+    #screenWidth {
         width: 100%;
         min-width: unset;
     }
@@ -45,27 +45,4 @@
 
 .form-scroll-wrapper::-webkit-scrollbar-track {
   background: transparent;
-}
-
-:host ::ng-deep .p-message-content {
-  height: auto !important;
-}
-
-.limited-text {
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-::ng-deep .p-fileupload-file-badge {
-    display: none !important;
-}
-
-::ng-deep .p-progressbar {
-    display: none !important;
-}
-
-::ng-deep .p-fileupload-file-actions {
-    display: none !important;
 }

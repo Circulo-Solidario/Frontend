@@ -260,7 +260,7 @@ export class CreateUser implements OnInit {
               return exist ? { emailExists: true } : null;
             }),
             catchError(() => {
-              return of({ serverError: true });
+              return of({ serverError: false });
             })
           )
         )
