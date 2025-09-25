@@ -1,15 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { MessageService } from 'primeng/api';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { InputText } from 'primeng/inputtext';
 import { Message } from 'primeng/message';
 import { Password } from 'primeng/password';
-import { Toast } from 'primeng/toast';
-import { timer } from 'rxjs';
+import { Toasts } from '../../services/toasts';
+import { LoginService } from '../../services/login';
 
 @Component({
   selector: 'app-login',
@@ -18,34 +17,35 @@ import { timer } from 'rxjs';
     ReactiveFormsModule,
     FormsModule,
     Card,
-    Toast,
     Message,
     Password,
     Button,
     InputText,
     RouterLink
   ],
-  providers: [MessageService],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
 export class Login {
+  private loginService: LoginService = inject(LoginService)
+  toastService: Toasts = inject(Toasts);
   loginForm: FormGroup;
   onLogin: boolean = false;
 
-  constructor(messageService: MessageService){
+  constructor(){
     this.loginForm = new FormGroup({
       correo: new FormControl('', [Validators.email]),
       contrasena: new FormControl('')
     })
   }
 
-  login(){
+  async login(){
     this.onLogin = true;
-    timer(1000).subscribe(
-      () => {
-        this.onLogin = false;
-      }
-    )
+    try{
+      const response = await this.loginService.login(this.loginForm);
+      
+    }catch(error){
+      this.toastService.showToast({ severity: 'error', summary: 'Credenciales inválidas', detail: 'Correo y/o contraseña incorrectas' });
+    }
   }
 }

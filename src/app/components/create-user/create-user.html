@@ -1,4 +1,11 @@
-<p-toast />
+<div class="row justify-content-start">
+  <div class="col-auto">
+    <p-button link (onClick)="goBack()">
+      <i class="pi pi-angle-left" pButtonIcon></i>
+      <span pButtonLabel>Volver atrás</span>
+    </p-button>
+  </div>
+</div>
 <div id="screen" class="col position-absolute top-50 start-50 translate-middle">
   <div class="container-fluid align-items-center justify-content-center">
     <div id="card" class="col-md-3 m-auto">
@@ -38,7 +45,7 @@
               </ng-template>
             </p-step>
           </p-step-list>
-          <p-step-panels class="p-0">
+          <p-step-panels>
             <p-step-panel [value]="1">
               <ng-template #content let-activateCallback="activateCallback">
                 <div class="form-scroll-wrapper justify-content-center align-items-center">
@@ -60,11 +67,7 @@
                       />
                       @if (accountForm.get('correo')?.invalid && accountForm.get('correo')?.touched
                       && accountForm.get('correo')?.dirty) {
-                      @if(!accountForm.get('correo')?.getError('serverError')){
-                      <p-message severity="warn" size="small" variant="simple">
-                        No pudimos validar tu email
-                      </p-message>
-                      } @else if(accountForm.get('correo')?.getError('emailExists')){
+                      @if(accountForm.get('correo')?.getError('emailExists')){
                       <p-message severity="error" size="small" variant="simple">
                         Existe una cuenta con ese correo.
                       </p-message>
@@ -88,6 +91,7 @@
                         [feedback]="true"
                         [toggleMask]="true"
                         fluid
+                        appendTo="body"
                         [invalid]="
                           accountForm.get('contrasena')?.invalid &&
                           accountForm.get('contrasena')?.touched &&
@@ -190,7 +194,7 @@
                     <p-tab value="0" class="w-50" (click)="changeType(0)">Usuario</p-tab>
                     <p-tab value="1" class="w-50" (click)="changeType(1)">Organización</p-tab>
                   </p-tablist>
-                  <p-tabpanels class="px-0">
+                  <p-tabpanels>
                     <p-tabpanel value="0">
                       <div class="form-scroll-wrapper justify-content-center align-items-center">
                         <form class="mb-0 mt-2 mx-1" [formGroup]="userForm">
@@ -200,6 +204,7 @@
                               class="w-100 mt-1"
                               id="nombreApellido"
                               pInputText
+                              fluid
                               placeholder="Ingresa tu nombre y apellido"
                               type="text"
                               formControlName="nombreApellido"
@@ -223,6 +228,7 @@
                               class="w-100 mt-1"
                               id="alias"
                               pInputText
+                              fluid
                               placeholder="Ingresa tu alias"
                               type="text"
                               formControlName="alias"
@@ -259,7 +265,7 @@
                             <p-fileupload
                               name="userImage"
                               id="userImage"
-                              styleClass="mt-1"
+                              styleClass="mt-1 w-100"
                               [multiple]="false"
                               accept="image/*"
                               maxFileSize="1000000"
@@ -328,24 +334,26 @@
                           </div>
                           <div>
                             <label for="roles">Selecciona los roles que desea tener</label>
-                            <p-selectbutton
-                              fluid
-                              class="mt-1"
-                              id="roles"
-                              [options]="userRolesOptions"
-                              formControlName="roles"
-                              [multiple]="true"
-                              optionLabel="label"
-                              optionValue="value"
-                              [invalid]="
-                                userForm.get('roles')?.invalid && userForm.get('roles')?.dirty
-                              "
-                            />
-                            @if(userForm.get('roles')?.invalid && userForm.get('roles')?.dirty){
-                            <p-message severity="error" size="small" variant="simple"
-                              >Seleccione al menos un rol.</p-message
-                            >
-                            }
+                            <div class="text-center">
+                              <p-selectbutton
+                                class="mt-1"
+                                fluid
+                                id="roles"
+                                [options]="userRolesOptions"
+                                formControlName="roles"
+                                [multiple]="true"
+                                optionLabel="label"
+                                optionValue="value"
+                                [invalid]="
+                                  userForm.get('roles')?.invalid && userForm.get('roles')?.dirty
+                                "
+                              />
+                              @if(userForm.get('roles')?.invalid && userForm.get('roles')?.dirty){
+                              <p-message severity="error" size="small" variant="simple"
+                                >Seleccione al menos un rol.</p-message
+                              >
+                              }
+                            </div>
                           </div>
                         </form>
                       </div>

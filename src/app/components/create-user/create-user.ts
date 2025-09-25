@@ -1,5 +1,6 @@
 import 'primeicons/primeicons.css';
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import {Location} from '@angular/common';
 import {
   AbstractControl,
   AsyncValidatorFn,
@@ -23,14 +24,14 @@ import { StepperModule } from 'primeng/stepper';
 import { TabsModule } from 'primeng/tabs';
 import { DatePickerModule } from 'primeng/datepicker';
 import { FileSelectEvent, FileUploadModule } from 'primeng/fileupload';
-import { Toast, ToastModule } from 'primeng/toast';
 import { ScrollerModule } from 'primeng/scroller';
 import { Images } from '../../services/images';
 import { ImagePost } from '../../models/images';
 import { Users } from '../../services/users';
-import { MessageService } from 'primeng/api';
 import { Ripple } from 'primeng/ripple';
 import { catchError, map, Observable, of, switchMap, timer } from 'rxjs';
+import { Router } from '@angular/router';
+import { Toasts } from '../../services/toasts';
 
 @Component({
   selector: 'app-create-user',
@@ -49,25 +50,25 @@ import { catchError, map, Observable, of, switchMap, timer } from 'rxjs';
     TabsModule,
     DatePickerModule,
     FileUploadModule,
-    ToastModule,
     ScrollerModule,
     Ripple
   ],
-  providers: [MessageService],
   templateUrl: './create-user.html',
   styleUrl: './create-user.css',
 })
 export class CreateUser implements OnInit {
-  private imageService: Images;
-  private userService: Users;
-  private messageService: MessageService;
+  private imageService: Images = inject(Images);
+  private userService: Users = inject(Users);
+  private router: Router = inject(Router);
+  private location = inject(Location)
+  toastService: Toasts = inject(Toasts);
   accountForm: FormGroup;
   userForm: FormGroup;
   charityForm: FormGroup;
   userRolesOptions = [
-    { label: 'Donante', value: 1 },
-    { label: 'Donatario', value: 2 },
-    { label: 'Observador', value: 3 },
+    { label: 'Donante', value: { id: 1 } },
+    { label: 'Donatario', value: { id: 2 } },
+    { label: 'Observador', value: { id: 3 } },
   ];
   activeStep: number = 1;
   typeSelected: number = 1;
@@ -77,11 +78,7 @@ export class CreateUser implements OnInit {
   imageUrl: string = '';
 
 
-  constructor(imageService: Images, userService: Users, messageService: MessageService) {
-    this.imageService = imageService;
-    this.userService = userService;
-    this.messageService = messageService;
-
+  constructor() {
     this.accountForm = new FormGroup({
       correo: new FormControl('', [Validators.required, Validators.email], [this.emailValidator()]),
       contrasena: new FormControl('', [
@@ -89,8 +86,7 @@ export class CreateUser implements OnInit {
         Validators.minLength(8),
         Validators.maxLength(25),
         this.passwordStrengthValidator(),
-      ]
-    ),
+      ]),
       confirmPassword: new FormControl('', [Validators.required, this.passWordMatchesValidaor()])
     });
 
@@ -159,14 +155,33 @@ export class CreateUser implements OnInit {
   }
 
   async onSubmit() {
+    this.postUser = true;
     let account = this.accountForm.value;
+
     account = {
       ...account,
       activo: true
     }
+
+    switch (this.typeSelected) {
+      case 1: {
+        account = {
+          ...account,
+          tipoUsuario: 'USUARIO'
+        };
+        break;
+      }
+      case 2: {
+        account = {
+          ...account,
+          tipoUsuario: 'ORGANIZACION'
+        };
+        break;
+      }
+    }
+
     let errorSavingImage = false;
     delete account.confirmPassword;
-    this.postUser = true;
 
     if (this.uploadedFiles[0] != this.image) {
       const image: ImagePost = {
@@ -203,20 +218,27 @@ export class CreateUser implements OnInit {
     if (account.fechaNacimiento == '') {
       delete account.fechaNacimiento;
     }
-    if (account.roles) {
-      delete account.roles;
-    }
+
     try {
-      const response = await this.userService.registerUser(account);
-      this.messageService.add({ severity: 'success', summary: 'Usuario creado!', detail: 'Usuario creado correctamente' });
+      await this.userService.registerUser(account);
+      this.toastService.showToast({ severity: 'success', summary: 'Usuario creado!', detail: 'Usuario creado correctamente' });
       if (errorSavingImage) {
-        this.messageService.add({ severity: 'warn', summary: 'Error al guardar imagen', detail: 'Puedes cargar nuevamente la imagen desde la edición del perfil' });
+        this.toastService.showToast({ severity: 'warn', summary: 'Error al guardar imagen', detail: 'Puedes cargar nuevamente la imagen desde la edición del perfil' });
       }
       this.postUser = false;
+      timer(500).subscribe(
+        () => {
+          this.router.navigateByUrl("/login");
+        }
+      )
     } catch (error) {
-      this.messageService.add({ severity: 'error', summary: 'Error al crear usuario', detail: 'Por favor intente nuevamente...' });
+      this.toastService.showToast({ severity: 'error', summary: 'Error al crear usuario', detail: 'Por favor intente nuevamente...' });
       this.postUser = false;
     }
+  }
+
+  goBack() {
+    this.location.back();
   }
 
   passWordMatchesValidaor(): ValidatorFn {
@@ -260,7 +282,8 @@ export class CreateUser implements OnInit {
               return exist ? { emailExists: true } : null;
             }),
             catchError(() => {
-              return of({ serverError: false });
+              this.toastService.showToast({ severity: 'warn', summary: 'Error al validar mail', detail: 'No pudimos validar disponibilad de tu email.' });
+              return of(null);
             })
           )
         )
