@@ -10,7 +10,7 @@ import { PanelMenu } from 'primeng/panelmenu';
 import { MenuItem } from 'primeng/api';
 import { Badge } from 'primeng/badge';
 import { Drawer } from 'primeng/drawer';
-import { ThemeSwitcher } from "../theme-switcher/theme-switcher";
+import { ThemeSwitcher } from '../theme-switcher/theme-switcher';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -26,13 +26,15 @@ import { CommonModule } from '@angular/common';
     PanelMenu,
     Drawer,
     ThemeSwitcher,
-    CommonModule
-],
+    CommonModule,
+  ],
   templateUrl: './home.html',
-  styleUrl: './home.css'
+  styleUrl: './home.css',
 })
 export class Home implements OnInit {
   isCollapsed = false;
+  fullyCollapsed = false;
+  rotate = false;
   visible = false;
   items: MenuItem[] = [];
 
@@ -44,21 +46,21 @@ export class Home implements OnInit {
         items: [
           {
             label: 'Compose',
-            icon: 'pi pi-file-edit'
+            icon: 'pi pi-file-edit',
           },
           {
             label: 'Inbox',
-            icon: 'pi pi-inbox'
+            icon: 'pi pi-inbox',
           },
           {
             label: 'Sent',
-            icon: 'pi pi-send'
+            icon: 'pi pi-send',
           },
           {
             label: 'Trash',
-            icon: 'pi pi-trash'
-          }
-        ]
+            icon: 'pi pi-trash',
+          },
+        ],
       },
       {
         label: 'Reports',
@@ -66,13 +68,13 @@ export class Home implements OnInit {
         items: [
           {
             label: 'Sales',
-            icon: 'pi pi-chart-line'
+            icon: 'pi pi-chart-line',
           },
           {
             label: 'Products',
-            icon: 'pi pi-list'
-          }
-        ]
+            icon: 'pi pi-list',
+          },
+        ],
       },
       {
         label: 'Profile',
@@ -80,18 +82,29 @@ export class Home implements OnInit {
         items: [
           {
             label: 'Settings',
-            icon: 'pi pi-cog'
+            icon: 'pi pi-cog',
           },
           {
             label: 'Privacy',
-            icon: 'pi pi-shield'
-          }
-        ]
-      }
+            icon: 'pi pi-shield',
+          },
+        ],
+      },
     ];
   }
 
   toggleSidebar() {
+    this.rotate = true;
     this.isCollapsed = !this.isCollapsed;
+    if (this.isCollapsed) {
+      setTimeout(() => {
+        this.fullyCollapsed = true;
+      }, 250);
+    } else {
+      this.fullyCollapsed = false;
+    }
+    setTimeout(() => {
+      this.rotate = false;
+    }, 500);
   }
 }
