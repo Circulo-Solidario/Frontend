@@ -1,0 +1,59 @@
+.main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.header-toolbar {
+    height: 55px;
+}
+
+.main-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    height: calc(100vh - 55px);
+    /* Resta la altura del toolbar */
+}
+
+.sidebar {
+    width: 15vw;
+    height: 100%;
+    transition: all 0.3s ease;
+    background: grey;
+    border-right: 1px solid black;
+    overflow-y: auto;
+    flex-shrink: 0;
+    height: 100%;
+}
+
+.sidebar.collapsed {
+    width: 5vw;
+}
+
+.sidebar.collapsed {
+    color: transparent;
+}
+
+.sidebar.collapsed .sidebar-text {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+    transition: opacity 0.2s ease;
+}
+
+.sidebar:not(.collapsed) .sidebar-text {
+  opacity: 1;
+  width: auto;
+  overflow: visible;
+  transition: 
+    opacity 0.3s ease 0.1s,
+    width 0.3s ease 0.1s;
+}
+
+.components-content {
+    flex: 1;
+    overflow-y: auto;
+    height: 100%;
+}

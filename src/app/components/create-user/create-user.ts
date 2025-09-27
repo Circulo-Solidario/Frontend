@@ -32,6 +32,7 @@ import { Ripple } from 'primeng/ripple';
 import { catchError, map, Observable, of, switchMap, timer } from 'rxjs';
 import { Router } from '@angular/router';
 import { Toasts } from '../../services/toasts';
+import { ThemeSwitcher } from "../theme-switcher/theme-switcher";
 
 @Component({
   selector: 'app-create-user',
@@ -51,8 +52,9 @@ import { Toasts } from '../../services/toasts';
     DatePickerModule,
     FileUploadModule,
     ScrollerModule,
-    Ripple
-  ],
+    Ripple,
+    ThemeSwitcher
+],
   templateUrl: './create-user.html',
   styleUrl: './create-user.css',
 })
@@ -272,10 +274,10 @@ export class CreateUser implements OnInit {
 
   emailValidator(): AsyncValidatorFn {
     return (control: AbstractControl): Observable<ValidationErrors | null> => {
-      if (!control.parent) {
+      if (!control.parent || control.parent.getError('email')) {
         return of(null);
       }
-      return timer(1000).pipe(
+      return timer(500).pipe(
         switchMap(() =>
           this.userService.validateEmail(control.value).pipe(
             map((exist: boolean) => {

@@ -1,3 +1,13 @@
+<div class="row me-0 justify-content-between align-items-center">
+  <div class="col-auto">
+    <p-button variant="text" [disabled]="true">
+      <span style="color: transparent">-</span>
+    </p-button>
+  </div>
+  <div class="col-auto">
+    <app-theme-switcher />
+  </div>
+</div>
 <div id="screenWidth" class="col position-absolute top-50 start-50 translate-middle">
   <div class="container-fluid align-items-center justify-content-center">
     <div id="card" class="col-lg-auto m-auto">
@@ -34,7 +44,6 @@
               />
               @if (loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched &&
               loginForm.get('correo')?.dirty) {
-              
               @if(loginForm.get('correo')?.getError('emailExists')){
               <p-message severity="error" size="small" variant="simple">
                 Existe una cuenta con ese correo.
@@ -81,7 +90,7 @@
         </div>
         <div class="row mt-1 justify-content-md-center">
           <div class="col-md-auto w-100 text-center">
-            <p-button type="button" label="Registrarme" routerLink="/crear-usuario" link/>
+            <p-button type="button" label="Registrarme" routerLink="/crear-usuario" link />
           </div>
         </div>
         <div class="row mb-4 mt-4 justify-content-md-center">

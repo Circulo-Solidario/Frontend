@@ -1,1 +1,51 @@
-<p>home works!</p>
+<div class="main-container">
+  <p-toolbar class="header-toolbar">
+    <ng-template #start>
+      <p-button (click)="toggleSidebar()" styleClass="p-button-text d-none d-md-block">
+        <i [ngClass]="[isCollapsed? 'pi pi-angle-right' : 'pi pi-angle-left']"></i>
+      </p-button>
+      <p-button (click)="visible = true" styleClass="p-button-text d-md-none">
+      </p-button>
+      <span>Círculo solidario</span>
+    </ng-template>
+    <ng-template #center>
+      <p-iconfield iconPosition="left">
+        <p-inputicon class="pi pi-search" />
+        <input type="text" pInputText placeholder="Search" fluid />
+      </p-iconfield>
+    </ng-template>
+    <ng-template #end>
+      <app-theme-switcher />
+      <p-splitbutton label="Save" />
+    </ng-template>
+  </p-toolbar>
+  <p-drawer [(visible)]="visible" header="Drawer">
+    <p-panelmenu [model]="items" class="gap-0">
+      <ng-template #item let-item>
+        <a pRipple class="flex items-center px-4 py-2 cursor-pointer group">
+          <i [class]="item.icon + ' text-secondary group-hover:text-inherit'"></i>
+          <span class="ml-2 sidebar-text">
+            {{ item.label }}
+          </span>
+        </a>
+      </ng-template>
+    </p-panelmenu>
+  </p-drawer>
+  <div class="main-content" [class.expanded]="isCollapsed">
+    <div class="sidebar d-none d-md-block" [class.collapsed]="isCollapsed">
+      <p-panelmenu [model]="items" class="gap-0">
+        <ng-template #item let-item>
+          <a pRipple class="flex items-center px-4 py-2 cursor-pointer group">
+            <i [class]="item.icon + ' text-secondary group-hover:text-inherit'"></i>
+            <span class="ml-2 sidebar-text">
+              {{ item.label }}
+            </span>
+          </a>
+        </ng-template>
+      </p-panelmenu>
+    </div>
+    <div class="components-content container-fluid p-0 py-2">
+      <router-outlet />
+    </div>
+  </div>
+</div>

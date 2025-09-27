@@ -1,9 +1,12 @@
-<div class="row justify-content-start">
+<div class="row me-0 justify-content-between align-items-center">
   <div class="col-auto">
     <p-button link (onClick)="goBack()">
       <i class="pi pi-angle-left" pButtonIcon></i>
       <span pButtonLabel>Volver atrás</span>
     </p-button>
+  </div>
+  <div class="col-auto">
+    <app-theme-switcher />
   </div>
 </div>
 <div id="screen" class="col position-absolute top-50 start-50 translate-middle">

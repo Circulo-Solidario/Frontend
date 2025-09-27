@@ -9,6 +9,7 @@ import { Message } from 'primeng/message';
 import { Password } from 'primeng/password';
 import { Toasts } from '../../services/toasts';
 import { LoginService } from '../../services/login';
+import { ThemeSwitcher } from "../theme-switcher/theme-switcher";
 
 @Component({
   selector: 'app-login',
@@ -21,8 +22,9 @@ import { LoginService } from '../../services/login';
     Password,
     Button,
     InputText,
-    RouterLink
-  ],
+    RouterLink,
+    ThemeSwitcher
+],
   templateUrl: './login.html',
   styleUrl: './login.css'
 })
