@@ -7,7 +7,7 @@ import { Toasts } from './services/toasts';
 
 @Component({
   selector: 'app-root',
-  imports: [ThemeSwitcher, RouterOutlet, Toast],
+  imports: [RouterOutlet, Toast],
   providers: [MessageService],
   templateUrl: './app.html',
   styleUrl: './app.css'

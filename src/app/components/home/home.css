@@ -14,15 +14,16 @@
     flex: 1;
     overflow: hidden;
     height: calc(100vh - 55px);
-    /* Resta la altura del toolbar */
 }
 
 .sidebar {
     width: 15vw;
     height: 100%;
+    display: flex;
     transition: all 0.3s ease;
-    background: grey;
-    border-right: 1px solid black;
+    background: var(--p-content-background);
+    border-right: 1px solid var(--p-content-border-color);
+    color: var(--p-content-color);
     overflow-y: auto;
     flex-shrink: 0;
     height: 100%;
@@ -38,22 +39,56 @@
 
 .sidebar.collapsed .sidebar-text {
     opacity: 0;
-    width: 0;
+    width: 0 !important;
+    margin: 0 !important;
+    display: flex;
+    overflow: hidden;
+}
+
+.sidebar.collapsed a {
     overflow: hidden;
     transition: opacity 0.2s ease;
 }
 
+.sidebar a {
+    display: flex;
+}
+
 .sidebar:not(.collapsed) .sidebar-text {
-  opacity: 1;
-  width: auto;
-  overflow: visible;
-  transition: 
-    opacity 0.3s ease 0.1s,
-    width 0.3s ease 0.1s;
+    opacity: 1;
+    width: auto;
+    overflow: visible;
+    transition:
+        opacity 0.3s ease 0.1s,
+        width 0.3s ease 0.1s;
 }
 
 .components-content {
     flex: 1;
     overflow-y: auto;
     height: 100%;
+}
+
+.sidebar-button {
+    cursor: pointer;
+}
+
+.sidebar.collapsed .sidebar-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar:not(.collapsed) .sidebar-button {
+    padding-left: 0.5rem;
+}
+
+::ng-deep .p-panelmenu-panel {
+    border-color: var(--p-content-background);
+}
+
+::ng-deep p-toolbar {
+    border-radius: 0;
+    border-color: var(--p-content-background);
+    border-bottom-color: var(--p-content-border-color);
 }

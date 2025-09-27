@@ -32,15 +32,17 @@
     </p-panelmenu>
   </p-drawer>
   <div class="main-content" [class.expanded]="isCollapsed">
-    <div class="sidebar d-none d-md-block" [class.collapsed]="isCollapsed">
-      <p-panelmenu [model]="items" class="gap-0">
+    <div class="sidebar px-2 pt-2 d-none d-md-block" [class.collapsed]="isCollapsed">
+      <p-panelmenu [model]="items" class="gap-2">
         <ng-template #item let-item>
-          <a pRipple class="flex items-center px-4 py-2 cursor-pointer group">
-            <i [class]="item.icon + ' text-secondary group-hover:text-inherit'"></i>
-            <span class="ml-2 sidebar-text">
-              {{ item.label }}
-            </span>
-          </a>
+          <div class="py-2 sidebar-button flex items-center">
+            <a class="items-center">
+              <i [class]="item.icon + ' text-inherit'" style="font-size: 1.2rem"></i>
+              <span class="ms-2 sidebar-text ">
+                {{ item.label }}
+              </span>
+            </a>
+          </div>
         </ng-template>
       </p-panelmenu>
     </div>
