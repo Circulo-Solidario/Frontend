@@ -1,5 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Router, RouterLink, RouterOutlet } from '@angular/router';
 import { Button } from 'primeng/button';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
@@ -15,6 +15,10 @@ import { Avatar } from 'primeng/avatar';
 import { OverlayBadge } from 'primeng/overlaybadge';
 import { Popover } from 'primeng/popover';
 import { Menu } from 'primeng/menu';
+import { LoginService } from '../../services/login';
+import { Observable } from 'rxjs';
+import { Badge } from 'primeng/badge';
+import { Chip } from 'primeng/chip';
 
 @Component({
   selector: 'app-home',
@@ -33,21 +37,43 @@ import { Menu } from 'primeng/menu';
     Avatar,
     OverlayBadge,
     Popover,
-    Menu
+    Menu,
+    Badge
   ],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
 export class Home implements OnInit {
   @ViewChild('op') op!: Popover;
+  private loginService: LoginService = inject(LoginService);
+  private router: Router = inject(Router);
+  loggedUser: any;
   isCollapsed = false;
   fullyCollapsed = false;
   rotate = false;
   visible = false;
-  items: MenuItem[] = [];
+  menu: MenuItem[] = [];
+  userMenu: MenuItem[] = [];
 
   ngOnInit() {
-    this.items = [
+    this.loggedUser = this.loginService.getLoggedUser();
+    if (this.loggedUser == null) {
+      this.router.navigate(['/login']);
+    }
+    this.userMenu = [
+      {
+        label: 'Perfil',
+        icon: 'pi pi-user',
+      },
+      {
+        label: 'Cerrar sesión',
+        icon: 'pi pi-sign-out',
+        command: () => {
+          this.logOut();
+        },
+      },
+    ];
+    this.menu = [
       {
         label: 'Productos',
         icon: 'pi pi-gift',
@@ -59,7 +85,7 @@ export class Home implements OnInit {
           {
             label: 'Ver solicitudes',
             icon: 'pi pi-comments',
-          }
+          },
         ],
       },
       {
@@ -110,5 +136,10 @@ export class Home implements OnInit {
 
   toggle(event: any) {
     this.op.toggle(event);
+  }
+
+  logOut(){
+    this.loginService.logOut();
+    this.router.navigate(['/login']);
   }
 }

@@ -149,6 +149,10 @@
     display: flex;
 }
 
+::ng-deep .p-menu-start{
+    padding: .75rem;
+}
+
 ::ng-deep .p-tieredmenu-root-list{
     gap: 1rem;
     max-width: max-content;
@@ -161,6 +165,12 @@
 
 ::ng-deep .sidebar-button p-button{
     width: 100%;
+}
+
+::ng-deep .p-menu-overlay{
+    display: block;
+    justify-content: center;
+    min-width: max-content;
 }
 
 ::ng-deep .p-ripple.p-button {

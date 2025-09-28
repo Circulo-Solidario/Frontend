@@ -111,23 +111,53 @@
       </div>
     </ng-template>
     <ng-template #end>
-      <div class="me-4">
-        <p-overlaybadge value="2">
-          <p-button (onClick)="toggle($event)">
-            <i class="pi pi-bell" style="font-size: 1.5rem"></i>
-          </p-button>
-        </p-overlaybadge>
-      </div>
-      <p-popover #op>
-        <ng-template #content>
-          <h4>Prueba</h4>
-        </ng-template>
-      </p-popover>
-      <div class="toolbar-end d-none d-sm-block">
-        <p-avatar (click)="menu.toggle($event)" icon="pi pi-user" class="ms-2 me-4 avatar" shape="circle" />
-        <p-menu #menu [model]="items" [popup]="true" />
-        <div>
-          <app-theme-switcher />
+      <div class="d-flex" style="align-items: baseline;">
+        <div class="me-4">
+          <p-overlaybadge value="1">
+            <p-button (onClick)="toggle($event)">
+              <i class="pi pi-bell" style="font-size: 1.5rem"></i>
+            </p-button>
+          </p-overlaybadge>
+        </div>
+        <p-popover #op>
+          <ng-template #content>
+            <h4>Prueba</h4>
+          </ng-template>
+        </p-popover>
+        <div class="toolbar-end d-none d-sm-block">
+          <p-avatar (click)="menu.toggle($event)" [icon]="loggedUser.urlImagen? '' : 'pi pi-user fs-4'"
+            [image]="loggedUser.urlImagen? loggedUser.urlImagen : ''" class="ms-2 me-4 avatar" shape="circle" />
+          <p-menu #menu [model]="userMenu" [popup]="true">
+            <ng-template #start styleClass="p-2">
+              <div class="row align-items-center">
+                <div class="col-auto">
+                  <p-avatar [icon]="loggedUser.urlImagen? '' : 'pi pi-user'"
+                    [image]="loggedUser.urlImagen? loggedUser.urlImagen : ''" shape="circle" />
+                </div>
+                <div class="col-auto p-0">
+                  <div class="row-cols-auto">
+                    <span class="fs-5 p-0">{{loggedUser.alias}}</span>
+                  </div>
+                  <div class="row-cols-auto pe-2 mt-1">
+                    @if(loggedUser.roles.length > 0){
+
+                    @for (rol of loggedUser.roles; track $index) {
+                    <p-badge class="text-capitalize mx-1" [value]="rol.name.toLowerCase()" severity="secondary"
+                      badgesize="small" />
+                    }
+
+                    }
+                    @else {
+                    <p-badge value="Organización benéfica" severity="secondary" badgesize="small" />
+                    }
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </p-menu>
+          <div>
+            <app-theme-switcher />
+          </div>
         </div>
       </div>
     </ng-template>
@@ -232,7 +262,7 @@
         </p>
       </div>
     </ng-template>
-    <p-panelmenu [model]="items" class="gap-2">
+    <p-panelmenu [model]="menu" class="gap-2 d-flex justify-content-end">
       <ng-template #item let-item>
         <div class="py-2 sidebar-button flex items-center">
           <a class="items-center">
@@ -245,8 +275,12 @@
       </ng-template>
     </p-panelmenu>
     <ng-template #footer>
+      <div class="d-flex justify-content-center gap-4">
+        <p-button label="Account" icon="pi pi-user" fluid></p-button>
+        <p-button label="Cerrar sesión" icon="pi pi-sign-out" fluid />
+      </div>
       <div class="flex items-center gap-2">
-        <p-button label="Cerrar sesión" icon="pi pi-sign-out" fluid severity="danger" text />
+
       </div>
     </ng-template>
   </p-drawer>
@@ -264,7 +298,7 @@
           </div>
         </ng-template>
       </p-panelmenu> -->
-      <p-tieredmenu [model]="items" class="gap-2 p-0 mt-2">
+      <p-tieredmenu [model]="menu" class="gap-2 p-0 mt-2">
         <ng-template #item let-item>
           <div class="sidebar-button">
             <p-button fluid [styleClass]="(fullyCollapsed ? 'justify-content-start' : 'justify-content-start')">

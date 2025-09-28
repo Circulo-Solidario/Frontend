@@ -33,6 +33,7 @@ import { catchError, map, Observable, of, switchMap, timer } from 'rxjs';
 import { Router } from '@angular/router';
 import { Toasts } from '../../services/toasts';
 import { ThemeSwitcher } from "../theme-switcher/theme-switcher";
+import { LoginService } from '../../services/login';
 
 @Component({
   selector: 'app-create-user',
@@ -59,6 +60,7 @@ import { ThemeSwitcher } from "../theme-switcher/theme-switcher";
   styleUrl: './create-user.css',
 })
 export class CreateUser implements OnInit {
+  private logginService: LoginService = inject(LoginService);
   private imageService: Images = inject(Images);
   private userService: Users = inject(Users);
   private router: Router = inject(Router);
@@ -123,6 +125,9 @@ export class CreateUser implements OnInit {
   }
 
   ngOnInit(): void {
+    if(this.logginService.getLoggedUser() != null){
+      this.router.navigate(['/principal']);
+    }
   }
 
   setImage(fileSelected: FileSelectEvent) {
