@@ -1,48 +1,54 @@
+/*#region Animaciones de rotación y logo*/
 @keyframes rotateFow {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(-360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(-360deg);
+    }
 }
 
 @keyframes rotateBack {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
 }
 
 .rotate-fow {
-  animation: rotateFow 1s ease-in-out;
+    animation: rotateFow 1s ease-in-out;
 }
 
 .rotate-back {
-  animation: rotateBack 1s ease-in-out;  
+    animation: rotateBack 1s ease-in-out;
 }
 
-#logo{
+#logo {
     fill: var(--p-primary-color);
 }
+/* #endregion */
+
+/*#region Toolbar*/
+.toolbar-center {
+    width: 45vw;
+}
+
+.toolbar-end {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+/*#endregion*/
 
 .main-container {
     display: flex;
     flex-direction: column;
     height: 100vh;
     overflow: hidden;
-}
-
-.toolbar-center {
-    width: 45vw;
-}
-
-.toolbar-end{
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
 }
 
 .main-content {
@@ -53,54 +59,8 @@
     background-color: var(--p-content-background);
 }
 
-.sidebar {
-    width: 10vw;
-    min-width: 40px;
-    height: 100%;
-    display: flex;
-    transition: all 0.3s ease;
-    background: var(--p-content-background);
-    color: var(--p-content-color);
-    overflow-y: auto;
-    flex-shrink: 0;
-}
-
-.sidebar.collapsed {
-    width: 40px;
-    color: transparent;
-}
-
-.sidebar-text {
-    transition:
-        opacity 0.3s ease,
-        width 0.3s ease,
-        margin 0.3s ease;
-    white-space: nowrap;
-    overflow: hidden;
-}
-
-.sidebar.collapsed .sidebar-text {
-    opacity: 0;
-    width: 0;
-    margin-left: 0;
-}
-
-.sidebar.collapsed a {
-    overflow: hidden;
-    transition: opacity 0.2s ease;
-}
-
-.sidebar a {
-    display: flex;
-}
-
-.sidebar:not(.collapsed) .sidebar-text {
-    opacity: 1;
-    width: auto;
-    overflow: visible;
-    transition:
-        opacity 0.3s ease 0.1s,
-        width 0.3s ease 0.1s;
+.avatar{
+    cursor: pointer;
 }
 
 .components-content {
@@ -109,20 +69,57 @@
     height: 100%;
 }
 
-.sidebar-button {
-    cursor: pointer;
-}
 
-.sidebar.fully-collapsed .sidebar-button {
+/*#region Sidebar desplegado*/
+.sidebar {
+    width: max-content;
+    min-width: min-content;
+    height: 100%;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    justify-items: center;
+    transition: width 0.3s ease;
+    background: var(--p-content-background);
+    color: var(--p-content-color);
+    flex-shrink: 0;
 }
 
-.sidebar:not(.fully-collapsed) .sidebar-button {
-    padding-left: 0.5rem;
+.sidebar-button{
+    display: flex;
 }
 
+.sidebar-text {
+    transition:
+        opacity 0.3s ease,
+        width 0.3s ease,
+        margin 0.3s ease,
+        display 0.3s ease;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.sidebar:not(.collapsed) .sidebar-text {
+    opacity: 1;
+    width: auto;
+    overflow: hidden;
+    transition:
+        opacity 0.3s ease 0.1s,
+        width 0.3s ease 0.1s;
+}
+/*#endregion*/
+
+/*#region Sidebar colapsada*/
+.sidebar.collapsed {
+    width: 40px;
+    min-width: 40px;
+    color: transparent;
+    transition: width 0.3s ease;
+}
+
+.sidebar.collapsed .p-button {
+    transition: opacity 0.2s ease;
+}
+/*#endregion*/
+
+/*#region No tocar*/
 .components-content {
     border-left: 1px solid var(--p-content-border-color);
     border-top: 1px solid var(--p-content-border-color);
@@ -134,16 +131,55 @@
     border-color: var(--p-content-background);
 }
 
+::ng-deep p-tieredmenu{
+    display: flex;
+    width: min-content;
+}
+
+::ng-deep p-tieredmenusub{
+    display: flex;
+}
+
+::ng-deep .p-tieredmenu {
+    border-color: var(--p-content-background);
+    min-width: max-content;
+}
+
+::ng-deep .ng-trigger{
+    display: flex;
+}
+
+::ng-deep .p-tieredmenu-root-list{
+    gap: 1rem;
+    max-width: max-content;
+}
+
 ::ng-deep p-toolbar {
     border-radius: 0;
     border-color: var(--p-content-background);
 }
 
-@media (max-width: 576px) {
+::ng-deep .sidebar-button p-button{
+    width: 100%;
+}
+
+::ng-deep .p-ripple.p-button {
+    padding: 0 !important;
+    background-color: transparent;
+    border: 0;
+    color: var(--p-text-color);
+}
+
+@media (max-width: 575px) {
     .components-content {
         border-left: 0px solid var(--p-content-border-color);
         border-top: 1px solid var(--p-content-border-color);
         border-top-left-radius: 0;
         background-color: var(--p-form-field-background);
     }
+    .toolbar-end{
+        display: none !important;
+    }
 }
+
+/* #endregion */
