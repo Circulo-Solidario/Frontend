@@ -1,568 +1,537 @@
-<p-toast />
-<div class="container-fluid align-items-center justify-content-center">
-  <div id="card" class="col-md-3 m-auto">
-    <p-card class="shadow-lg px-4 flex" scr>
-      <div class="text-center mb-4 mt-4">
-        <h1 class="fw-bold m-0">Crea una cuenta</h1>
-        <p class="text-sm m-0 mt-1">Bienvenido. Comencemos.</p>
-      </div>
-      <p-stepper [(value)]="activeStep" class="basis-[20rem]" [linear]="true">
-        <p-step-list>
-          <p-step [value]="1" class="flex flex-row flex-auto gap-2">
-            <ng-template #content let-activateCallback="activateCallback" let-value="value">
-              <button
-                class="bg-transparent border-0 inline-flex flex-col gap-2"
-                (click)="activateCallback()"
-              >
-                <i
-                  class="pi pi-user inline-flex items-center justify-center"
-                  style="font-size: 1.5rem"
-                ></i>
-                <p class="text-sm mb-0">Cuenta</p>
-              </button>
-            </ng-template>
-          </p-step>
-          <p-step [value]="2" class="flex flex-row flex-auto gap-2">
-            <ng-template #content let-activateCallback="activateCallback" let-value="value">
-              <button
-                class="bg-transparent border-0 inline-flex flex-col gap-2"
-                (click)="activateCallback()"
-              >
-                <i
-                  class="pi pi-id-card inline-flex items-center justify-center"
-                  style="font-size: 1.5rem"
-                ></i>
-                <p class="text-sm mb-0">Perfil</p>
-              </button>
-            </ng-template>
-          </p-step>
-        </p-step-list>
-        <p-step-panels class="p-0">
-          <p-step-panel [value]="1">
-            <ng-template #content let-activateCallback="activateCallback">
-              <div class="form-scroll-wrapper justify-content-center align-items-center">
-                <form class="me-2 mb-0 mt-2" [formGroup]="accountForm">
-                  <div
-                    class="mb-4"
-                    [ngClass]="[
-                      accountForm.get('correo')?.invalid &&
-                      accountForm.get('correo')?.touched &&
-                      accountForm.get('correo')?.dirty
-                        ? ''
-                        : 'pb-2'
-                    ]"
-                  >
-                    <label class="form-label" for="correo">Correo electrónico</label>
-                    <input
-                      class="w-100 mt-1"
-                      id="correo"
-                      pInputText
-                      placeholder="tu-correo@ejemplo.com"
-                      type="email"
-                      formControlName="correo"
-                      [invalid]="
-                        accountForm.get('correo')?.invalid &&
-                        accountForm.get('correo')?.touched &&
-                        accountForm.get('correo')?.dirty
-                      "
-                    />
-                    @if (accountForm.get('correo')?.invalid && accountForm.get('correo')?.touched &&
-                    accountForm.get('correo')?.dirty) {
+<div class="row me-0 justify-content-between align-items-center">
+  <div class="col-auto">
+    <p-button link (onClick)="goBack()">
+      <i class="pi pi-angle-left" pButtonIcon></i>
+      <span pButtonLabel>Volver atrás</span>
+    </p-button>
+  </div>
+  <div class="col-auto">
+    <app-theme-switcher />
+  </div>
+</div>
+<div id="screen" class="col position-absolute top-50 start-50 translate-middle">
+  <div class="container-fluid align-items-center justify-content-center">
+    <div id="card" class="col-md-3 m-auto">
+      <p-card class="shadow-lg px-4 flex" scr>
+        <div class="text-center mb-4 mt-4">
+          <h1 class="fw-bold m-0">Crea una cuenta</h1>
+          <p class="text-sm m-0 mt-1">Bienvenido. Comencemos.</p>
+        </div>
+        <p-stepper [(value)]="activeStep" class="basis-[20rem]" [linear]="true">
+          <p-step-list>
+            <p-step [value]="1" class="flex flex-row flex-auto gap-2">
+              <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                <button
+                  class="bg-transparent border-0 inline-flex flex-col gap-2"
+                  (click)="activateCallback()"
+                >
+                  <i
+                    class="pi pi-user inline-flex items-center justify-center"
+                    style="font-size: 1.5rem"
+                  ></i>
+                  <p class="text-sm mb-0">Cuenta</p>
+                </button>
+              </ng-template>
+            </p-step>
+            <p-step [value]="2" class="flex flex-row flex-auto gap-2">
+              <ng-template #content let-activateCallback="activateCallback" let-value="value">
+                <button
+                  class="bg-transparent border-0 inline-flex flex-col gap-2"
+                  (click)="activateCallback()"
+                >
+                  <i
+                    class="pi pi-id-card inline-flex items-center justify-center"
+                    style="font-size: 1.5rem"
+                  ></i>
+                  <p class="text-sm mb-0">Perfil</p>
+                </button>
+              </ng-template>
+            </p-step>
+          </p-step-list>
+          <p-step-panels>
+            <p-step-panel [value]="1">
+              <ng-template #content let-activateCallback="activateCallback">
+                <div class="form-scroll-wrapper justify-content-center align-items-center">
+                  <form class="me-2 mb-0 mt-2" [formGroup]="accountForm">
+                    <div class="mb-4">
+                      <label class="form-label" for="correo">Correo electrónico</label>
+                      <input
+                        class="w-100 mt-1"
+                        id="correo"
+                        pInputText
+                        placeholder="tu-correo@ejemplo.com"
+                        type="email"
+                        formControlName="correo"
+                        [invalid]="
+                          accountForm.get('correo')?.invalid &&
+                          accountForm.get('correo')?.touched &&
+                          accountForm.get('correo')?.dirty
+                        "
+                      />
+                      @if (accountForm.get('correo')?.invalid && accountForm.get('correo')?.touched
+                      && accountForm.get('correo')?.dirty) {
                       @if(accountForm.get('correo')?.getError('emailExists')){
-                        <p-message severity="error" size="small" variant="simple">Existe una cuenta con ese correo.</p-message>
+                      <p-message severity="error" size="small" variant="simple">
+                        Existe una cuenta con ese correo.
+                      </p-message>
                       }@else {
-                        <p-message severity="error" size="small" variant="simple">Ingrese un mail válido.</p-message>
-                      }                    
-                    }
-                  </div>
-                  <div
-                    class="my-4"
-                    [ngClass]="[
-                      accountForm.get('contrasena')?.invalid &&
+                      <p-message severity="error" size="small" variant="simple">
+                        Ingrese un mail válido.
+                      </p-message>
+                      } }
+                    </div>
+                    <div class="my-4">
+                      <label class="form-label" for="contrasena">Contraseña</label>
+                      <p-password
+                        class="mt-1"
+                        id="contrasena"
+                        formControlName="contrasena"
+                        placeholder="Crea una contraseña"
+                        weakLabel="Muy simple"
+                        mediumLabel="Medianamente segura"
+                        strongLabel="Compleja"
+                        promptLabel="Ingrese una contraseña"
+                        [feedback]="true"
+                        [toggleMask]="true"
+                        fluid
+                        appendTo="body"
+                        [invalid]="
+                          accountForm.get('contrasena')?.invalid &&
+                          accountForm.get('contrasena')?.touched &&
+                          accountForm.get('contrasena')?.dirty
+                        "
+                      >
+                        <ng-template #footer>
+                          <p-divider />
+                          <ul class="ms-2 p-0 leading-normal" style="list-style: none">
+                            <li class="flex items-center">
+                              @if(accountForm.get('contrasena')?.getError('minlength') ||
+                              accountForm.get('contrasena')?.getError('required')){
+                              <i class="pi pi-times-circle me-1" style="color: red"></i>
+                              }@else{
+                              <i class="pi pi-check-circle me-1" style="color: green"></i>
+                              } Mínimo 8 caracteres
+                            </li>
+                            <li class="flex items-center">
+                              @if(accountForm.get('contrasena')?.getError('missingSpecialChar') ||
+                              accountForm.get('contrasena')?.getError('required')){
+                              <i class="pi pi-times-circle me-1" style="color: red"></i>
+                              }@else{
+                              <i class="pi pi-check-circle me-1" style="color: green"></i>
+                              } Símbolos (ej. !@#$)
+                            </li>
+                            <li class="flex items-center">
+                              @if(accountForm.get('contrasena')?.getError('missingUpperCase') ||
+                              accountForm.get('contrasena')?.getError('required')){
+                              <i class="pi pi-times-circle me-1" style="color: red"></i>
+                              }@else{
+                              <i class="pi pi-check-circle me-1" style="color: green"></i>
+                              } Al menos una mayúscula
+                            </li>
+                            <li class="flex items-center">
+                              @if(accountForm.get('contrasena')?.getError('missingNumber') ||
+                              accountForm.get('contrasena')?.getError('required')){
+                              <i class="pi pi-times-circle me-1" style="color: red"></i>
+                              }@else{
+                              <i class="pi pi-check-circle me-1" style="color: green"></i>
+                              } Números
+                            </li>
+                          </ul>
+                        </ng-template>
+                      </p-password>
+                      @if (accountForm.get('contrasena')?.invalid &&
                       accountForm.get('contrasena')?.touched &&
-                      accountForm.get('contrasena')?.dirty
-                        ? ''
-                        : 'pb-2'
-                    ]"
-                  >
-                    <label class="form-label" for="contrasena">Contraseña</label>
-                    <p-password
-                      class="mt-1"
-                      id="contrasena"
-                      formControlName="contrasena"
-                      placeholder="Crea una contraseña"
-                      weakLabel="Muy simple"
-                      mediumLabel="Medianamente segura"
-                      strongLabel="Compleja"
-                      promptLabel="Ingrese una contraseña"
-                      [feedback]="true"
-                      [toggleMask]="true"
-                      fluid
-                      [invalid]="
-                        accountForm.get('contrasena')?.invalid &&
-                        accountForm.get('contrasena')?.touched &&
-                        accountForm.get('contrasena')?.dirty
-                      "
-                    >
-                      <ng-template #footer>
-                        <p-divider />
-                        <ul class="ms-2 p-0 leading-normal" style="list-style: none">
-                          <li class="flex items-center">
-                            @if(accountForm.get('contrasena')?.getError('minlength') ||
-                            accountForm.get('contrasena')?.getError('required')){
-                            <i class="pi pi-times-circle me-1" style="color: red"></i>
-                            }@else{
-                            <i class="pi pi-check-circle me-1" style="color: green"></i>
-                            } Mínimo 8 caracteres
-                          </li>
-                          <li class="flex items-center">
-                            @if(accountForm.get('contrasena')?.getError('missingSpecialChar') ||
-                            accountForm.get('contrasena')?.getError('required')){
-                            <i class="pi pi-times-circle me-1" style="color: red"></i>
-                            }@else{
-                            <i class="pi pi-check-circle me-1" style="color: green"></i>
-                            } Símbolos (ej. !@#$)
-                          </li>
-                          <li class="flex items-center">
-                            @if(accountForm.get('contrasena')?.getError('missingUpperCase') ||
-                            accountForm.get('contrasena')?.getError('required')){
-                            <i class="pi pi-times-circle me-1" style="color: red"></i>
-                            }@else{
-                            <i class="pi pi-check-circle me-1" style="color: green"></i>
-                            } Al menos una mayúscula
-                          </li>
-                          <li class="flex items-center">
-                            @if(accountForm.get('contrasena')?.getError('missingNumber') ||
-                            accountForm.get('contrasena')?.getError('required')){
-                            <i class="pi pi-times-circle me-1" style="color: red"></i>
-                            }@else{
-                            <i class="pi pi-check-circle me-1" style="color: green"></i>
-                            } Números
-                          </li>
-                        </ul>
-                      </ng-template>
-                    </p-password>
-                    @if (accountForm.get('contrasena')?.invalid &&
-                    accountForm.get('contrasena')?.touched && accountForm.get('contrasena')?.dirty) {
-                    <p-message severity="error" size="small" variant="simple"
-                      >Ingrese una contraseña válida.</p-message
-                    >
-                    }
-                  </div>
-                  <div
-                    class="mt-4"
-                    [ngClass]="[
-                      accountForm.get('confirmPassword')?.invalid &&
+                      accountForm.get('contrasena')?.dirty) {
+                      <p-message severity="error" size="small" variant="simple"
+                        >Ingrese una contraseña válida.</p-message
+                      >
+                      }
+                    </div>
+                    <div class="mt-4">
+                      <label class="form-label" for="confirm-password">Confirmar contraseña</label>
+                      <p-password
+                        class="mt-1"
+                        id="confirm-password"
+                        formControlName="confirmPassword"
+                        placeholder="Confirma tu contraseña"
+                        [feedback]="false"
+                        [toggleMask]="true"
+                        fluid
+                        [invalid]="
+                          accountForm.get('confirmPassword')?.invalid &&
+                          accountForm.get('contrasena')?.valid &&
+                          accountForm.get('confirmPassword')?.touched &&
+                          accountForm.get('confirmPassword')?.dirty
+                        "
+                        [disabled]="accountForm.get('contrasena')?.invalid ?? true"
+                      />
+                      @if (accountForm.get('confirmPassword')?.invalid &&
                       accountForm.get('contrasena')?.valid &&
                       accountForm.get('confirmPassword')?.touched &&
-                      accountForm.get('confirmPassword')?.dirty
-                        ? ''
-                        : 'pb-2'
-                    ]"
-                  >
-                    <label class="form-label" for="confirm-password">Confirmar contraseña</label>
-                    <p-password
-                      class="mt-1"
-                      id="confirm-password"
-                      formControlName="confirmPassword"
-                      placeholder="Confirma tu contraseña"
-                      [feedback]="false"
-                      [toggleMask]="true"
-                      fluid
-                      [invalid]="
-                        accountForm.get('confirmPassword')?.invalid &&
-                        accountForm.get('contrasena')?.valid &&
-                        accountForm.get('confirmPassword')?.touched &&
-                        accountForm.get('confirmPassword')?.dirty
-                      "
-                      [disabled]="accountForm.get('contrasena')?.invalid ?? true"
-                    />
-                    @if (accountForm.get('confirmPassword')?.invalid &&
-                    accountForm.get('contrasena')?.valid &&
-                    accountForm.get('confirmPassword')?.touched &&
-                    accountForm.get('confirmPassword')?.dirty) {
-                    <p-message severity="error" size="small" variant="simple"
-                      >Las contraseñas no coinciden.</p-message
-                    >
-                    }
+                      accountForm.get('confirmPassword')?.dirty) {
+                      <p-message severity="error" size="small" variant="simple"
+                        >Las contraseñas no coinciden.</p-message
+                      >
+                      }
+                    </div>
+                  </form>
+                </div>
+                <div class="row mb-4 mt-4 justify-content-md-center">
+                  <div class="col-md-auto w-100">
+                    <p-button
+                      styleClass="w-100"
+                      (onClick)="activateCallback(2)"
+                      [disabled]="!accountForm.valid"
+                      icon="pi pi-arrow-right"
+                      iconPos="right"
+                      label="Crea tu perfil"
+                    ></p-button>
                   </div>
-                </form>
-              </div>
-              <div class="row mb-4 mt-4 justify-content-md-center">
-                <div class="col-md-auto w-100">
-                  <p-button
-                    styleClass="w-100"
-                    (onClick)="activateCallback(2)"
-                    [disabled]="!accountForm.valid"
-                    icon="pi pi-arrow-right"
-                    iconPos="right"
-                    label="Crea tu perfil"
-                  ></p-button>
                 </div>
-              </div>
-            </ng-template>
-          </p-step-panel>
-          <p-step-panel [value]="2">
-            <ng-template #content let-activateCallback="activateCallback">
-              <p-tabs value="0">
-                <p-tablist class="text-center">
-                  <p-tab value="0" class="w-50" (click)="changeType(0)">Usuario</p-tab>
-                  <p-tab value="1" class="w-50" (click)="changeType(1)">Organización</p-tab>
-                </p-tablist>
-                <p-tabpanels class="px-0">
-                  <p-tabpanel value="0">
-                    <div class="form-scroll-wrapper justify-content-center align-items-center">
-                      <form class="mb-0 mt-2 mx-1" [formGroup]="userForm">
-                        <div
-                          class="mb-4"
-                          [ngClass]="[
-                            userForm.get('nombreApellido')?.invalid &&
+              </ng-template>
+            </p-step-panel>
+            <p-step-panel [value]="2">
+              <ng-template #content let-activateCallback="activateCallback">
+                <p-tabs value="0">
+                  <p-tablist class="text-center">
+                    <p-tab value="0" class="w-50" (click)="changeType(0)">Usuario</p-tab>
+                    <p-tab value="1" class="w-50" (click)="changeType(1)">Organización</p-tab>
+                  </p-tablist>
+                  <p-tabpanels>
+                    <p-tabpanel value="0">
+                      <div class="form-scroll-wrapper justify-content-center align-items-center">
+                        <form class="mb-0 mt-2 mx-1" [formGroup]="userForm">
+                          <div class="mb-4">
+                            <label class="form-label" for="nombreApellido">Nombre y apellido</label>
+                            <input
+                              class="w-100 mt-1"
+                              id="nombreApellido"
+                              pInputText
+                              fluid
+                              placeholder="Ingresa tu nombre y apellido"
+                              type="text"
+                              formControlName="nombreApellido"
+                              [invalid]="
+                                userForm.get('nombreApellido')?.invalid &&
+                                userForm.get('nombreApellido')?.touched &&
+                                userForm.get('nombreApellido')?.dirty
+                              "
+                            />
+                            @if (userForm.get('nombreApellido')?.invalid &&
                             userForm.get('nombreApellido')?.touched &&
-                            userForm.get('nombreApellido')?.dirty
-                              ? ''
-                              : 'pb-2'
-                          ]"
-                        >
-                          <label class="form-label" for="nombreApellido">Nombre y apellido</label>
-                          <input
-                            class="w-100 mt-1"
-                            id="nombreApellido"
-                            pInputText
-                            placeholder="Ingresa tu nombre y apellido"
-                            type="text"
-                            formControlName="nombreApellido"
-                            [invalid]="
-                              userForm.get('nombreApellido')?.invalid &&
-                              userForm.get('nombreApellido')?.touched &&
-                              userForm.get('nombreApellido')?.dirty
-                            "
-                          />
-                          @if (userForm.get('nombreApellido')?.invalid && userForm.get('nombreApellido')?.touched &&
-                          userForm.get('nombreApellido')?.dirty) {
-                          <p-message severity="error" size="small" variant="simple"
-                            >Ingrese un nombre válido.</p-message
-                          >
-                          }
-                        </div>
-                        <div
-                          class="mb-4"
-                          [ngClass]="[
-                            userForm.get('alias')?.invalid &&
-                            userForm.get('alias')?.touched &&
-                            userForm.get('alias')?.dirty
-                              ? ''
-                              : 'pb-2'
-                          ]"
-                        >
-                          <label class="form-label" for="alias">Alias</label>
-                          <input
-                            class="w-100 mt-1"
-                            id="alias"
-                            pInputText
-                            placeholder="Ingresa tu alias"
-                            type="text"
-                            formControlName="alias"
-                            [invalid]="
-                              userForm.get('alias')?.invalid &&
-                              userForm.get('alias')?.touched &&
-                              userForm.get('alias')?.dirty
-                            "
-                          />
-                          @if (userForm.get('alias')?.invalid && userForm.get('alias')?.touched
-                          && userForm.get('alias')?.dirty) {
-                          <p-message severity="error" size="small" variant="simple"
-                            >Ingrese un alias válido.</p-message
-                          >
-                          }
-                        </div>
-                        <div class="mb-4">
-                          <label for="fechaNacimiento">Fecha de nacimiento</label>
-                          <p-datepicker
-                            class="mt-1"
-                            id="fechaNacimiento"
-                            formControlName="fechaNacimiento"
-                            fluid
-                            [iconDisplay]="'input'"
-                            [showIcon]="true"
-                            inputId="icondisplay"
-                            appendTo="body"
-                            dateFormat="dd/mm/yy"
-                            placeholder="Selecciona tu fecha de nacimiento"
-                          />
-                        </div>
-                        <div class="mb-4">
-                          <label for="userImage">Foto de perfil</label>
-                          <p-fileupload
-                            name="userImage"
-                            id="userImage"
-                            styleClass="mt-1"
-                            [multiple]="false"
-                            accept="image/*"
-                            maxFileSize="1000000"
-                            mode="advanced"
-                            (onSelect)="setImage($event)"
-                            (onClear)="clearImage()"
-                            [files]="uploadedFiles"
-                          >
-                            <ng-template #empty>
-                              <div class="row justify-content-md-center">
-                                <div class="col-md-auto">Arrastra una imagen para subirla</div>
-                              </div>
-                            </ng-template>
-                            <ng-template #file>
-                              @if(uploadedFiles.length == 0){
-                              <div class="row justify-content-md-center">
-                                <div class="col-md-auto">Arrastra una imagen para subirla</div>
-                              </div>
-                              } @for (file of uploadedFiles; track $index) {
-                              <div class="row justify-content-md-center">
-                                <div class="col-md-auto">
-                                  <img
-                                    [src]="file.objectURL"
-                                    [alt]="file.name"
-                                    width="auto"
-                                    height="75vh"
-                                    style="border-radius: 0.5em"
-                                  />
-                                </div>
-                                <div class="col">
-                                  <div class="row">
-                                    {{ file.name }}
-                                  </div>
-                                  <div class="row">{{ file.size }} bytes</div>
-                                </div>
-                              </div>
-                              }
-                            </ng-template>
-                            <ng-template #header
-                              let-files
-                              let-chooseCallback="chooseCallback"
-                              let-clearCallback="clearCallback"
+                            userForm.get('nombreApellido')?.dirty) {
+                            <p-message severity="error" size="small" variant="simple"
+                              >Ingrese un nombre válido.</p-message
                             >
-                              <div class="justify-between items-center">
-                                <div class="flex">
-                                  <p-button
-                                    class="me-2"
-                                    (onClick)="chooseCallback($event, chooseCallback)"
-                                    icon="pi pi-images"
-                                    [rounded]="true"
-                                    [outlined]="true"
-                                  />
-                                  <p-button
-                                    (onClick)="clearCallback()"
-                                    icon="pi pi-times"
-                                    [rounded]="true"
-                                    [outlined]="true"
-                                    severity="danger"
-                                    [disabled]="!files || files.length === 0"
-                                  />
+                            }
+                          </div>
+                          <div class="mb-4">
+                            <label class="form-label" for="alias">Alias</label>
+                            <input
+                              class="w-100 mt-1"
+                              id="alias"
+                              pInputText
+                              fluid
+                              placeholder="Ingresa tu alias"
+                              type="text"
+                              formControlName="alias"
+                              [invalid]="
+                                userForm.get('alias')?.invalid &&
+                                userForm.get('alias')?.touched &&
+                                userForm.get('alias')?.dirty
+                              "
+                            />
+                            @if (userForm.get('alias')?.invalid && userForm.get('alias')?.touched &&
+                            userForm.get('alias')?.dirty) {
+                            <p-message severity="error" size="small" variant="simple"
+                              >Ingrese un alias válido.</p-message
+                            >
+                            }
+                          </div>
+                          <div class="mb-4">
+                            <label for="fechaNacimiento">Fecha de nacimiento</label>
+                            <p-datepicker
+                              class="mt-1"
+                              id="fechaNacimiento"
+                              formControlName="fechaNacimiento"
+                              fluid
+                              [iconDisplay]="'input'"
+                              [showIcon]="true"
+                              inputId="icondisplay"
+                              appendTo="body"
+                              dateFormat="dd/mm/yy"
+                              placeholder="Selecciona tu fecha de nacimiento"
+                            />
+                          </div>
+                          <div class="mb-4">
+                            <label for="userImage">Foto de perfil</label>
+                            <p-fileupload
+                              name="userImage"
+                              id="userImage"
+                              styleClass="mt-1 w-100"
+                              [multiple]="false"
+                              accept="image/*"
+                              maxFileSize="1000000"
+                              mode="advanced"
+                              (onSelect)="setImage($event)"
+                              (onClear)="clearImage()"
+                              [files]="uploadedFiles"
+                            >
+                              <ng-template #empty>
+                                <div class="row justify-content-md-center">
+                                  <div class="col-md-auto">Arrastra una imagen para subirla</div>
                                 </div>
-                              </div>
-                            </ng-template>
-                          </p-fileupload>
-                        </div>
-                        <div>
-                          <label for="roles">Selecciona los roles que desea tener</label>
-                          <p-selectbutton
-                            fluid
-                            class="mt-1"
-                            id="roles"
-                            [options]="userRolesOptions"
-                            formControlName="roles"
-                            [multiple]="true"
-                            optionLabel="label"
-                            optionValue="value"
-                            [invalid]="
-                              userForm.get('roles')?.invalid && userForm.get('roles')?.dirty
-                            "
-                          />
-                          @if(userForm.get('roles')?.invalid && userForm.get('roles')?.dirty){
-                          <p-message severity="error" size="small" variant="simple"
-                            >Seleccione al menos un rol.</p-message
-                          >
-                          }
-                        </div>
-                      </form>
-                    </div>
-                  </p-tabpanel>
-                  <p-tabpanel value="1">
-                    <div class="form-scroll-wrapper justify-content-center align-items-center">
-                      <form class="mb-0 mt-2 mx-1" [formGroup]="charityForm">
-                        <div
-                          class="mb-4"
-                          [ngClass]="[
-                            charityForm.get('nombreApellido')?.invalid &&
+                              </ng-template>
+                              <ng-template #file>
+                                @if(uploadedFiles.length == 0){
+                                <div class="row justify-content-md-center">
+                                  <div class="col-md-auto">Arrastra una imagen para subirla</div>
+                                </div>
+                                } @for (file of uploadedFiles; track $index) {
+                                <div class="row justify-content-md-center">
+                                  <div class="col-md-auto">
+                                    <img
+                                      [src]="file.objectURL"
+                                      [alt]="file.name"
+                                      width="auto"
+                                      height="75vh"
+                                      style="border-radius: 0.5em"
+                                    />
+                                  </div>
+                                  <div class="col">
+                                    <div class="row">
+                                      {{ file.name }}
+                                    </div>
+                                    <div class="row">{{ file.size }} bytes</div>
+                                  </div>
+                                </div>
+                                }
+                              </ng-template>
+                              <ng-template
+                                #header
+                                let-files
+                                let-chooseCallback="chooseCallback"
+                                let-clearCallback="clearCallback"
+                              >
+                                <div class="justify-between items-center">
+                                  <div class="flex">
+                                    <p-button
+                                      class="me-2"
+                                      (onClick)="chooseCallback($event, chooseCallback)"
+                                      icon="pi pi-images"
+                                      [rounded]="true"
+                                      [outlined]="true"
+                                    />
+                                    <p-button
+                                      (onClick)="clearCallback()"
+                                      icon="pi pi-times"
+                                      [rounded]="true"
+                                      [outlined]="true"
+                                      severity="danger"
+                                      [disabled]="!files || files.length === 0"
+                                    />
+                                  </div>
+                                </div>
+                              </ng-template>
+                            </p-fileupload>
+                          </div>
+                          <div>
+                            <label for="roles">Selecciona los roles que desea tener</label>
+                            <div class="text-center">
+                              <p-selectbutton
+                                class="mt-1"
+                                fluid
+                                id="roles"
+                                [options]="userRolesOptions"
+                                formControlName="roles"
+                                [multiple]="true"
+                                optionLabel="label"
+                                optionValue="value"
+                                [invalid]="
+                                  userForm.get('roles')?.invalid && userForm.get('roles')?.dirty
+                                "
+                              />
+                              @if(userForm.get('roles')?.invalid && userForm.get('roles')?.dirty){
+                              <p-message severity="error" size="small" variant="simple"
+                                >Seleccione al menos un rol.</p-message
+                              >
+                              }
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                    </p-tabpanel>
+                    <p-tabpanel value="1">
+                      <div class="form-scroll-wrapper justify-content-center align-items-center">
+                        <form class="mb-0 mt-2 mx-1" [formGroup]="charityForm">
+                          <div class="mb-4">
+                            <label class="form-label" for="nombreApellido"
+                              >Nombre de la organización
+                            </label>
+                            <input
+                              class="w-100 mt-1"
+                              id="nombreApellido"
+                              pInputText
+                              placeholder="Ingresa el nombre"
+                              type="text"
+                              formControlName="nombreApellido"
+                              [invalid]="
+                                charityForm.get('nombreApellido')?.invalid &&
+                                charityForm.get('nombreApellido')?.touched &&
+                                charityForm.get('nombreApellido')?.dirty
+                              "
+                            />
+                            @if (charityForm.get('nombreApellido')?.invalid &&
                             charityForm.get('nombreApellido')?.touched &&
-                            charityForm.get('nombreApellido')?.dirty
-                              ? ''
-                              : 'pb-2'
-                          ]"
-                        >
-                          <label class="form-label" for="nombreApellido">Nombre de la organización</label>
-                          <input
-                            class="w-100 mt-1"
-                            id="nombreApellido"
-                            pInputText
-                            placeholder="Ingresa el nombre"
-                            type="text"
-                            formControlName="nombreApellido"
-                            [invalid]="
-                              charityForm.get('nombreApellido')?.invalid &&
-                              charityForm.get('nombreApellido')?.touched &&
-                              charityForm.get('nombreApellido')?.dirty
-                            "
-                          />
-                          @if (charityForm.get('nombreApellido')?.invalid && charityForm.get('nombreApellido')?.touched
-                          && charityForm.get('nombreApellido')?.dirty) {
-                          <p-message severity="error" size="small" variant="simple"
-                            >Ingrese un nombre válido.</p-message
-                          >
-                          }
-                        </div>
-                        <div
-                          class="mb-4"
-                          [ngClass]="[
-                            charityForm.get('alias')?.invalid &&
-                            charityForm.get('alias')?.touched &&
-                            charityForm.get('alias')?.dirty
-                              ? ''
-                              : 'pb-2'
-                          ]"
-                        >
-                          <label class="form-label" for="alias">Alias</label>
-                          <input
-                            class="w-100 mt-1"
-                            id="alias"
-                            pInputText
-                            placeholder="Ingresa tu alias"
-                            type="text"
-                            formControlName="alias"
-                            [invalid]="
-                              charityForm.get('alias')?.invalid &&
-                              charityForm.get('alias')?.touched &&
-                              charityForm.get('alias')?.dirty
-                            "
-                          />
-                          @if (charityForm.get('alias')?.invalid && charityForm.get('alias')?.touched
-                          && charityForm.get('alias')?.dirty) {
-                          <p-message severity="error" size="small" variant="simple"
-                            >Ingrese un alias válido.</p-message
-                          >
-                          }
-                        </div>
-                        <div class="mb-4">
-                          <label for="fechaNacimiento">Fecha de fundación</label>
-                          <p-datepicker
-                            class="mt-1"
-                            id="fechaNacimiento"
-                            formControlName="fechaNacimiento"
-                            fluid
-                            [iconDisplay]="'input'"
-                            [showIcon]="true"
-                            inputId="icondisplay"
-                            appendTo="body"
-                            dateFormat="dd/mm/yy"
-                            placeholder="Selecciona la fecha de fundación"
-                          />
-                        </div>
-                        <div>
-                          <label for="userImage">Logo</label>
-                          <p-fileupload
-                            name="userImage"
-                            id="userImage"
-                            styleClass="mt-1"
-                            [multiple]="false"
-                            accept="image/*"
-                            maxFileSize="1000000"
-                            mode="advanced"
-                            (onSelect)="setImage($event)"
-                            (onClear)="clearImage()"
-                            [files]="uploadedFiles"
-                          >
-                            <ng-template #empty>
-                              <div class="row justify-content-md-center">
-                                <div class="col-md-auto">Arrastra una imagen para subirla</div>
-                              </div>
-                            </ng-template>
-                            <ng-template #file>
-                              @if(uploadedFiles.length == 0){
-                              <div class="row justify-content-md-center">
-                                <div class="col-md-auto">Arrastra una imagen para subirla</div>
-                              </div>
-                              } @for (file of uploadedFiles; track $index) {
-                              <div class="row justify-content-md-center">
-                                <div class="col-md-auto">
-                                  <img
-                                    [src]="file.objectURL"
-                                    [alt]="file.name"
-                                    width="auto"
-                                    height="75vh"
-                                    style="border-radius: 0.5em"
-                                  />
-                                </div>
-                                <div class="col">
-                                  <div class="row">
-                                    {{ file.name }}
-                                  </div>
-                                  <div class="row">{{ file.size }} bytes</div>
-                                </div>
-                              </div>
-                              }
-                            </ng-template>
-                            <ng-template #header
-                              let-files
-                              let-chooseCallback="chooseCallback"
-                              let-clearCallback="clearCallback"
+                            charityForm.get('nombreApellido')?.dirty) {
+                            <p-message severity="error" size="small" variant="simple"
+                              >Ingrese un nombre válido.</p-message
                             >
-                              <div class="justify-between items-center">
-                                <div class="flex">
-                                  <p-button
-                                    class="me-2"
-                                    (onClick)="chooseCallback($event, chooseCallback)"
-                                    icon="pi pi-images"
-                                    [rounded]="true"
-                                    [outlined]="true"
-                                  />
-                                  <p-button
-                                    (onClick)="clearCallback()"
-                                    icon="pi pi-times"
-                                    [rounded]="true"
-                                    [outlined]="true"
-                                    severity="danger"
-                                    [disabled]="!files || files.length === 0"
-                                  />
+                            }
+                          </div>
+                          <div class="mb-4">
+                            <label class="form-label" for="alias">Alias</label>
+                            <input
+                              class="w-100 mt-1"
+                              id="alias"
+                              pInputText
+                              placeholder="Ingresa tu alias"
+                              type="text"
+                              formControlName="alias"
+                              [invalid]="
+                                charityForm.get('alias')?.invalid &&
+                                charityForm.get('alias')?.touched &&
+                                charityForm.get('alias')?.dirty
+                              "
+                            />
+                            @if (charityForm.get('alias')?.invalid &&
+                            charityForm.get('alias')?.touched && charityForm.get('alias')?.dirty) {
+                            <p-message severity="error" size="small" variant="simple"
+                              >Ingrese un alias válido.</p-message
+                            >
+                            }
+                          </div>
+                          <div class="mb-4">
+                            <label for="fechaNacimiento">Fecha de fundación</label>
+                            <p-datepicker
+                              class="mt-1"
+                              id="fechaNacimiento"
+                              formControlName="fechaNacimiento"
+                              fluid
+                              [iconDisplay]="'input'"
+                              [showIcon]="true"
+                              inputId="icondisplay"
+                              appendTo="body"
+                              dateFormat="dd/mm/yy"
+                              placeholder="Selecciona la fecha de fundación"
+                            />
+                          </div>
+                          <div>
+                            <label for="userImage">Logo</label>
+                            <p-fileupload
+                              name="userImage"
+                              id="userImage"
+                              styleClass="mt-1"
+                              [multiple]="false"
+                              accept="image/*"
+                              maxFileSize="1000000"
+                              mode="advanced"
+                              (onSelect)="setImage($event)"
+                              (onClear)="clearImage()"
+                              [files]="uploadedFiles"
+                            >
+                              <ng-template #empty>
+                                <div class="row justify-content-md-center">
+                                  <div class="col-md-auto">Arrastra una imagen para subirla</div>
                                 </div>
-                              </div>
-                            </ng-template>
-                          </p-fileupload>
-                        </div>
-                      </form>
-                    </div>
-                  </p-tabpanel>
-                </p-tabpanels>
-              </p-tabs>
-              <div class="row mt-2 mb-4 justify-content-md-center">
-                <div class="col-md-auto w-50">
-                  <p-button
-                    label="Volver atrás"
-                    fluid
-                    severity="secondary"
-                    icon="pi pi-arrow-left"
-                    (onClick)="activateCallback(1)"
-                  />
+                              </ng-template>
+                              <ng-template #file>
+                                @if(uploadedFiles.length == 0){
+                                <div class="row justify-content-md-center">
+                                  <div class="col-md-auto">Arrastra una imagen para subirla</div>
+                                </div>
+                                } @for (file of uploadedFiles; track $index) {
+                                <div class="row justify-content-md-center">
+                                  <div class="col-md-auto">
+                                    <img
+                                      [src]="file.objectURL"
+                                      [alt]="file.name"
+                                      width="auto"
+                                      height="75vh"
+                                      style="border-radius: 0.5em"
+                                    />
+                                  </div>
+                                  <div class="col">
+                                    <div class="row">
+                                      {{ file.name }}
+                                    </div>
+                                    <div class="row">{{ file.size }} bytes</div>
+                                  </div>
+                                </div>
+                                }
+                              </ng-template>
+                              <ng-template
+                                #header
+                                let-files
+                                let-chooseCallback="chooseCallback"
+                                let-clearCallback="clearCallback"
+                              >
+                                <div class="justify-between items-center">
+                                  <div class="flex">
+                                    <p-button
+                                      class="me-2"
+                                      (onClick)="chooseCallback($event, chooseCallback)"
+                                      icon="pi pi-images"
+                                      [rounded]="true"
+                                      [outlined]="true"
+                                    />
+                                    <p-button
+                                      (onClick)="clearCallback()"
+                                      icon="pi pi-times"
+                                      [rounded]="true"
+                                      [outlined]="true"
+                                      severity="danger"
+                                      [disabled]="!files || files.length === 0"
+                                    />
+                                  </div>
+                                </div>
+                              </ng-template>
+                            </p-fileupload>
+                          </div>
+                        </form>
+                      </div>
+                    </p-tabpanel>
+                  </p-tabpanels>
+                </p-tabs>
+                <div class="row mt-2 mb-4 justify-content-md-center">
+                  <div class="col-md-auto w-50">
+                    <p-button
+                      label="Volver atrás"
+                      fluid
+                      severity="secondary"
+                      icon="pi pi-arrow-left"
+                      (onClick)="activateCallback(1)"
+                    />
+                  </div>
+                  <div class="col-md-auto w-50">
+                    <p-button
+                      fluid
+                      (onClick)="onSubmit()"
+                      [disabled]="
+                        (typeSelected == 1 && userForm.invalid) ||
+                        (typeSelected == 2 && charityForm.invalid) ||
+                        postUser
+                      "
+                    >
+                      Registrarme! @if(postUser){<i class="pi pi-spin pi-spinner"></i>}
+                    </p-button>
+                  </div>
                 </div>
-                <div class="col-md-auto w-50">
-                  <p-button fluid (onClick)="onSubmit()" 
-                  [disabled]="(typeSelected == 1 && userForm.invalid) || ( typeSelected == 2 && charityForm.invalid) || postUser">
-                  Registrarme!
-                  @if(postUser){<i class="pi pi-spin pi-spinner"></i>}                  
-                  </p-button>
-                </div>
-              </div>
-            </ng-template>
-          </p-step-panel>
-        </p-step-panels>
-      </p-stepper>
-    </p-card>
+              </ng-template>
+            </p-step-panel>
+          </p-step-panels>
+        </p-stepper>
+      </p-card>
+    </div>
   </div>
 </div>

@@ -1,0 +1,118 @@
+<div class="row me-0 justify-content-between align-items-center">
+  <div class="col-auto">
+    <p-button variant="text" [disabled]="true">
+      <span style="color: transparent">-</span>
+    </p-button>
+  </div>
+  <div class="col-auto">
+    <app-theme-switcher />
+  </div>
+</div>
+<div id="screenWidth" class="col position-absolute top-50 start-50 translate-middle">
+  <div class="container-fluid align-items-center justify-content-center">
+    <div id="card" class="col-lg-auto m-auto">
+      <p-card class="shadow-lg px-4 flex" fluid>
+        <div class="text-center mb-4 mt-4">
+          <h1 class="fw-bold m-0">Iniciar sesión</h1>
+          <p class="text-sm m-0 mt-1">Ingresa con tu cuenta</p>
+        </div>
+        <div class="form-scroll-wrapper justify-content-center align-items-center">
+          <form class="me-2 mb-0 mt-2" [formGroup]="loginForm">
+            <div
+              class="mb-4"
+              [ngClass]="[
+                loginForm.get('correo')?.invalid &&
+                loginForm.get('correo')?.touched &&
+                loginForm.get('correo')?.dirty
+                  ? ''
+                  : 'pb-2'
+              ]"
+            >
+              <label class="form-label" for="correo">Correo electrónico</label>
+              <input
+                class="w-100 mt-1"
+                id="correo"
+                pInputText
+                placeholder="tu-correo@ejemplo.com"
+                type="email"
+                formControlName="correo"
+                [invalid]="
+                  loginForm.get('correo')?.invalid &&
+                  loginForm.get('correo')?.touched &&
+                  loginForm.get('correo')?.dirty
+                "
+              />
+              @if (loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched &&
+              loginForm.get('correo')?.dirty) {
+              @if(loginForm.get('correo')?.getError('emailExists')){
+              <p-message severity="error" size="small" variant="simple">
+                Existe una cuenta con ese correo.
+              </p-message>
+              }@else {
+              <p-message severity="error" size="small" variant="simple">
+                Ingrese un mail válido.
+              </p-message>
+              } }
+            </div>
+            <div
+              class="mt-4"
+              [ngClass]="[
+                loginForm.get('contrasena')?.invalid &&
+                loginForm.get('contrasena')?.touched &&
+                loginForm.get('contrasena')?.dirty
+                  ? ''
+                  : 'pb-2'
+              ]"
+            >
+              <label class="form-label" for="contrasena">Contraseña</label>
+              <p-password
+                class="mt-1"
+                id="contrasena"
+                formControlName="contrasena"
+                placeholder="Crea una contraseña"
+                [feedback]="false"
+                [toggleMask]="true"
+                fluid
+                [invalid]="
+                  loginForm.get('contrasena')?.invalid &&
+                  loginForm.get('contrasena')?.touched &&
+                  loginForm.get('contrasena')?.dirty
+                "
+              />
+              @if (loginForm.get('contrasena')?.invalid && loginForm.get('contrasena')?.touched &&
+              loginForm.get('contrasena')?.dirty) {
+              <p-message severity="error" size="small" variant="simple"
+                >Ingrese una contraseña válida.</p-message
+              >
+              }
+            </div>
+          </form>
+        </div>
+        <div class="row mt-1 justify-content-md-center">
+          <div class="col-md-auto w-100 text-center">
+            <p-button type="button" label="Registrarme" routerLink="/crear-usuario" link />
+          </div>
+        </div>
+        <div class="row mb-4 mt-4 justify-content-md-center">
+          <div class="col-md-auto w-100">
+            <p-button
+              styleClass="w-100"
+              (onClick)="login()"
+              [disabled]="!loginForm.valid || onLogin"
+            >
+              Iniciar sesión @if(onLogin){<i class="pi pi-spin pi-spinner"></i>}
+            </p-button>
+          </div>
+        </div>
+        <div class="row mb-4 mt-4 justify-content-md-center">
+          <div class="col-md-auto w-100">
+            <p-button styleClass="w-100" (onClick)="login()">
+              <i class="pi pi-google" pButtonIcon></i>
+              <span pButtonLabel>Ingresar con Google</span>
+            </p-button>
+          </div>
+        </div>
+      </p-card>
+    </div>
+  </div>
+</div>

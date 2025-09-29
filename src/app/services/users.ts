@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { environment } from '../environments/environment';
 import { firstValueFrom, Observable } from 'rxjs';
 
@@ -8,11 +8,7 @@ import { firstValueFrom, Observable } from 'rxjs';
 })
 export class Users {
   private readonly apiPath = '/usuarios';
-  private readonly httpCliente: HttpClient;
-
-  constructor(httpClient: HttpClient){
-    this.httpCliente = httpClient;
-  }
+  private readonly httpCliente: HttpClient = inject(HttpClient)
 
   async registerUser(user: any): Promise<any>{
     return await firstValueFrom(this.httpCliente.post(`${environment.apiUrl}${this.apiPath}`, user));
