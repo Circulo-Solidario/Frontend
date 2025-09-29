@@ -1,6 +1,6 @@
 import 'primeicons/primeicons.css';
 import { Component, inject, OnInit } from '@angular/core';
-import {Location} from '@angular/common';
+import { Location } from '@angular/common';
 import {
   AbstractControl,
   AsyncValidatorFn,
@@ -55,7 +55,7 @@ import { LoginService } from '../../services/login';
     ScrollerModule,
     Ripple,
     ThemeSwitcher
-],
+  ],
   templateUrl: './create-user.html',
   styleUrl: './create-user.css',
 })
@@ -125,7 +125,7 @@ export class CreateUser implements OnInit {
   }
 
   ngOnInit(): void {
-    if(this.logginService.getLoggedUser() != null){
+    if (this.logginService.getLoggedUser() != null) {
       this.router.navigate(['/principal']);
     }
   }
@@ -147,14 +147,10 @@ export class CreateUser implements OnInit {
   changeType(type: number) {
     switch (type) {
       case 0: {
-        this.charityForm.reset();
-        this.clearImage();
         this.typeSelected = 1;
         break;
       }
       case 1: {
-        this.userForm.reset();
-        this.clearImage();
         this.typeSelected = 2;
         break;
       }
@@ -176,6 +172,12 @@ export class CreateUser implements OnInit {
           ...account,
           tipoUsuario: 'USUARIO'
         };
+        if (this.userForm.valid) {
+          account = {
+            ...account,
+            ...this.userForm.value
+          }
+        }
         break;
       }
       case 2: {
@@ -183,6 +185,12 @@ export class CreateUser implements OnInit {
           ...account,
           tipoUsuario: 'ORGANIZACION'
         };
+        if (this.charityForm.valid) {
+          account = {
+            ...account,
+            ...this.charityForm.value
+          }
+        }
         break;
       }
     }
@@ -203,18 +211,6 @@ export class CreateUser implements OnInit {
       }
     };
 
-    if (this.userForm.valid) {
-      account = {
-        ...account,
-        ...this.userForm.value
-      }
-    }
-    if (this.charityForm.valid) {
-      account = {
-        ...account,
-        ...this.charityForm.value
-      }
-    }
     if (this.imageUrl != '') {
       account = {
         ...account,
