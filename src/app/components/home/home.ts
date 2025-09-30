@@ -64,6 +64,7 @@ export class Home implements OnInit {
       {
         label: 'Perfil',
         icon: 'pi pi-user',
+        routerLink: '/principal/editar-perfil'
       },
       {
         label: 'Cerrar sesión',
