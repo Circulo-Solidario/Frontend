@@ -3,7 +3,7 @@ import { Component, inject } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
-import { DatePicker } from 'primeng/datepicker';
+import { DatePicker, DatePickerModule } from 'primeng/datepicker';
 import { InputText } from 'primeng/inputtext';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
@@ -15,6 +15,7 @@ import { Users } from '../../services/users';
 import { ImagePost } from '../../models/images';
 import { Images } from '../../services/images';
 import { Toasts } from '../../services/toasts';
+import { InputMask } from 'primeng/inputmask';
 
 @Component({
   selector: 'app-edit-profile',
@@ -24,6 +25,7 @@ import { Toasts } from '../../services/toasts';
     FormsModule,
     Card,
     DatePicker,
+    DatePickerModule,
     InputText,
     Button,
     InputGroupModule,
@@ -40,6 +42,7 @@ export class EditProfile {
   private imageService: Images = inject(Images);
   private router: Router = inject(Router);
   private toastService: Toasts = inject(Toasts);
+  today: Date = new Date();
   originalData: any;
   editPassword: boolean = false;
   editUserForm: FormGroup;
@@ -91,7 +94,7 @@ export class EditProfile {
     this.editUserForm.setValue({
       nombreApellido: this.originalData.nombreApellido ?? '',
       alias: this.originalData.alias ?? '',
-      fechaNacimiento: this.originalData.fechaNacimiento ? this.reverseDate(this.originalData.fechaNacimiento) : '',
+      fechaNacimiento: this.originalData.fechaNacimiento != null ? this.reverseDate(this.originalData.fechaNacimiento) : '',
       // contrasena: this.originalData.contrasena ?? ''
     });
     if (this.originalData.tipoUsuario != 'ORGANIZACION') {
@@ -108,6 +111,13 @@ export class EditProfile {
         ...this.editUserForm.value,
         correo: this.originalData.correo
       }
+      
+      if(typeof(editedUser.fechaNacimiento) == 'string'){
+        editedUser.fechaNacimiento = new Date(this.reverseDate(editedUser.fechaNacimiento)).toISOString();
+      }else{
+        editedUser.fechaNacimiento = editedUser.fechaNacimiento.toISOString();
+      }      
+      
       let errorSavingImage = false;
       if (this.changedImage) {
         const image: ImagePost = {
@@ -125,14 +135,16 @@ export class EditProfile {
           ...editedUser,
           urlImagen: this.imageUrl
         }
-      }else{
+      } else {
         editedUser = {
           ...editedUser,
           urlImagen: this.originalData.urlImagen
         }
       }
+      console.log(editedUser);
+      
       this.userService.editUser(this.id, editedUser).subscribe({
-        next: async () => {
+        next: async (data: any) => {
           this.toastService.showToast({
             severity: 'success', summary: 'Datos editados!', detail: 'Se editaron los datos del usuario correctamente'
           });
@@ -141,8 +153,7 @@ export class EditProfile {
               severity: 'error', summary: 'Error al editar imagen', detail: 'No se pudo actualizar la imagen, intente nuevamente...'
             });
           }
-          const newUserData = await this.userService.getUserInfo(this.originalData.correo);
-          this.loginService.setLoggedUser(newUserData);
+          this.loginService.setLoggedUser(data);
           this.editUserForm.markAsPristine();
           this.router.navigate(['/principal']);
         },
@@ -158,8 +169,9 @@ export class EditProfile {
   }
 
   reverseDate(date: string): string {
-    const parts = date.split("-");
-    return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    const symbol = date.includes('/');
+    const parts = date.split(symbol? '/' : '-'); 
+    return `${parts[2]}/${parts[1]}/${parts[0]}`
   }
 
   cancel() {

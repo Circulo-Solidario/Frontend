@@ -59,7 +59,6 @@ export class Home implements OnInit {
     this.loginService.getLoggedUser().subscribe(
       (user: any) => {
         this.loggedUser = user;
-        console.log(this.loggedUser);
       });
 
     if (this.loggedUser == null) {
@@ -142,6 +141,16 @@ export class Home implements OnInit {
 
   toggle(event: any) {
     this.op.toggle(event);
+  }
+
+  goHome(){
+    this.router.navigate(['/principal']);
+    this.visible = false;
+  }
+
+  goEditProfile(){
+    this.router.navigate(['/principal/editar-perfil']);
+    this.visible = false;
   }
 
   logOut() {

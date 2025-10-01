@@ -30,6 +30,10 @@
 #logo {
     fill: var(--p-primary-color);
 }
+
+.home-button{
+    cursor: pointer;
+}
 /* #endregion */
 
 /*#region Toolbar*/

@@ -48,7 +48,12 @@ export class Login implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loggedUser = this.loginService.getLoggedUser();
+    this.loginService.getLoggedUser().subscribe(
+      (user: any) =>{
+        this.loggedUser = user;
+      }
+    );
+    console.log(this.loggedUser);    
     if (this.loggedUser != null) {
       this.router.navigate(['/principal']);
     }

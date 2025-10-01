@@ -1,3 +1,9 @@
+@media (max-width: 412px){
+  .profile-data{
+    justify-content: center;
+  }
+}
+
 .main-container{
     padding: 2vh 2vw !important;
     height: max-content;

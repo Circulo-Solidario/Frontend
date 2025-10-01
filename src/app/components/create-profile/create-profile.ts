@@ -95,6 +95,13 @@ export class CreateProfile implements OnInit {
   }
 
   async ngOnInit(): Promise<void> {
+    this.loginService.getLoggedUser().subscribe(
+      (user: any) => {
+        if (user != null) {
+          this.router.navigate(['/principal']);
+        }
+      }
+    );
     if (!this.user?.email || !this.user) {
       this.router.navigate(['/login']);
     }

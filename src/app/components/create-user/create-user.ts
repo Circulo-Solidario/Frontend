@@ -125,9 +125,13 @@ export class CreateUser implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.logginService.getLoggedUser() != null) {
-      this.router.navigate(['/principal']);
-    }
+    this.logginService.getLoggedUser().subscribe(
+      (user: any) => {
+        if (user != null) {
+          this.router.navigate(['/principal']);
+        }
+      }
+    );
   }
 
   setImage(fileSelected: FileSelectEvent) {
