@@ -7,14 +7,14 @@ import { DatePicker } from 'primeng/datepicker';
 import { InputText } from 'primeng/inputtext';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { Password } from 'primeng/password';
-import { Divider } from 'primeng/divider';
-import { Ripple } from 'primeng/ripple';
 import { SelectButton } from 'primeng/selectbutton';
 import { LoginService } from '../../services/login';
 import { Router } from '@angular/router';
-import { map } from 'rxjs';
 import { Message } from 'primeng/message';
+import { Users } from '../../services/users';
+import { ImagePost } from '../../models/images';
+import { Images } from '../../services/images';
+import { Toasts } from '../../services/toasts';
 
 @Component({
   selector: 'app-edit-profile',
@@ -28,8 +28,6 @@ import { Message } from 'primeng/message';
     Button,
     InputGroupModule,
     InputGroupAddonModule,
-    Password,
-    Divider,
     SelectButton,
     Message
   ],
@@ -38,16 +36,21 @@ import { Message } from 'primeng/message';
 })
 export class EditProfile {
   private loginService: LoginService = inject(LoginService);
+  private userService: Users = inject(Users);
+  private imageService: Images = inject(Images);
   private router: Router = inject(Router);
+  private toastService: Toasts = inject(Toasts);
   originalData: any;
   editPassword: boolean = false;
   editUserForm: FormGroup;
   isOrganization: boolean = true;
   userRolesOptions = [
-    { label: 'Donante', value: { id: 1 } },
-    { label: 'Donatario', value: { id: 2 } },
-    { label: 'Observador', value: { id: 3 } },
+    { label: 'Donante', value: { id: 2 } },
+    { label: 'Donatario', value: { id: 3 } },
+    { label: 'Observador', value: { id: 4 } },
   ];
+  id: number = -1;
+  imageUrl: string = '';
   originalUserImage: string = '';
   userImage: string = '';
   changedImage: File | null = null;
@@ -64,20 +67,23 @@ export class EditProfile {
         Validators.maxLength(25)
       ]),
       fechaNacimiento: new FormControl(''),
-      contrasena: new FormControl('', [
-        Validators.required,
-        Validators.minLength(8),
-        Validators.maxLength(25),
-        this.passwordStrengthValidator(),
-      ])
+      // contrasena: new FormControl('', [
+      //   Validators.required,
+      //   Validators.minLength(8),
+      //   Validators.maxLength(25),
+      //   this.passwordStrengthValidator(),
+      // ])
     });
   }
 
   ngOnInit(): void {
-    this.originalData = this.loginService.getLoggedUser();
+    this.loginService.getLoggedUser().subscribe(
+      (user) => this.originalData = user
+    );
     if (!this.originalData) {
       this.router.navigate(['/login']);
     }
+    this.id = this.originalData.id;
     if (this.originalData.urlImagen) {
       this.originalUserImage = this.originalData.urlImagen;
       this.userImage = this.originalData.urlImagen;
@@ -86,15 +92,70 @@ export class EditProfile {
       nombreApellido: this.originalData.nombreApellido ?? '',
       alias: this.originalData.alias ?? '',
       fechaNacimiento: this.originalData.fechaNacimiento ? this.reverseDate(this.originalData.fechaNacimiento) : '',
-      contrasena: this.originalData.contrasena ?? ''
+      // contrasena: this.originalData.contrasena ?? ''
     });
     if (this.originalData.tipoUsuario != 'ORGANIZACION') {
       this.isOrganization = false;
-      this.editUserForm.addControl('roles', new FormControl([], [Validators.required]));
+      this.editUserForm.addControl('roles', new FormControl(this.originalData.roles.map((role: any) => {
+        return { id: role.id }
+      }), [Validators.required]));
     }
   }
 
-  onSubmit(): void { }
+  async onSubmit() {
+    if (this.editUserForm.valid) {
+      let editedUser = {
+        ...this.editUserForm.value,
+        correo: this.originalData.correo
+      }
+      let errorSavingImage = false;
+      if (this.changedImage) {
+        const image: ImagePost = {
+          image: this.changedImage
+        }
+        try {
+          const response = await this.imageService.uploadImage(image);
+          this.imageUrl = response.data.url;
+        } catch (error) {
+          errorSavingImage = true;
+        }
+      };
+      if (this.imageUrl != '') {
+        editedUser = {
+          ...editedUser,
+          urlImagen: this.imageUrl
+        }
+      }else{
+        editedUser = {
+          ...editedUser,
+          urlImagen: this.originalData.urlImagen
+        }
+      }
+      this.userService.editUser(this.id, editedUser).subscribe({
+        next: async () => {
+          this.toastService.showToast({
+            severity: 'success', summary: 'Datos editados!', detail: 'Se editaron los datos del usuario correctamente'
+          });
+          if (errorSavingImage) {
+            this.toastService.showToast({
+              severity: 'error', summary: 'Error al editar imagen', detail: 'No se pudo actualizar la imagen, intente nuevamente...'
+            });
+          }
+          const newUserData = await this.userService.getUserInfo(this.originalData.correo);
+          this.loginService.setLoggedUser(newUserData);
+          this.editUserForm.markAsPristine();
+          this.router.navigate(['/principal']);
+        },
+        error: () => {
+          this.toastService.showToast({
+            severity: 'error', summary: 'Error al editar usuario', detail: 'No se pudo actualizar los datos del usuario...'
+          });
+        }
+      })
+
+    }
+
+  }
 
   reverseDate(date: string): string {
     const parts = date.split("-");
@@ -102,16 +163,23 @@ export class EditProfile {
   }
 
   cancel() {
-    this.editUserForm.setValue({
-      nombreApellido: this.originalData.nombreApellido ?? '',
-      alias: this.originalData.alias ?? '',
-      fechaNacimiento: this.originalData.fechaNacimiento ?? '',
-      contrasena: this.originalData.contrasena ?? ''
-    });
+    this.editUserForm.get('nombreApellido')?.setValue(this.originalData.nombreApellido ?? '');
+    this.editUserForm.get('alias')?.setValue(this.originalData.alias ?? '');
+    this.editUserForm.get('fechaNacimiento')?.setValue(this.reverseDate(this.originalData.fechaNacimiento) ?? '');
+    // this.editUserForm.get('contrasena')?.setValue(this.originalData.contrasena ?? '');
+    if (this.originalData.tipoUsuario != 'ORGANIZACION') {
+      this.editUserForm.get('roles')?.setValue(
+        this.originalData.roles.map((role: any) => {
+          return { id: role.id }
+        })
+      );
+    }
     if (this.originalData.urlImagen) {
       this.originalUserImage = this.originalData.urlImagen;
       this.userImage = this.originalData.urlImagen;
+      this.changedImage = null;
     }
+    this.editUserForm.markAsPristine();
   }
 
   onFileSelected(event: Event) {

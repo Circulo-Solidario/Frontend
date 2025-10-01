@@ -22,7 +22,10 @@ export class LoginService {
 
   getLoggedUser(): Observable<any>{
     const storedUser = localStorage.getItem('loggedUser');
-    return storedUser ? JSON.parse(storedUser) : this.loggedUser.getValue();
+    if(storedUser && !this.loggedUser.value){
+      this.loggedUser.next(JSON.parse(storedUser));
+    }
+    return this.loggedUser$;
   }
 
   logOut(){

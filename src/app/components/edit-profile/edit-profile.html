@@ -7,6 +7,7 @@
         <div class="row mb-4">
           <div class="col-auto image-container text-center">
             <!-- Imagen actual -->
+            @if(userImage){
             <img
               [src]="userImage"
               alt="Imagen de Perfil"
@@ -14,6 +15,9 @@
               height="150"
               width="150"
             />
+            }@else {
+              <i class="pi pi-user" style="font-size: 5rem"></i>
+            }
             <label for="fileInput" class="upload-btn">
               <i class="pi pi-pencil p-2" style="font-size: 2rem"></i>
             </label>
@@ -48,6 +52,15 @@
               placeholder="Ingresa tu nombre y apellido"
               fluid
             />
+            @if (editUserForm.get('nombreApellido')?.invalid &&
+            editUserForm.get('nombreApellido')?.touched &&
+            editUserForm.get('nombreApellido')?.dirty) {
+            <div class="row mt-1">
+              <p-message severity="error" size="small" variant="simple">
+                Ingrese un nombre válido.
+              </p-message>
+            </div>
+            }
           </div>
           <div class="col-12 col-sm-12 col-md-6 mb-4">
             <label for="alias">Alias</label>
@@ -60,6 +73,14 @@
               placeholder="Ingresa tu alias"
               fluid
             />
+            @if (editUserForm.get('alias')?.invalid && editUserForm.get('alias')?.touched &&
+            editUserForm.get('alias')?.dirty) {
+            <div class="row mt-1">
+              <p-message severity="error" size="small" variant="simple">
+                Ingrese un alias válido.
+              </p-message>
+            </div>
+            }
           </div>
         </div>
         <div class="row w-100">
@@ -77,7 +98,7 @@
               fluid
             ></p-date-picker>
           </div>
-          <div class="col-12 col-sm-12 col-md-6 mb-4 password-form">
+          <!-- <div class="col-12 col-sm-12 col-md-6 mb-4 password-form">
             <label for="password">Contraseña</label>
             <p-inputgroup>
               <p-password
@@ -139,9 +160,33 @@
               </p-password>
               <p-button [label]="editPassword? 'Ok' : 'Cambiar'" (onClick)="editPassword = !editPassword" />
             </p-inputgroup>
+          </div> -->
+          @if(!isOrganization){
+          <div class="col-12 col-sm-12 col-md-6 mb-4">
+            <label for="roles">Selecciona los roles que desea tener</label>
+            <div class="text-center">
+              <p-selectbutton
+                class="mt-1"
+                fluid
+                id="roles"
+                formControlName="roles"
+                [options]="userRolesOptions"
+                [multiple]="true"
+                optionLabel="label"
+                optionValue="value"
+              />
+              @if(editUserForm.get('roles')?.invalid && editUserForm.get('roles')?.dirty){
+              <div class="row mt-1">
+                <p-message severity="error" size="small" variant="simple"
+                  >Seleccione al menos un rol.
+                </p-message>
+              </div>
+              }
+            </div>
           </div>
+          }
         </div>
-        @if(!isOrganization){
+        <!-- @if(!isOrganization){
         <div class="row w-100">
           <div class="col-12 col-sm-12 col-md-6 mb-4">
             <label for="roles">Selecciona los roles que desea tener</label>
@@ -150,6 +195,7 @@
                 class="mt-1"
                 fluid
                 id="roles"
+                formControlName="roles"
                 [options]="userRolesOptions"
                 [multiple]="true"
                 optionLabel="label"
@@ -163,11 +209,21 @@
             </div>
           </div>
         </div>
-        }
+        } -->
         <div class="row w-100 justify-content-end">
           <div class="col-auto mt-4">
-            <p-button class="me-4" label="Cancelar" severity="secondary" (onClick)="cancel()" />
-            <p-button label="Guardar" />
+            <p-button
+              class="me-4"
+              label="Cancelar"
+              severity="secondary"
+              (onClick)="cancel()"
+              [disabled]="editUserForm.pristine && !changedImage"
+            />
+            <p-button
+              label="Guardar"
+              (onClick)="onSubmit()"
+              [disabled]="(editUserForm.pristine && !changedImage) || editUserForm.invalid"
+            />
           </div>
         </div>
       </div>

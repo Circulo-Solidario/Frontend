@@ -70,9 +70,9 @@ export class CreateUser implements OnInit {
   userForm: FormGroup;
   charityForm: FormGroup;
   userRolesOptions = [
-    { label: 'Donante', value: { id: 1 } },
-    { label: 'Donatario', value: { id: 2 } },
-    { label: 'Observador', value: { id: 3 } },
+    { label: 'Donante', value: { id: 2 } },
+    { label: 'Donatario', value: { id: 3 } },
+    { label: 'Observador', value: { id: 4 } },
   ];
   activeStep: number = 1;
   typeSelected: number = 1;

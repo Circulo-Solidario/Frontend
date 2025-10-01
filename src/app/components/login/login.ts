@@ -61,7 +61,6 @@ export class Login implements OnInit {
       this.loginService.setLoggedUser(response.usuario);
       this.router.navigate(['/principal']);
     } catch (error) {
-      console.log(error);
       this.toastService.showToast({ severity: 'error', summary: 'Credenciales inválidas', detail: 'Correo y/o contraseña incorrectas' });
     } finally {
       this.onLogin = false;
@@ -70,7 +69,6 @@ export class Login implements OnInit {
 
   async googleLogin() {
     const user = await this.loginGoogleService.loginWithGoogle();
-    console.log(user);
     try {
       const loggedUser = await this.userService.getUserInfo(user.email);
       this.loginService.setLoggedUser(loggedUser);
@@ -84,6 +82,8 @@ export class Login implements OnInit {
             imageUrl: user.photoURL
           }
         });
+      }else{
+        this.toastService.showToast({ severity: 'error', summary: 'Error', detail: 'Intente nuevamente' });
       }
     }
   }

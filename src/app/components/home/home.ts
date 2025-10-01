@@ -56,7 +56,12 @@ export class Home implements OnInit {
   userMenu: MenuItem[] = [];
 
   ngOnInit() {
-    this.loggedUser = this.loginService.getLoggedUser();
+    this.loginService.getLoggedUser().subscribe(
+      (user: any) => {
+        this.loggedUser = user;
+        console.log(this.loggedUser);
+      });
+
     if (this.loggedUser == null) {
       this.router.navigate(['/login']);
     }
@@ -139,7 +144,7 @@ export class Home implements OnInit {
     this.op.toggle(event);
   }
 
-  logOut(){
+  logOut() {
     this.loginService.logOut();
     this.router.navigate(['/login']);
   }

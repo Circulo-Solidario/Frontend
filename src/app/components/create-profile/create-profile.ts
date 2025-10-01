@@ -49,9 +49,9 @@ export class CreateProfile implements OnInit {
   private loginService: LoginService = inject(LoginService);
   toastService: Toasts = inject(Toasts);
   userRolesOptions = [
-    { label: 'Donante', value: { id: 1 } },
-    { label: 'Donatario', value: { id: 2 } },
-    { label: 'Observador', value: { id: 3 } },
+    { label: 'Donante', value: { id: 2 } },
+    { label: 'Donatario', value: { id: 3 } },
+    { label: 'Observador', value: { id: 4 } },
   ];
   charityForm: FormGroup;
   userForm: FormGroup;
