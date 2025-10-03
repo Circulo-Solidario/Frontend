@@ -50,7 +50,7 @@ export class EditProfile {
   userRolesOptions = [
     { label: 'Donante', value: { id: 2 } },
     { label: 'Donatario', value: { id: 3 } },
-    { label: 'Observador', value: { id: 4 } },
+    { label: 'Observador', value: { id: 4 } }
   ];
   id: number = -1;
   imageUrl: string = '';
@@ -109,13 +109,14 @@ export class EditProfile {
     if (this.editUserForm.valid) {
       let editedUser = {
         ...this.editUserForm.value,
-        correo: this.originalData.correo
+        correo: this.originalData.correo,
+        validado: true
       }
       
       if(typeof(editedUser.fechaNacimiento) == 'string'){
-        editedUser.fechaNacimiento = new Date(this.reverseDate(editedUser.fechaNacimiento)).toISOString();
+        editedUser.fechaNacimiento = editedUser.fechaNacimiento ? new Date(this.reverseDate(editedUser.fechaNacimiento)).toISOString() : null;
       }else{
-        editedUser.fechaNacimiento = editedUser.fechaNacimiento.toISOString();
+        editedUser.fechaNacimiento = editedUser.fechaNacimiento ? editedUser.fechaNacimiento.toISOString() : null;
       }      
       
       let errorSavingImage = false;
@@ -141,7 +142,7 @@ export class EditProfile {
           urlImagen: this.originalData.urlImagen
         }
       }
-      console.log(editedUser);
+      
       
       this.userService.editUser(this.id, editedUser).subscribe({
         next: async (data: any) => {

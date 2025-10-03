@@ -144,7 +144,8 @@ export class CreateProfile implements OnInit {
     
     account = {
       correo: this.user.email,
-      activo: true
+      activo: true,
+      validado: false
     }
 
     switch (this.typeSelected) {

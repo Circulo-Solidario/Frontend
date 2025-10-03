@@ -42,8 +42,8 @@ export class Login implements OnInit {
 
   constructor() {
     this.loginForm = new FormGroup({
-      correo: new FormControl('', [Validators.email]),
-      contrasena: new FormControl('')
+      correo: new FormControl('', [Validators.email, Validators.required]),
+      contrasena: new FormControl('', [Validators.required])
     })
   }
 
@@ -52,8 +52,7 @@ export class Login implements OnInit {
       (user: any) =>{
         this.loggedUser = user;
       }
-    );
-    console.log(this.loggedUser);    
+    );    
     if (this.loggedUser != null) {
       this.router.navigate(['/principal']);
     }
@@ -61,6 +60,10 @@ export class Login implements OnInit {
 
   async login() {
     this.onLogin = true;
+    if(!this.loginForm.valid){
+      this.onLogin = false;
+      return
+    }
     try {
       const response = await this.loginService.login(this.loginForm.value);
       this.loginService.setLoggedUser(response.usuario);

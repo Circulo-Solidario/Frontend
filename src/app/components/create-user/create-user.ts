@@ -167,7 +167,8 @@ export class CreateUser implements OnInit {
 
     account = {
       ...account,
-      activo: true
+      activo: true,
+      validado: true
     }
 
     switch (this.typeSelected) {
