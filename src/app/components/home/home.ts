@@ -86,6 +86,7 @@ export class Home implements OnInit {
           {
             label: 'Publicar producto',
             icon: 'pi pi-plus',
+            routerLink: '/principal/crear-producto'
           },
           {
             label: 'Ver solicitudes',

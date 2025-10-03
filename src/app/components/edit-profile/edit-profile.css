@@ -4,6 +4,10 @@
   }
 }
 
+.go-back-buttom{
+  cursor: pointer;
+}
+
 .main-container{
     padding: 2vh 2vw !important;
     height: max-content;

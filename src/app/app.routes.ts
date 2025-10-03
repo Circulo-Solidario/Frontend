@@ -10,6 +10,10 @@ export const routes: Routes = [
         children: [{
             path: 'editar-perfil',
             loadComponent: () => import('./components/edit-profile/edit-profile').then(m => m.EditProfile)
+        },
+        {
+            path: 'crear-producto',
+            loadComponent: () => import('./components/create-product/create-product').then(m => m.CreateProduct)
         }
         ]
     },

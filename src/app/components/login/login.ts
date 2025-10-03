@@ -59,6 +59,7 @@ export class Login implements OnInit {
   }
 
   async login() {
+    this.loginForm.markAsTouched();
     this.onLogin = true;
     if(!this.loginForm.valid){
       this.onLogin = false;

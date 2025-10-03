@@ -105,6 +105,10 @@ export class EditProfile {
     }
   }
 
+  goHome(){
+    this.router.navigate(['/principal']);
+  }
+
   async onSubmit() {
     if (this.editUserForm.valid) {
       let editedUser = {

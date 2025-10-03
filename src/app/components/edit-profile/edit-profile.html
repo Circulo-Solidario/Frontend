@@ -1,7 +1,7 @@
-<!-- profile-edit.component.html -->
 <div class="main-container container-fluid">
   <div class="col-auto justify-content-center align-content-center h-100">
-    <h1 class="my-2">Editar Perfil</h1>
+    <h1 class="d-flex my-2 align-items-center">
+      <i class="pi pi-chevron-left me-3 go-back-buttom" (click)="goHome()"></i> Editar Perfil</h1>
     <p-card>
       <div class="p-fluid" [formGroup]="editUserForm">
         <div class="row mb-4 profile-data">
