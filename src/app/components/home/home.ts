@@ -56,7 +56,11 @@ export class Home implements OnInit {
   userMenu: MenuItem[] = [];
 
   ngOnInit() {
-    this.loggedUser = this.loginService.getLoggedUser();
+    this.loginService.getLoggedUser().subscribe(
+      (user: any) => {
+        this.loggedUser = user;
+      });
+
     if (this.loggedUser == null) {
       this.router.navigate(['/login']);
     }
@@ -64,6 +68,7 @@ export class Home implements OnInit {
       {
         label: 'Perfil',
         icon: 'pi pi-user',
+        routerLink: '/principal/editar-perfil'
       },
       {
         label: 'Cerrar sesión',
@@ -138,7 +143,17 @@ export class Home implements OnInit {
     this.op.toggle(event);
   }
 
-  logOut(){
+  goHome(){
+    this.router.navigate(['/principal']);
+    this.visible = false;
+  }
+
+  goEditProfile(){
+    this.router.navigate(['/principal/editar-perfil']);
+    this.visible = false;
+  }
+
+  logOut() {
     this.loginService.logOut();
     this.router.navigate(['/login']);
   }

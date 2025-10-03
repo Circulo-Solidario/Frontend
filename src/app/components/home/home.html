@@ -107,7 +107,7 @@
       <p-button (click)="visible = true" styleClass="p-button-text d-sm-none">
         <i class="pi pi-bars"></i>
       </p-button>
-      <span class="ms-2 fs-5 d-none d-sm-block"> Círculo solidario </span>
+      <span class="ms-2 fs-5 d-none d-sm-block home-button" (click)="goHome()"> Círculo solidario </span>
     </ng-template>
     <ng-template #center>
       <div class="toolbar-center">
@@ -176,7 +176,7 @@
       </div>
     </ng-template>
   </p-toolbar>
-  <p-drawer [(visible)]="visible" [closable]="false">
+  <p-drawer [(visible)]="visible" [closable]="false" (onHide)="visible = false">
     <ng-template #header>
       <div class="gap-2 d-flex" style="align-items: center">
         <svg
@@ -279,7 +279,7 @@
             />
           </g>
         </svg>
-        <p class="ms-2 my-0 fs-4">Círculo solidario</p>
+        <p class="ms-2 my-0 fs-4" (click)="goHome()">Círculo solidario</p>
         <div class="ms-2">
           <app-theme-switcher />
         </div>
@@ -299,7 +299,7 @@
     </p-panelmenu>
     <ng-template #footer>
       <div class="d-flex justify-content-center gap-5" style="align-items: center">
-        <p-button [label]="loggedUser.alias" fluid>
+        <p-button [label]="loggedUser.alias" (onClick)="goEditProfile()" fluid>
           <p-avatar
             [icon]="loggedUser.urlImagen ? '' : 'pi pi-user fs-6'"
             [image]="loggedUser.urlImagen ? loggedUser.urlImagen : ''"
@@ -307,9 +307,8 @@
             shape="circle"
           />
         </p-button>
-        <p-button label="Cerrar sesión" (click)="logOut()" icon="pi pi-sign-out" fluid />
+        <p-button label="Cerrar sesión" (click)="logOut()" icon="pi pi-sign-out" fluid/>
       </div>
-      <div class="flex items-center gap-2"></div>
     </ng-template>
   </p-drawer>
   <div class="main-content" [class.expanded]="isCollapsed">
@@ -352,7 +351,7 @@
         </ng-template>
       </p-tieredmenu>
     </div>
-    <div class="components-content container-fluid p-0 py-2">
+    <div class="components-content container-fluid p-0">
       <router-outlet />
     </div>
   </div>

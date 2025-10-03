@@ -42,13 +42,17 @@ export class Login implements OnInit {
 
   constructor() {
     this.loginForm = new FormGroup({
-      correo: new FormControl('', [Validators.email]),
-      contrasena: new FormControl('')
+      correo: new FormControl('', [Validators.email, Validators.required]),
+      contrasena: new FormControl('', [Validators.required])
     })
   }
 
   ngOnInit(): void {
-    this.loggedUser = this.loginService.getLoggedUser();
+    this.loginService.getLoggedUser().subscribe(
+      (user: any) =>{
+        this.loggedUser = user;
+      }
+    );    
     if (this.loggedUser != null) {
       this.router.navigate(['/principal']);
     }
@@ -56,12 +60,15 @@ export class Login implements OnInit {
 
   async login() {
     this.onLogin = true;
+    if(!this.loginForm.valid){
+      this.onLogin = false;
+      return
+    }
     try {
       const response = await this.loginService.login(this.loginForm.value);
       this.loginService.setLoggedUser(response.usuario);
       this.router.navigate(['/principal']);
     } catch (error) {
-      console.log(error);
       this.toastService.showToast({ severity: 'error', summary: 'Credenciales inválidas', detail: 'Correo y/o contraseña incorrectas' });
     } finally {
       this.onLogin = false;
@@ -70,7 +77,6 @@ export class Login implements OnInit {
 
   async googleLogin() {
     const user = await this.loginGoogleService.loginWithGoogle();
-    console.log(user);
     try {
       const loggedUser = await this.userService.getUserInfo(user.email);
       this.loginService.setLoggedUser(loggedUser);
@@ -84,6 +90,8 @@ export class Login implements OnInit {
             imageUrl: user.photoURL
           }
         });
+      }else{
+        this.toastService.showToast({ severity: 'error', summary: 'Error', detail: 'Intente nuevamente' });
       }
     }
   }

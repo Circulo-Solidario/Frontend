@@ -70,9 +70,9 @@ export class CreateUser implements OnInit {
   userForm: FormGroup;
   charityForm: FormGroup;
   userRolesOptions = [
-    { label: 'Donante', value: { id: 1 } },
-    { label: 'Donatario', value: { id: 2 } },
-    { label: 'Observador', value: { id: 3 } },
+    { label: 'Donante', value: { id: 2 } },
+    { label: 'Donatario', value: { id: 3 } },
+    { label: 'Observador', value: { id: 4 } },
   ];
   activeStep: number = 1;
   typeSelected: number = 1;
@@ -125,9 +125,13 @@ export class CreateUser implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.logginService.getLoggedUser() != null) {
-      this.router.navigate(['/principal']);
-    }
+    this.logginService.getLoggedUser().subscribe(
+      (user: any) => {
+        if (user != null) {
+          this.router.navigate(['/principal']);
+        }
+      }
+    );
   }
 
   setImage(fileSelected: FileSelectEvent) {
@@ -163,7 +167,8 @@ export class CreateUser implements OnInit {
 
     account = {
       ...account,
-      activo: true
+      activo: true,
+      validado: true
     }
 
     switch (this.typeSelected) {

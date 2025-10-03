@@ -21,4 +21,8 @@ export class Users {
   async getUserInfo(email: string): Promise<any>{
     return await firstValueFrom(this.httpCliente.get(`${environment.apiUrl}${this.apiPath}/info/${email}`));
   }
+
+  editUser(id: number, user:any): Observable<any>{
+    return this.httpCliente.put(`${environment.apiUrl}${this.apiPath}/${id}`, user); 
+  }
 }

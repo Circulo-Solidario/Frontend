@@ -44,15 +44,10 @@
               />
               @if (loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched &&
               loginForm.get('correo')?.dirty) {
-              @if(loginForm.get('correo')?.getError('emailExists')){
-              <p-message severity="error" size="small" variant="simple">
-                Existe una cuenta con ese correo.
-              </p-message>
-              }@else {
-              <p-message severity="error" size="small" variant="simple">
-                Ingrese un mail válido.
-              </p-message>
-              } }
+                <p-message severity="error" size="small" variant="simple">
+                Ingrese un mail.
+                </p-message>
+              }
             </div>
             <div
               class="mt-4"
@@ -82,7 +77,7 @@
               @if (loginForm.get('contrasena')?.invalid && loginForm.get('contrasena')?.touched &&
               loginForm.get('contrasena')?.dirty) {
               <p-message severity="error" size="small" variant="simple"
-                >Ingrese una contraseña válida.</p-message
+                >Ingrese una contraseña.</p-message
               >
               }
             </div>

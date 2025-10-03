@@ -30,6 +30,10 @@
 #logo {
     fill: var(--p-primary-color);
 }
+
+.home-button{
+    cursor: pointer;
+}
 /* #endregion */
 
 /*#region Toolbar*/
@@ -131,34 +135,38 @@
     border-color: var(--p-content-background);
 }
 
-::ng-deep p-tieredmenu{
+::ng-deep .sidebar p-tieredmenu{
     display: flex;
     width: min-content;
 }
 
-::ng-deep p-tieredmenusub{
+::ng-deep .sidebar p-tieredmenusub{
     display: flex;
 }
 
-::ng-deep .p-tieredmenu {
+::ng-deep .sidebar .p-tieredmenu {
     border-color: var(--p-content-background);
     min-width: max-content;
 }
 
-::ng-deep .ng-trigger{
+::ng-deep .sidebar .ng-trigger{
     display: flex;
 }
 
-::ng-deep .p-menu-start{
+::ng-deep .header-toolbar .ng-trigger{
+    display: flex;
+}
+
+::ng-deep .header-toolbar .p-menu-start{
     padding: .75rem;
 }
 
-::ng-deep .p-tieredmenu-root-list{
+::ng-deep .sidebar .p-tieredmenu-root-list{
     gap: 1rem;
     max-width: max-content;
 }
 
-::ng-deep p-toolbar {
+::ng-deep p-toolbar.header-toolbar {
     border-radius: 0;
     border-color: var(--p-content-background);
 }
@@ -167,13 +175,27 @@
     width: 100%;
 }
 
-::ng-deep .p-menu-overlay{
+::ng-deep .header-toolbar .p-menu-overlay{
     display: block;
     justify-content: center;
     min-width: max-content;
 }
 
-::ng-deep .p-ripple.p-button {
+::ng-deep .header-toolbar .p-ripple.p-button {
+    padding: 0 !important;
+    background-color: transparent;
+    border: 0;
+    color: var(--p-text-color);
+}
+
+::ng-deep .sidebar .p-ripple.p-button {
+    padding: 0 !important;
+    background-color: transparent;
+    border: 0;
+    color: var(--p-text-color);
+}
+
+::ng-deep .p-drawer-footer .p-ripple.p-button {
     padding: 0 !important;
     background-color: transparent;
     border: 0;
