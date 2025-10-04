@@ -1,37 +1,24 @@
-<!-- profile-edit.component.html -->
 <div class="main-container container-fluid">
   <div class="col-auto justify-content-center align-content-center h-100">
-    <h1 class="my-2">Editar Perfil</h1>
+    <h1 class="d-flex my-2 align-items-center mb-4">
+      <i class="pi pi-chevron-left me-3 go-back-buttom" (click)="goHome()"></i> Editar Perfil
+    </h1>
     <p-card>
-      <div class="p-fluid" [formGroup]="editUserForm">
+      <div class="p-fluid p-4" [formGroup]="editUserForm">
         <div class="row mb-4 profile-data">
           <div class="col-auto image-container text-center">
             <!-- Imagen actual -->
             @if(userImage){
-            <img
-              [src]="userImage"
-              alt="Imagen de Perfil"
-              class="p-shadow-3 profile-img"
-              height="150"
-              width="150"
-            />
+            <img [src]="userImage" alt="Imagen de Perfil" class="p-shadow-3 profile-img" height="150" width="150" />
             }@else {
-              <i class="pi pi-user" style="font-size: 5rem"></i>
+            <i class="pi pi-user" style="font-size: 5rem"></i>
             }
             <label for="fileInput" class="upload-btn">
               <i class="pi pi-pencil p-2" style="font-size: 2rem"></i>
             </label>
-            <input
-              id="fileInput"
-              type="file"
-              accept="image/*"
-              (change)="onFileSelected($event)"
-              hidden
-            />
+            <input id="fileInput" type="file" accept=".jpg,.png,.jpeg" (change)="onFileSelected($event)" hidden />
           </div>
-          <div
-            class="col-auto justify-content-center align-content-center align-items-center text-start"
-          >
+          <div class="col-auto justify-content-center align-content-center align-items-center text-start">
             <h2 class="m-0">{{ this.editUserForm.get('nombreApellido')?.value ?? '' }}</h2>
             <h4 class="m-0 text-secondary">{{ this.editUserForm.get('alias')?.value ?? '' }}</h4>
             <h4 class="m-0 text-secondary">{{ this.originalData.correo ?? '' }}</h4>
@@ -42,16 +29,9 @@
           <div class="col-12 col-sm-12 col-md-6 mb-4">
             <label for="fullName">{{
               isOrganization ? 'Nombre de la organización' : 'Nombre y apellido'
-            }}</label>
-            <input
-              class="w-100"
-              id="fullName"
-              type="text"
-              pInputText
-              formControlName="nombreApellido"
-              placeholder="Ingresa tu nombre y apellido"
-              fluid
-            />
+              }}<span style="color: red;">&ensp;*</span></label>
+            <input class="w-100" id="fullName" type="text" pInputText formControlName="nombreApellido"
+              placeholder="Ingresa tu nombre y apellido" fluid />
             @if (editUserForm.get('nombreApellido')?.invalid &&
             editUserForm.get('nombreApellido')?.touched &&
             editUserForm.get('nombreApellido')?.dirty) {
@@ -63,16 +43,9 @@
             }
           </div>
           <div class="col-12 col-sm-12 col-md-6 mb-4">
-            <label for="alias">Alias</label>
-            <input
-              class="w-100"
-              id="alias"
-              type="text"
-              pInputText
-              formControlName="alias"
-              placeholder="Ingresa tu alias"
-              fluid
-            />
+            <label for="alias">Alias<span style="color: red;">&ensp;*</span></label>
+            <input class="w-100" id="alias" type="text" pInputText formControlName="alias"
+              placeholder="Ingresa tu alias" fluid />
             @if (editUserForm.get('alias')?.invalid && editUserForm.get('alias')?.touched &&
             editUserForm.get('alias')?.dirty) {
             <div class="row mt-1">
@@ -87,17 +60,9 @@
           <div class="col-12 col-sm-12 col-md-6 mb-4">
             <label for="birthDate">{{
               isOrganization ? 'Fecha de fundación' : 'Fecha de Nacimiento'
-            }}</label>
-            <p-datepicker
-              [maxDate]="today"
-              class="mt-1"
-              id="birthDate"
-              formControlName="fechaNacimiento"
-              dateFormat="dd/mm/yy"
-              [showIcon]="true"
-              inputId="icon"
-              fluid
-            ></p-datepicker>
+              }}</label>
+            <p-datepicker [maxDate]="today" class="mt-1" id="birthDate" formControlName="fechaNacimiento"
+              dateFormat="dd/mm/yy" [showIcon]="true" inputId="icon" fluid></p-datepicker>
           </div>
           <!-- <div class="col-12 col-sm-12 col-md-6 mb-4 password-form">
             <label for="password">Contraseña</label>
@@ -164,22 +129,13 @@
           </div> -->
           @if(!isOrganization){
           <div class="col-12 col-sm-12 col-md-6 mb-4">
-            <label for="roles">Selecciona los roles que desea tener</label>
+            <label for="roles">Selecciona los roles que desea tener<span style="color: red;">&ensp;*</span></label>
             <div class="text-center">
-              <p-selectbutton
-                class="mt-1"
-                fluid
-                id="roles"
-                formControlName="roles"
-                [options]="userRolesOptions"
-                [multiple]="true"
-                optionLabel="label"
-                optionValue="value"
-              />
+              <p-selectbutton class="mt-1" fluid id="roles" formControlName="roles" [options]="userRolesOptions"
+                [multiple]="true" optionLabel="label" optionValue="value" />
               @if(editUserForm.get('roles')?.invalid && editUserForm.get('roles')?.dirty){
               <div class="row mt-1">
-                <p-message severity="error" size="small" variant="simple"
-                  >Seleccione al menos un rol.
+                <p-message severity="error" size="small" variant="simple">Seleccione al menos un rol.
                 </p-message>
               </div>
               }
@@ -213,18 +169,10 @@
         } -->
         <div class="row w-100 justify-content-end">
           <div class="col-auto mt-4">
-            <p-button
-              class="me-4"
-              label="Cancelar"
-              severity="secondary"
-              (onClick)="cancel()"
-              [disabled]="editUserForm.pristine && !changedImage"
-            />
-            <p-button
-              label="Guardar"
-              (onClick)="onSubmit()"
-              [disabled]="(editUserForm.pristine && !changedImage) || editUserForm.invalid"
-            />
+            <p-button class="me-4" label="Cancelar" severity="secondary" (onClick)="cancel()"
+              [disabled]="editUserForm.pristine && !changedImage" />
+            <p-button label="Guardar" (onClick)="onSubmit()"
+              [disabled]="(editUserForm.pristine && !changedImage) || editUserForm.invalid" />
           </div>
         </div>
       </div>

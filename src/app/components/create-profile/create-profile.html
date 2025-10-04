@@ -26,7 +26,7 @@
               <div class="form-scroll-wrapper justify-content-center align-items-center">
                 <form class="mb-0 mt-2 mx-1" [formGroup]="userForm">
                   <div class="mb-4">
-                    <label class="form-label" for="nombreApellido">Nombre y apellido</label>
+                    <label class="form-label" for="nombreApellido">Nombre y apellido<span style="color: red;">&ensp;*</span></label>
                     <input
                       class="w-100 mt-1"
                       id="nombreApellido"
@@ -50,7 +50,7 @@
                     }
                   </div>
                   <div class="mb-4">
-                    <label class="form-label" for="alias">Alias</label>
+                    <label class="form-label" for="alias">Alias<span style="color: red;">&ensp;*</span></label>
                     <input
                       class="w-100 mt-1"
                       id="alias"
@@ -94,7 +94,7 @@
                       id="userImage"
                       styleClass="mt-1 w-100"
                       [multiple]="false"
-                      accept="image/*"
+                      accept=".jpg,.png,.jpeg"
                       maxFileSize="1000000"
                       mode="advanced"
                       (onSelect)="setImage($event)"
@@ -178,7 +178,7 @@
                     </p-fileupload>
                   </div>
                   <div>
-                    <label for="roles">Selecciona los roles que desea tener</label>
+                    <label for="roles">Selecciona los roles que desea tener<span style="color: red;">&ensp;*</span></label>
                     <div class="text-center">
                       <p-selectbutton
                         class="mt-1"
@@ -206,7 +206,7 @@
                 <form class="mb-0 mt-2 mx-1" [formGroup]="charityForm">
                   <div class="mb-4">
                     <label class="form-label" for="nombreApellido"
-                      >Nombre de la organización
+                      >Nombre de la organización<span style="color: red;">&ensp;*</span>
                     </label>
                     <input
                       class="w-100 mt-1"
@@ -230,7 +230,7 @@
                     }
                   </div>
                   <div class="mb-4">
-                    <label class="form-label" for="alias">Alias</label>
+                    <label class="form-label" for="alias">Alias<span style="color: red;">&ensp;*</span></label>
                     <input
                       class="w-100 mt-1"
                       id="alias"
@@ -273,7 +273,7 @@
                       id="userImage"
                       styleClass="mt-1"
                       [multiple]="false"
-                      accept="image/*"
+                      accept=".jpg,.png,.jpeg"
                       maxFileSize="1000000"
                       mode="advanced"
                       (onSelect)="setImage($event)"

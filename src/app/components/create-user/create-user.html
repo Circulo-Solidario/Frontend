@@ -54,7 +54,7 @@
                 <div class="form-scroll-wrapper justify-content-center align-items-center">
                   <form class="me-2 mb-0 mt-2" [formGroup]="accountForm">
                     <div class="mb-4">
-                      <label class="form-label" for="correo">Correo electrónico</label>
+                      <label class="form-label" for="correo">Correo electrónico<span style="color: red;">&ensp;*</span></label>
                       <input
                         class="w-100 mt-1"
                         id="correo"
@@ -81,7 +81,7 @@
                       } }
                     </div>
                     <div class="my-4">
-                      <label class="form-label" for="contrasena">Contraseña</label>
+                      <label class="form-label" for="contrasena">Contraseña<span style="color: red;">&ensp;*</span></label>
                       <p-password
                         class="mt-1"
                         id="contrasena"
@@ -148,7 +148,7 @@
                       }
                     </div>
                     <div class="mt-4">
-                      <label class="form-label" for="confirm-password">Confirmar contraseña</label>
+                      <label class="form-label" for="confirm-password">Confirmar contraseña<span style="color: red;">&ensp;*</span></label>
                       <p-password
                         class="mt-1"
                         id="confirm-password"
@@ -202,7 +202,7 @@
                       <div class="form-scroll-wrapper justify-content-center align-items-center">
                         <form class="mb-0 mt-2 mx-1" [formGroup]="userForm">
                           <div class="mb-4">
-                            <label class="form-label" for="nombreApellido">Nombre y apellido</label>
+                            <label class="form-label" for="nombreApellido">Nombre y apellido<span style="color: red;">&ensp;*</span></label>
                             <input
                               class="w-100 mt-1"
                               id="nombreApellido"
@@ -226,7 +226,7 @@
                             }
                           </div>
                           <div class="mb-4">
-                            <label class="form-label" for="alias">Alias</label>
+                            <label class="form-label" for="alias">Alias<span style="color: red;">&ensp;*</span></label>
                             <input
                               class="w-100 mt-1"
                               id="alias"
@@ -336,7 +336,7 @@
                             </p-fileupload>
                           </div>
                           <div>
-                            <label for="roles">Selecciona los roles que desea tener</label>
+                            <label for="roles">Selecciona los roles que desea tener<span style="color: red;">&ensp;*</span></label>
                             <div class="text-center">
                               <p-selectbutton
                                 class="mt-1"
@@ -366,7 +366,7 @@
                         <form class="mb-0 mt-2 mx-1" [formGroup]="charityForm">
                           <div class="mb-4">
                             <label class="form-label" for="nombreApellido"
-                              >Nombre de la organización
+                              >Nombre de la organización<span style="color: red;">&ensp;*</span>
                             </label>
                             <input
                               class="w-100 mt-1"
@@ -390,7 +390,7 @@
                             }
                           </div>
                           <div class="mb-4">
-                            <label class="form-label" for="alias">Alias</label>
+                            <label class="form-label" for="alias">Alias<span style="color: red;">&ensp;*</span></label>
                             <input
                               class="w-100 mt-1"
                               id="alias"

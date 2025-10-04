@@ -21,9 +21,7 @@
             <div
               class="mb-4"
               [ngClass]="[
-                loginForm.get('correo')?.invalid &&
-                loginForm.get('correo')?.touched &&
-                loginForm.get('correo')?.dirty
+                loginForm.invalid && loginForm.touched
                   ? ''
                   : 'pb-2'
               ]"
@@ -37,13 +35,10 @@
                 type="email"
                 formControlName="correo"
                 [invalid]="
-                  loginForm.get('correo')?.invalid &&
-                  loginForm.get('correo')?.touched &&
-                  loginForm.get('correo')?.dirty
+                  loginForm.invalid && loginForm.touched
                 "
               />
-              @if (loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched &&
-              loginForm.get('correo')?.dirty) {
+              @if (loginForm.invalid && loginForm.touched) {
                 <p-message severity="error" size="small" variant="simple">
                 Ingrese un mail.
                 </p-message>
@@ -52,9 +47,7 @@
             <div
               class="mt-4"
               [ngClass]="[
-                loginForm.get('contrasena')?.invalid &&
-                loginForm.get('contrasena')?.touched &&
-                loginForm.get('contrasena')?.dirty
+                loginForm.invalid && loginForm.touched
                   ? ''
                   : 'pb-2'
               ]"
@@ -69,13 +62,10 @@
                 [toggleMask]="true"
                 fluid
                 [invalid]="
-                  loginForm.get('contrasena')?.invalid &&
-                  loginForm.get('contrasena')?.touched &&
-                  loginForm.get('contrasena')?.dirty
+                  loginForm.invalid && loginForm.touched
                 "
               />
-              @if (loginForm.get('contrasena')?.invalid && loginForm.get('contrasena')?.touched &&
-              loginForm.get('contrasena')?.dirty) {
+              @if (loginForm.invalid && loginForm.touched) {
               <p-message severity="error" size="small" variant="simple"
                 >Ingrese una contraseña.</p-message
               >
@@ -93,7 +83,7 @@
             <p-button
               styleClass="w-100"
               (onClick)="login()"
-              [disabled]="!loginForm.valid || onLogin"
+              [disabled]="onLogin"
             >
               Iniciar sesión @if(onLogin){<i class="pi pi-spin pi-spinner"></i>}
             </p-button>

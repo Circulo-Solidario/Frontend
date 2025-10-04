@@ -1,7 +1,7 @@
 <div class="main-container">
   <p-toolbar class="header-toolbar">
     <ng-template #start>
-      <p-button (click)="toggleSidebar()" styleClass="p-button-text d-none d-sm-block p-0">
+      <p-button (click)="toggleSidebar()" styleClass="p-button-text d-none d-sm-block p-0 ms-3">
         <svg
           id="logo"
           class="d-none d-sm-block"
@@ -287,7 +287,7 @@
     </ng-template>
     <p-panelmenu [model]="menu" class="gap-2 d-flex justify-content-end">
       <ng-template #item let-item>
-        <div class="py-2 sidebar-button flex items-center">
+        <div class="py-2 sidebar-button flex items-center" >
           <a class="items-center">
             <i [class]="item.icon + ' text-inherit'" style="font-size: 1.2rem"></i>
             <span class="ms-2 sidebar-text">
@@ -329,7 +329,7 @@
           </div>
         </ng-template>
       </p-panelmenu> -->
-      <p-tieredmenu [model]="menu" class="gap-2 p-0 mt-2">
+      <p-tieredmenu [model]="menu">
         <ng-template #item let-item>
           <div class="sidebar-button">
             <p-button
@@ -337,12 +337,12 @@
               [styleClass]="fullyCollapsed ? 'justify-content-start' : 'justify-content-start'"
             >
               <i
-                [class.ms-1]="!fullyCollapsed"
-                [class]="item.icon + ' text-inherit p-1'"
+                
+                [class]="item.icon + ' text-inherit m-3'"
                 style="font-size: 1.4rem"
               ></i>
               @if(!item.items || (item.items && !isCollapsed)){
-              <span class="ms-2 my-1 me-4 sidebar-text text-start align-middle">
+              <span class="pe-4 sidebar-text text-start align-middle">
                 {{ item.label }}
               </span>
               }

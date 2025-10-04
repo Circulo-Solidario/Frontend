@@ -1,6 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
 import { Button } from 'primeng/button';
 import { Card } from 'primeng/card';
 import { DatePicker, DatePickerModule } from 'primeng/datepicker';
@@ -31,10 +40,10 @@ import { InputMask } from 'primeng/inputmask';
     InputGroupModule,
     InputGroupAddonModule,
     SelectButton,
-    Message
+    Message,
   ],
   templateUrl: './edit-profile.html',
-  styleUrl: './edit-profile.css'
+  styleUrl: './edit-profile.css',
 })
 export class EditProfile {
   private loginService: LoginService = inject(LoginService);
@@ -50,7 +59,7 @@ export class EditProfile {
   userRolesOptions = [
     { label: 'Donante', value: { id: 2 } },
     { label: 'Donatario', value: { id: 3 } },
-    { label: 'Observador', value: { id: 4 } }
+    { label: 'Observador', value: { id: 4 } },
   ];
   id: number = -1;
   imageUrl: string = '';
@@ -65,10 +74,7 @@ export class EditProfile {
         Validators.minLength(3),
         Validators.maxLength(25),
       ]),
-      alias: new FormControl('', [
-        Validators.minLength(3),
-        Validators.maxLength(25)
-      ]),
+      alias: new FormControl('', [Validators.minLength(3), Validators.maxLength(25)]),
       fechaNacimiento: new FormControl(''),
       // contrasena: new FormControl('', [
       //   Validators.required,
@@ -80,9 +86,7 @@ export class EditProfile {
   }
 
   ngOnInit(): void {
-    this.loginService.getLoggedUser().subscribe(
-      (user) => this.originalData = user
-    );
+    this.loginService.getLoggedUser().subscribe((user) => (this.originalData = user));
     if (!this.originalData) {
       this.router.navigate(['/login']);
     }
@@ -94,15 +98,28 @@ export class EditProfile {
     this.editUserForm.setValue({
       nombreApellido: this.originalData.nombreApellido ?? '',
       alias: this.originalData.alias ?? '',
-      fechaNacimiento: this.originalData.fechaNacimiento != null ? this.reverseDate(this.originalData.fechaNacimiento) : '',
+      fechaNacimiento:
+        this.originalData.fechaNacimiento != null
+          ? this.reverseDate(this.originalData.fechaNacimiento)
+          : '',
       // contrasena: this.originalData.contrasena ?? ''
     });
     if (this.originalData.tipoUsuario != 'ORGANIZACION') {
       this.isOrganization = false;
-      this.editUserForm.addControl('roles', new FormControl(this.originalData.roles.map((role: any) => {
-        return { id: role.id }
-      }), [Validators.required]));
+      this.editUserForm.addControl(
+        'roles',
+        new FormControl(
+          this.originalData.roles.map((role: any) => {
+            return { id: role.id };
+          }),
+          [Validators.required]
+        )
+      );
     }
+  }
+
+  goHome() {
+    this.router.navigate(['/principal']);
   }
 
   async onSubmit() {
@@ -110,48 +127,55 @@ export class EditProfile {
       let editedUser = {
         ...this.editUserForm.value,
         correo: this.originalData.correo,
-        validado: true
+        validado: true,
+      };
+
+      if (typeof editedUser.fechaNacimiento == 'string') {
+        editedUser.fechaNacimiento = editedUser.fechaNacimiento
+          ? new Date(this.reverseDate(editedUser.fechaNacimiento)).toISOString()
+          : null;
+      } else {
+        editedUser.fechaNacimiento = editedUser.fechaNacimiento
+          ? editedUser.fechaNacimiento.toISOString()
+          : null;
       }
-      
-      if(typeof(editedUser.fechaNacimiento) == 'string'){
-        editedUser.fechaNacimiento = editedUser.fechaNacimiento ? new Date(this.reverseDate(editedUser.fechaNacimiento)).toISOString() : null;
-      }else{
-        editedUser.fechaNacimiento = editedUser.fechaNacimiento ? editedUser.fechaNacimiento.toISOString() : null;
-      }      
-      
+
       let errorSavingImage = false;
       if (this.changedImage) {
         const image: ImagePost = {
-          image: this.changedImage
-        }
+          image: this.changedImage,
+        };
         try {
           const response = await this.imageService.uploadImage(image);
           this.imageUrl = response.data.url;
         } catch (error) {
           errorSavingImage = true;
         }
-      };
+      }
       if (this.imageUrl != '') {
         editedUser = {
           ...editedUser,
-          urlImagen: this.imageUrl
-        }
+          urlImagen: this.imageUrl,
+        };
       } else {
         editedUser = {
           ...editedUser,
-          urlImagen: this.originalData.urlImagen
-        }
+          urlImagen: this.originalData.urlImagen,
+        };
       }
-      
-      
+
       this.userService.editUser(this.id, editedUser).subscribe({
         next: async (data: any) => {
           this.toastService.showToast({
-            severity: 'success', summary: 'Datos editados!', detail: 'Se editaron los datos del usuario correctamente'
+            severity: 'success',
+            summary: 'Datos editados!',
+            detail: 'Se editaron los datos del usuario correctamente',
           });
           if (errorSavingImage) {
             this.toastService.showToast({
-              severity: 'error', summary: 'Error al editar imagen', detail: 'No se pudo actualizar la imagen, intente nuevamente...'
+              severity: 'error',
+              summary: 'Error al editar imagen',
+              detail: 'No se pudo actualizar la imagen, intente nuevamente...',
             });
           }
           this.loginService.setLoggedUser(data);
@@ -160,30 +184,32 @@ export class EditProfile {
         },
         error: () => {
           this.toastService.showToast({
-            severity: 'error', summary: 'Error al editar usuario', detail: 'No se pudo actualizar los datos del usuario...'
+            severity: 'error',
+            summary: 'Error al editar usuario',
+            detail: 'No se pudo actualizar los datos del usuario...',
           });
-        }
-      })
-
+        },
+      });
     }
-
   }
 
   reverseDate(date: string): string {
     const symbol = date.includes('/');
-    const parts = date.split(symbol? '/' : '-'); 
-    return `${parts[2]}/${parts[1]}/${parts[0]}`
+    const parts = date.split(symbol ? '/' : '-');
+    return `${parts[2]}/${parts[1]}/${parts[0]}`;
   }
 
   cancel() {
     this.editUserForm.get('nombreApellido')?.setValue(this.originalData.nombreApellido ?? '');
     this.editUserForm.get('alias')?.setValue(this.originalData.alias ?? '');
-    this.editUserForm.get('fechaNacimiento')?.setValue(this.reverseDate(this.originalData.fechaNacimiento) ?? '');
+    this.editUserForm
+      .get('fechaNacimiento')
+      ?.setValue(this.reverseDate(this.originalData.fechaNacimiento) ?? '');
     // this.editUserForm.get('contrasena')?.setValue(this.originalData.contrasena ?? '');
     if (this.originalData.tipoUsuario != 'ORGANIZACION') {
       this.editUserForm.get('roles')?.setValue(
         this.originalData.roles.map((role: any) => {
-          return { id: role.id }
+          return { id: role.id };
         })
       );
     }
@@ -197,14 +223,19 @@ export class EditProfile {
 
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
+    if (input.files && input.files[0] && '|image/jpg|image/jpeg|image/png|'.includes(input.files[0].type)) {
       this.changedImage = input.files[0];
-
       const reader = new FileReader();
-      reader.onload = e => {
+      reader.onload = (e) => {
         this.userImage = e.target?.result as string;
       };
       reader.readAsDataURL(this.changedImage);
+    } else {
+      this.toastService.showToast({
+        severity: 'error',
+        summary: 'Formato de imagen inválido',
+        detail: 'Formatos admitidos: jpg, png o jpeg',
+      });
     }
   }
 
@@ -227,5 +258,4 @@ export class EditProfile {
       return Object.keys(errors).length > 0 ? errors : null;
     };
   }
-
 }
