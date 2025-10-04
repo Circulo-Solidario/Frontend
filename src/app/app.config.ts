@@ -29,7 +29,7 @@ export const appConfig: ApplicationConfig = {
           cssLayer: {
             enabeld: true,
             name: 'primeng',
-            order: 'primeng',
+            order: 'reset, primeng, component',
           },
         },
       },

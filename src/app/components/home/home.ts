@@ -38,7 +38,7 @@ import { Chip } from 'primeng/chip';
     OverlayBadge,
     Popover,
     Menu,
-    Badge
+    Badge,
   ],
   templateUrl: './home.html',
   styleUrl: './home.css',
@@ -56,10 +56,9 @@ export class Home implements OnInit {
   userMenu: MenuItem[] = [];
 
   ngOnInit() {
-    this.loginService.getLoggedUser().subscribe(
-      (user: any) => {
-        this.loggedUser = user;
-      });
+    this.loginService.getLoggedUser().subscribe((user: any) => {
+      this.loggedUser = user;
+    });
 
     if (this.loggedUser == null) {
       this.router.navigate(['/login']);
@@ -68,7 +67,7 @@ export class Home implements OnInit {
       {
         label: 'Perfil',
         icon: 'pi pi-user',
-        routerLink: '/principal/editar-perfil'
+        routerLink: '/principal/editar-perfil',
       },
       {
         label: 'Cerrar sesión',
@@ -86,7 +85,10 @@ export class Home implements OnInit {
           {
             label: 'Publicar producto',
             icon: 'pi pi-plus',
-            routerLink: '/principal/crear-producto'
+            command: () => {
+              this.router.navigate(['/principal/publicar-producto']);
+              this.visible = false;
+            },
           },
           {
             label: 'Ver solicitudes',
@@ -144,12 +146,12 @@ export class Home implements OnInit {
     this.op.toggle(event);
   }
 
-  goHome(){
+  goHome() {
     this.router.navigate(['/principal']);
     this.visible = false;
   }
 
-  goEditProfile(){
+  goEditProfile() {
     this.router.navigate(['/principal/editar-perfil']);
     this.visible = false;
   }

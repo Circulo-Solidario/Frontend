@@ -77,6 +77,7 @@
 /*#region Sidebar desplegado*/
 .sidebar {
     width: max-content;
+    padding: 1rem;
     min-width: min-content;
     height: 100%;
     display: flex;
@@ -102,7 +103,7 @@
 }
 .sidebar:not(.collapsed) .sidebar-text {
     opacity: 1;
-    width: auto;
+    padding-right: 6rem;
     overflow: hidden;
     transition:
         opacity 0.3s ease 0.1s,
@@ -112,7 +113,8 @@
 
 /*#region Sidebar colapsada*/
 .sidebar.collapsed {
-    width: 40px;
+    width: max-content;
+    padding: 1rem;
     min-width: 40px;
     color: transparent;
     transition: width 0.3s ease;
@@ -173,6 +175,12 @@
 
 ::ng-deep .sidebar-button p-button{
     width: 100%;
+    padding-right: 0;
+}
+
+::ng-deep .sidebar:not(.collapsed) .sidebar-button p-button{
+    width: 100%;
+    padding-right: 2rem;
 }
 
 ::ng-deep .header-toolbar .p-menu-overlay{
