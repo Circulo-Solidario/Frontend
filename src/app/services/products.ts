@@ -4,13 +4,17 @@ import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class Products {
   private readonly httpClient: HttpClient = inject(HttpClient);
   private readonly apiPath = '/productos';
 
-  publishProduct(product: any): Observable<any>{
-    return this.httpClient.post(`${environment.apiUrl}${this.apiPath}/donador`, product)
+  publishProduct(product: any): Observable<any> {
+    return this.httpClient.post(`${environment.apiUrl}${this.apiPath}/donador`, product);
+  }
+
+  getProducts(filters: any): Observable<any> {
+    return this.httpClient.get(`${environment.apiUrl}${this.apiPath}`, { params: filters });
   }
 }

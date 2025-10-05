@@ -1,0 +1,51 @@
+@media (max-width: 575px) {
+    .main-container {
+        padding-top: 2vh !important;
+    }
+}
+
+.go-back-buttom {
+    cursor: pointer;
+}
+
+::ng-deep .p-dataview-header{
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+::ng-deep .p-dataview-content{
+    border-radius: 0 0 0.5rem 0.5rem;
+}
+
+::ng-deep .p-panel-header{
+    padding: 0;
+}
+
+::ng-deep .p-panel-content{
+    padding: 1rem 0;
+}
+
+::ng-deep p-panel{
+    border: none;
+}
+
+.image{
+    height: 10vw;
+    width: 10vw;
+    object-fit: cover;
+}
+
+.card-image{
+    height: 15vw;
+    width: 15vw;  
+    object-fit: cover;  
+}
+
+.card{
+    min-width: max-content;
+
+}
+
+.main-container {
+    padding: 4vh;
+    height: max-content;
+}

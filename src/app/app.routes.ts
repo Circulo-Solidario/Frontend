@@ -19,6 +19,11 @@ export const routes: Routes = [
         path: 'publicar-producto',
         loadComponent: () =>
           import('./components/create-product/create-product').then((m) => m.CreateProduct),
+      },
+      {
+        path: 'busqueda',
+        loadComponent: () =>
+          import('./components/products-list/products-list').then((m) => m.ProductsList),
       }
     ]
   },
