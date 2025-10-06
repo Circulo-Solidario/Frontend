@@ -107,13 +107,22 @@
       <p-button (click)="visible = true" styleClass="p-button-text d-sm-none">
         <i class="pi pi-bars"></i>
       </p-button>
-      <span class="ms-2 fs-5 d-none d-sm-block home-button" (click)="goHome()"> Círculo solidario </span>
+      <span class="ms-2 fs-5 d-none d-sm-block home-button" (click)="goHome()">
+        Círculo solidario
+      </span>
     </ng-template>
     <ng-template #center>
       <div class="toolbar-center">
         <p-iconfield>
           <p-inputicon class="pi pi-search" />
-          <input [(ngModel)]="productName" type="text" pInputText placeholder="Busca los productos que necesites..." fluid (keypress)="searchProduct($event)"/>
+          <input
+            [(ngModel)]="productName"
+            type="text"
+            pInputText
+            placeholder="Busca los productos que necesites..."
+            fluid
+            (keypress)="searchProduct($event)"
+          />
         </p-iconfield>
       </div>
     </ng-template>
@@ -287,7 +296,7 @@
     </ng-template>
     <p-panelmenu [model]="menu" class="gap-2 d-flex justify-content-end">
       <ng-template #item let-item>
-        <div class="py-2 sidebar-button flex items-center" >
+        <div class="py-2 sidebar-button flex items-center">
           <a class="items-center">
             <i [class]="item.icon + ' text-inherit'" style="font-size: 1.2rem"></i>
             <span class="ms-2 sidebar-text">
@@ -307,7 +316,7 @@
             shape="circle"
           />
         </p-button>
-        <p-button label="Cerrar sesión" (click)="logOut()" icon="pi pi-sign-out" fluid/>
+        <p-button label="Cerrar sesión" (click)="logOut()" icon="pi pi-sign-out" fluid />
       </div>
     </ng-template>
   </p-drawer>
@@ -336,11 +345,7 @@
               fluid
               [styleClass]="fullyCollapsed ? 'justify-content-start' : 'justify-content-start'"
             >
-              <i
-                
-                [class]="item.icon + ' text-inherit m-3'"
-                style="font-size: 1.4rem"
-              ></i>
+              <i [class]="item.icon + ' text-inherit m-3'" style="font-size: 1.4rem"></i>
               @if(!item.items || (item.items && !isCollapsed)){
               <span class="pe-4 sidebar-text text-start align-middle">
                 {{ item.label }}

@@ -4,6 +4,12 @@
     }
 }
 
+#no-data-logo{
+    fill: var(--p-dataview-content-color);
+    width: max-content;
+    height: max-content;
+}
+
 .go-back-buttom {
     cursor: pointer;
 }
