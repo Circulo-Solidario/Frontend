@@ -358,6 +358,12 @@
     </div>
     <div class="components-content container-fluid p-0">
       <router-outlet />
+      <p-scrolltop
+        target="parent"
+        [threshold]="100"
+        icon="pi pi-arrow-up"
+        [buttonProps]="{ severity: 'contrast', raised: true, rounded: true }"
+      />
     </div>
   </div>
 </div>

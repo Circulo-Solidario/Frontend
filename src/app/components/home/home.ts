@@ -18,6 +18,7 @@ import { Menu } from 'primeng/menu';
 import { LoginService } from '../../services/login';
 import { Observable } from 'rxjs';
 import { Badge } from 'primeng/badge';
+import { ScrollTopModule } from 'primeng/scrolltop';
 import { Chip } from 'primeng/chip';
 import { FormsModule } from "@angular/forms";
 
@@ -40,7 +41,8 @@ import { FormsModule } from "@angular/forms";
     Popover,
     Menu,
     Badge,
-    FormsModule
+    FormsModule,
+    ScrollTopModule
 ],
   templateUrl: './home.html',
   styleUrl: './home.css',
