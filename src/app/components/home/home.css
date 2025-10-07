@@ -179,8 +179,8 @@
 }
 
 ::ng-deep .sidebar:not(.collapsed) .sidebar-button p-button{
-    width: 100%;
-    padding-right: 2rem;
+    width: 12vw;
+    min-width: max-content;
 }
 
 ::ng-deep .header-toolbar .p-menu-overlay{

@@ -18,7 +18,9 @@ import { Menu } from 'primeng/menu';
 import { LoginService } from '../../services/login';
 import { Observable } from 'rxjs';
 import { Badge } from 'primeng/badge';
+import { ScrollTopModule } from 'primeng/scrolltop';
 import { Chip } from 'primeng/chip';
+import { FormsModule } from "@angular/forms";
 
 @Component({
   selector: 'app-home',
@@ -39,7 +41,9 @@ import { Chip } from 'primeng/chip';
     Popover,
     Menu,
     Badge,
-  ],
+    FormsModule,
+    ScrollTopModule
+],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
@@ -52,6 +56,7 @@ export class Home implements OnInit {
   fullyCollapsed = false;
   rotate = false;
   visible = false;
+  productName: string = '';
   menu: MenuItem[] = [];
   userMenu: MenuItem[] = [];
 
@@ -159,5 +164,15 @@ export class Home implements OnInit {
   logOut() {
     this.loginService.logOut();
     this.router.navigate(['/login']);
+  }
+
+  searchProduct(key: KeyboardEvent){
+    if(key.key != 'Enter' || this.productName == ''){
+      return;
+    }
+    this.router.navigate(['/principal/busqueda'], {
+      queryParams: { nombre: this.productName }
+    });
+    this.productName = '';
   }
 }
