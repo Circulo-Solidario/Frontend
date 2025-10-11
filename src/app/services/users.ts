@@ -18,6 +18,10 @@ export class Users {
     return this.httpCliente.get<boolean>(`${environment.apiUrl}${this.apiPath}/existe/${email}`);
   }
 
+  getUserInfoId(id: any): Observable<any>{
+    return this.httpCliente.get(`${environment.apiUrl}${this.apiPath}/${id}`);
+  }
+
   async getUserInfo(email: string): Promise<any>{
     return await firstValueFrom(this.httpCliente.get(`${environment.apiUrl}${this.apiPath}/info/${email}`));
   }

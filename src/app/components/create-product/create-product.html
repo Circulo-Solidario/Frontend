@@ -40,7 +40,7 @@
                 formControlName="nombre" />
             </div>
             <div class="mt-4 row-gap-0">
-              <label for="description">Descripción<span style="color: red;">&ensp;*</span></label>
+              <label for="description">Descripción<span style="color: red;">&ensp;*</span><span>&ensp;({{productForm.get('descripcion')?.value.length ?? 0}}/255)</span></label>
               <textarea name="description" placeholder="Describe el producto detalladamente..." class="mt-2"
                 formControlName="descripcion" rows="5" cols="30" pTextarea fluid></textarea>
             </div>

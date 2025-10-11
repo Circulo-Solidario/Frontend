@@ -1,0 +1,143 @@
+<div class="main-container container-fluid pt-3">
+  <div class="col-auto justify-content-center align-content-center h-100">
+    <h1 class="d-flex my-2 align-items-center mb-4">
+      <i class="pi pi-chevron-left me-3 go-back-buttom" (click)="goBack()"></i>
+      Detalles del producto
+    </h1>
+    <div class="container-fluid">
+      <div class="row m-auto justify-content-center w-75 row-cols-2 p-4 product-content">
+        <div class="col-auto pe-md-5">
+          <div class="row">
+            <img
+              class="d-block mx-auto image"
+              [src]="productData?.urlImagen"
+            />
+          </div>
+          <div class="row mt-4">
+            <h2 class="p-0">Información del donante</h2>
+          </div>
+          <div class="row">
+            <div class="col-auto ps-0 pe-0">
+              <p-avatar
+                [icon]="donorData?.urlImagen ? '' : 'pi pi-user fs-4'"
+                [image]="donorData?.urlImagen ? donorData?.urlImagen : ''"
+                class="avatar me-2"
+                shape="circle"
+                size="xlarge"
+              />
+            </div>
+            <div class="col-8 col-xl-auto p-0">
+              <div class="row-cols-auto" style="max-width: max-content;">
+                <span class="fs-5 p-0">{{ donorData?.alias }}</span>
+              </div>
+              <div class="row-cols-auto mt-1" style="max-width: max-content;">
+                @if(donorData?.roles.length > 0){ @for (rol of donorData?.roles; track $index) {
+                <p-badge
+                  class="text-capitalize me-1 mt-1"
+                  [value]="rol.name.toLowerCase()"
+                  severity="secondary"
+                  badgesize="small"
+                />
+                } } @else {
+                <p-badge value="Organización benéfica" severity="secondary" badgesize="small" />
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-xl-6 mt-4 mt-xl-0" style="display: inline-grid">
+          <div class="row" style="display: block;">
+            <h1 class="mb-1" style="height: max-content">{{ productData?.nombre }}</h1>
+            <div style="display: flex;">
+              <span>Categoría:&nbsp;</span>
+              <span> {{ productData?.categoria.nombre }}</span>
+            </div>
+          </div>
+          <div class="row align-items-start mt-4 mt-xl-0" style="display: block;">
+            <label for="description" style="height: max-content">Descripción:</label>
+            <p name="description" class="description">{{ productData?.descripcion }}</p>
+          </div>
+          <div class="row mt-2 align-items-end mt-2 mt-xl-0">
+            <h3 class="title mb-0">Estado</h3>
+            <p-tag
+              class="tag"
+              icon="pi pi-check"
+              severity="success"
+              value="Disponible"
+              [rounded]="true"
+            />
+            <p-button class="mt-4 mt-xl-0" icon="pi pi-thumbs-up" fluid label="Solicitar producto" />
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <p-card>
+      <div class="row row-cols-2 px-4 py-2">
+        <div class="col-5">
+          <div class="row rounded">
+            <img
+              class="d-block border mx-auto rounded image rounded"
+              [src]="productData?.urlImagen"
+            />
+          </div>
+          <div class="row mt-4">
+            <h2 class="p-0">Información del donante</h2>
+          </div>
+          <div class="row">
+            <div class="col-auto ps-0">
+              <p-avatar
+                [icon]="donorData?.urlImagen ? '' : 'pi pi-user fs-4'"
+                [image]="donorData?.urlImagen ? donorData?.urlImagen : ''"
+                class="ms-2 me-2 avatar"
+                shape="circle"
+                size="xlarge"
+              />
+            </div>
+            <div class="col-auto p-0">
+              <div class="row-cols-auto">
+                <span class="fs-5 p-0">{{ donorData?.alias }}</span>
+              </div>
+              <div class="row-cols-auto pe-2 mt-1">
+                @if(donorData?.roles.length > 0){ @for (rol of donorData?.roles; track $index) {
+                <p-badge
+                  class="text-capitalize me-1"
+                  [value]="rol.name.toLowerCase()"
+                  severity="secondary"
+                  badgesize="small"
+                />
+                } } @else {
+                <p-badge value="Organización benéfica" severity="secondary" badgesize="small" />
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col ps-5">
+          <div class="row">
+            <h1 class="mb-1">{{ productData?.nombre }}</h1>
+          </div>
+          <div>
+            <span class="text-muted">Categoría:&nbsp;&nbsp;</span
+            ><span> {{ productData?.categoria.nombre }}</span>
+          </div>
+          <div class="row mt-4 description">
+            <p>{{ productData?.descripcion }}</p>
+          </div>
+          <div class="row">
+            <h3 class="title">Estado</h3>
+            <p-tag
+              class="tag"
+              icon="pi pi-check"
+              severity="success"
+              value="Disponible"
+              [rounded]="true"
+            />
+          </div>
+          <div class="row">
+            <p-button icon="pi pi-thumbs-up" fluid label="Solicitar producto" />
+          </div>
+        </div>
+      </div>
+    </p-card> -->
+  </div>
+</div>

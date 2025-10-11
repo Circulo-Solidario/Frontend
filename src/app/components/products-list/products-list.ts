@@ -1,7 +1,7 @@
 import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Products } from '../../services/products';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Tag } from 'primeng/tag';
 import { Button, ButtonModule } from 'primeng/button';
@@ -43,6 +43,7 @@ export class ProductsList implements OnInit {
   private productService: Products = inject(Products);
   private toasts: Toasts = inject(Toasts);
   private categoriesService: Categories = inject(Categories);
+  private location: Location = inject(Location);
   currentPage: number = 0;
   pageSize: number = 10;
   isLoading: boolean = false;
@@ -59,7 +60,9 @@ export class ProductsList implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
-      this.name = params['nombre']
+      this.name = params['nombre'];
+      params['categoria'] ? this.selectedCategory = Number(params['categoria']) : null;
+      params['distancia'] ? this.distance = Number(params['distancia']) : null;
       this.filterData();
     });
     this.categoriesService.getCategories().subscribe({
@@ -76,6 +79,16 @@ export class ProductsList implements OnInit {
     });
   }
 
+  goDetailProducts(idProduct: any) {
+    this.router.navigate(['/principal/detalles'], {
+      state: { id: idProduct, filters: this.filters }
+    });
+  }
+
+  requestProduct(item: any, event: MouseEvent): void{
+    event.stopPropagation();
+  }
+
   getProducts() {
     this.filters = {
       nombre: this.name,
@@ -83,12 +96,21 @@ export class ProductsList implements OnInit {
       page: this.currentPage,
       size: this.pageSize
     }
+    const queryParams = { ...this.route.snapshot.queryParams };
+    let queryString = new URLSearchParams(queryParams).toString();
+    if (!queryString.includes('&distancia=')) {
+      queryString += `&distancia=${this.distance}`;
+    }
     if (this.selectedCategory) {
       this.filters = {
         ...this.filters,
         categoriaId: this.selectedCategory
       }
+      if (!queryString.includes('&categoria=')) {
+        queryString += `&categoria=${this.selectedCategory}`;
+      }
     }
+    this.location.replaceState(`/principal/busqueda?${queryString}`);
     this.productService.getProducts(this.filters).subscribe({
       next: (newProducts: any) => {
         if (newProducts.content.length < this.pageSize) {
@@ -158,8 +180,8 @@ export class ProductsList implements OnInit {
     }
   }
 
-  getSkeletonItems(cant?: number): number[]{
-     return Array.from({length: cant ?? this.pageSize}, (_, i) => i);
+  getSkeletonItems(cant?: number): number[] {
+    return Array.from({ length: cant ?? this.pageSize }, (_, i) => i);
   }
 
   private shouldLoadMore(): boolean {
