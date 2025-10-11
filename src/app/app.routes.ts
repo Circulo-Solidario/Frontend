@@ -24,6 +24,11 @@ export const routes: Routes = [
         path: 'busqueda',
         loadComponent: () =>
           import('./components/products-list/products-list').then((m) => m.ProductsList),
+        children: []
+      },
+      {
+        path: 'detalles',
+        loadComponent: () => import('./components/product-detail/product-detail').then((m) => m.ProductDetail)
       }
     ]
   },

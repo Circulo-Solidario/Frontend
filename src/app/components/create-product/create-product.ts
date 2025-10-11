@@ -60,7 +60,7 @@ export class CreateProduct implements OnInit {
   constructor() {
     this.productForm = new FormGroup({
       nombre: new FormControl('', [Validators.required, Validators.minLength(4)]),
-      descripcion: new FormControl('', [Validators.required, Validators.minLength(4)]),
+      descripcion: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(255)]),
       categoria: new FormControl(null, [Validators.required]),
     });
   }

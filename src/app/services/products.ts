@@ -9,6 +9,7 @@ import { environment } from '../environments/environment';
 export class Products {
   private readonly httpClient: HttpClient = inject(HttpClient);
   private readonly apiPath = '/productos';
+  private idProduct: any;
 
   publishProduct(product: any): Observable<any> {
     return this.httpClient.post(`${environment.apiUrl}${this.apiPath}/donador`, product);
@@ -16,5 +17,17 @@ export class Products {
 
   getProducts(filters: any): Observable<any> {
     return this.httpClient.get(`${environment.apiUrl}${this.apiPath}`, { params: filters });
+  }
+
+  getProductDetail(id: any): Observable<any>{
+    return this.httpClient.get(`${environment.apiUrl}${this.apiPath}/${id}`);
+  }
+
+  setIdProducto(id: any){
+    this.idProduct = id;
+  }
+
+  getIdProduct(): any{
+    return this.idProduct;
   }
 }
