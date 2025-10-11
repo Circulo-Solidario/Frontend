@@ -85,6 +85,10 @@ export class ProductsList implements OnInit {
     });
   }
 
+  requestProduct(item: any, event: MouseEvent): void{
+    event.stopPropagation();
+  }
+
   getProducts() {
     this.filters = {
       nombre: this.name,

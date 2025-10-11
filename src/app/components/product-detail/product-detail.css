@@ -8,13 +8,13 @@
 }
 
 .product-content{
-    background: var(--p-card-background);
-    box-shadow: var(--p-card-shadow);
-    border-radius: var(--p-card-border-radius);
+    background: var(--p-content-background);
+    box-shadow: 0 2px 6px rgba(0, 25, 15, 0.1);
+    border-radius: var(--p-border-radius-xl);
 }
 
 #card{
-    background-color: var(--p-background-color);
+    background-color: var(--p-content-background);
 }
 
 .image {
@@ -23,7 +23,7 @@
     width: 40vh;
     object-fit: cover;
     padding: 0;
-    border-radius: var(--p-card-border-radius);
+    border-radius: var(--p-border-radius-xl);
 }
 
 .description{

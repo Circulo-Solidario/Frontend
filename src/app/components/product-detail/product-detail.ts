@@ -8,6 +8,7 @@ import { Button } from 'primeng/button';
 import { Avatar } from 'primeng/avatar';
 import { Badge } from 'primeng/badge';
 import { Tag } from 'primeng/tag';
+import { Card } from 'primeng/card';
 
 @Component({
   selector: 'app-product-detail',
@@ -15,7 +16,8 @@ import { Tag } from 'primeng/tag';
     Button,
     Avatar,
     Badge,
-    Tag
+    Tag,
+    Card
   ],
   templateUrl: './product-detail.html',
   styleUrl: './product-detail.css'

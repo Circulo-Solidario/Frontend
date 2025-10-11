@@ -101,6 +101,7 @@
                       label="Solicitar"
                       [disabled]="item.inventoryStatus === 'OUTOFSTOCK'"
                       class="flex-grow-1 flex-md-grow-0 text-nowrap"
+                      (click)="requestProduct(item, $event)"
                     ></p-button>
                   </div>
                 </div>
@@ -163,6 +164,7 @@
                       icon="pi pi-thumbs-up"
                       label="Solicitar"
                       class="flex-grow-1 text-nowrap"
+                      (click)="requestProduct(item, $event)"
                     ></p-button>
                   </div>
                 </div>
