@@ -22,13 +22,19 @@ export const routes: Routes = [
       },
       {
         path: 'busqueda',
-        loadComponent: () =>
-          import('./components/products-list/products-list').then((m) => m.ProductsList),
-        children: []
+        loadComponent: () => import('./components/products-list/products-list').then((m) => m.ProductsList)
       },
       {
         path: 'detalles',
         loadComponent: () => import('./components/product-detail/product-detail').then((m) => m.ProductDetail)
+      },
+      {
+        path: 'mis-publicaciones',
+        loadComponent: () => import('./components/donor-product-list/donor-product-list').then((m) => m.DonorProductList)
+      },
+      {
+        path: 'editar-publicacion',
+        loadComponent: () => import('./components/edit-product/edit-product').then((m) => m.EditProduct)
       }
     ]
   },

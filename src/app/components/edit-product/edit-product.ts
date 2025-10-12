@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import {
   FormControl,
@@ -24,7 +24,7 @@ import { LoginService } from '../../services/login';
 import { Geolocation } from '../../services/geolocation';
 
 @Component({
-  selector: 'app-create-product',
+  selector: 'app-edit-product',
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -37,10 +37,10 @@ import { Geolocation } from '../../services/geolocation';
     SelectModule,
     TagModule
   ],
-  templateUrl: './create-product.html',
-  styleUrl: './create-product.css',
+  templateUrl: './edit-product.html',
+  styleUrl: './edit-product.css'
 })
-export class CreateProduct implements OnInit {
+export class EditProduct implements OnInit {
   @ViewChild(FileUpload) fileUpload!: FileUpload;
   private router: Router = inject(Router);
   private categoriesService: Categories = inject(Categories);
@@ -49,13 +49,18 @@ export class CreateProduct implements OnInit {
   private imageService: Images = inject(Images);
   private toasts: Toasts = inject(Toasts);
   private geolocationService: Geolocation = inject(Geolocation);
+  private location: Location = inject(Location);
+  id: any;
   loggedUser: any;
+  originalData: any;
   productForm: FormGroup;
-  imagen: File | null = null;
   setUploading: boolean = false;
-  imagenUrl: string | null = null;
   categories: any;
   coords: GeolocationCoordinates | null = null;
+  imagenUrl: string | null = null;
+  imagen: File | null = null;
+  originalProductImage: File | null = null;
+  changeImage: boolean = false;
 
   constructor() {
     this.productForm = new FormGroup({
@@ -70,6 +75,12 @@ export class CreateProduct implements OnInit {
     if (!this.loggedUser) {
       this.router.navigate(['/login']);
     }
+    const navigation = this.router.currentNavigation();
+    const state = navigation?.extras?.state || history.state;
+    this.id = state?.['id'];
+    if(!this.id){    
+      this.router.navigate(['/principal/mis-publicaciones']);
+    }
     this.categoriesService.getCategories().subscribe({
       next: (categoriesList: any) => {
         this.categories = categoriesList;
@@ -82,10 +93,33 @@ export class CreateProduct implements OnInit {
         });
       },
     });
+    this.productService.getProductDetail(this.id).subscribe({
+      next: (response: any) => {
+        this.originalData = response;
+        this.productForm.setValue({
+          nombre: this.originalData.nombre,
+          descripcion: this.originalData.descripcion,
+          categoria: this.originalData.categoria
+        });
+        this.imagen = this.originalData.urlImagen;
+        this.imagenUrl = this.originalData.urlImagen;
+        this.originalProductImage = this.originalData.urlImagen;       
+      },
+      error: () => {
+        this.toasts.showToast({
+          severity: 'error', summary: 'Error al obtener producto', detail: 'No pudimos obtener el producto, intente nuevamente...'
+        })
+        this.location.back();
+      }
+    })    
   }
 
-  goHome() {
-    this.router.navigate(['/principal']);
+  goBack() {
+    this.location.back();
+  }
+
+  choose() {
+    this.fileUpload.choose();
   }
 
   setImage(fileSelected: FileSelectEvent) {
@@ -93,11 +127,8 @@ export class CreateProduct implements OnInit {
       this.showImageError();
       return;
     }
-    this.imagen = fileSelected.files[0];
-  }
-
-  choose() {
-    this.fileUpload.choose();
+    this.imagen = fileSelected.files[0];   
+    
   }
 
   showImageError() {
@@ -111,6 +142,7 @@ export class CreateProduct implements OnInit {
   clearImage() {
     this.fileUpload.clear();
     this.imagen = null;
+    this.changeImage = true;
   }
 
   async onSubmit() {
@@ -130,7 +162,7 @@ export class CreateProduct implements OnInit {
       return;
     }
     let errorSavingImage = false;
-    if (this.imagen) {
+    if (this.imagen != this.originalProductImage && this.imagen) {
       const image: ImagePost = {
         image: this.imagen,
       };
@@ -157,28 +189,29 @@ export class CreateProduct implements OnInit {
       });
       this.setUploading = false;
       return;
-    }    
+    }
     let product = {
-      estado: 'EN_STOCK',
+      id: this.id,
+      estado: 'DISPONIBLE',
       idUsuario: this.loggedUser.id,
       urlImagen: this.imagenUrl,
       ...this.productForm.value,
     };
-    this.productService.publishProduct(product).subscribe({
+    this.productService.editProduct(this.id ,product).subscribe({
       next: (response: any) => {
         this.toasts.showToast({
           severity: 'success',
-          summary: 'Producto publicado!',
-          detail: `Producto "${response.nombre}" publicado con éxito`,
+          summary: 'Publicación editada!',
+          detail: `Se editó la publicación con éxito`,
         });
-        this.router.navigate(['/principal']);
+        this.location.back();
         this.setUploading = false;
       },
-      error: (error: any) => {
+      error: () => {
         this.toasts.showToast({
           severity: 'error',
-          summary: 'Producto no publicado',
-          detail: 'No pudimos publicar tu producto, intente nuevamente',
+          summary: 'Error al editar publicación',
+          detail: 'No pudimos editar tu publicación, intente nuevamente...',
         });
         this.setUploading = false;
       },
@@ -186,10 +219,13 @@ export class CreateProduct implements OnInit {
   }
 
   cancel() {
-    this.clearImage();
-    this.productForm.get('nombre')?.setValue('');
-    this.productForm.get('categoria')?.setValue(null);
-    this.productForm.get('descripcion')?.setValue('');
+    this.productForm.setValue({
+      nombre: this.originalData.nombre,
+      descripcion: this.originalData.descripcion,
+      categoria: this.originalData.categoria
+    });
+    this.changeImage = false;
+    this.imagen = this.originalData.urlImagen;
     this.productForm.markAsPristine();
   }
 }

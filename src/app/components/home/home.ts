@@ -1,5 +1,5 @@
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
-import { Router, RouterLink, RouterOutlet } from '@angular/router';
+import { Router, RouterOutlet } from '@angular/router';
 import { Button } from 'primeng/button';
 import { IconField } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
@@ -16,10 +16,8 @@ import { OverlayBadge } from 'primeng/overlaybadge';
 import { Popover } from 'primeng/popover';
 import { Menu } from 'primeng/menu';
 import { LoginService } from '../../services/login';
-import { Observable } from 'rxjs';
 import { Badge } from 'primeng/badge';
 import { ScrollTopModule } from 'primeng/scrolltop';
-import { Chip } from 'primeng/chip';
 import { FormsModule } from "@angular/forms";
 
 @Component({
@@ -92,6 +90,14 @@ export class Home implements OnInit {
             icon: 'pi pi-plus',
             command: () => {
               this.router.navigate(['/principal/publicar-producto']);
+              this.visible = false;
+            },
+          },
+          {
+            label: 'Mis publicaciones',
+            icon: 'pi pi-list',
+            command: () => {
+              this.router.navigate(['/principal/mis-publicaciones']);
               this.visible = false;
             },
           },

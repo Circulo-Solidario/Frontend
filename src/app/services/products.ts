@@ -23,6 +23,18 @@ export class Products {
     return this.httpClient.get(`${environment.apiUrl}${this.apiPath}/${id}`);
   }
 
+  getDonorsProducts(id: any): Observable<any>{
+    return this.httpClient.get(`${environment.apiUrl}${this.apiPath}/usuario-donador/${id}`)
+  }
+
+  deleteProduct(id: any): Observable<void>{
+    return this.httpClient.delete<void>(`${environment.apiUrl}${this.apiPath}/${id}`)
+  }
+
+  editProduct(id: any, product: any): Observable<any>{
+    return this.httpClient.put(`${environment.apiUrl}${this.apiPath}/${id}`, product);
+  }
+
   setIdProducto(id: any){
     this.idProduct = id;
   }
