@@ -15,6 +15,7 @@ import { SliderModule } from 'primeng/slider';
 import { ScrollTopModule } from 'primeng/scrolltop';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { Skeleton } from 'primeng/skeleton';
+import { LoginService } from '../../services/login';
 @Component({
   selector: 'app-products-list',
   imports: [
@@ -44,6 +45,7 @@ export class ProductsList implements OnInit {
   private toasts: Toasts = inject(Toasts);
   private categoriesService: Categories = inject(Categories);
   private location: Location = inject(Location);
+  private loginService: LoginService = inject(LoginService);
   currentPage: number = 0;
   pageSize: number = 10;
   isLoading: boolean = false;
@@ -59,6 +61,11 @@ export class ProductsList implements OnInit {
   options = ['list', 'grid'];
 
   ngOnInit(): void {
+    this.loginService.getLoggedUser().subscribe((user: any) => {
+      if (user == null) {
+        this.router.navigate(['/login']);
+      }
+    });
     this.route.queryParams.subscribe((params) => {
       this.name = params['nombre'];
       params['categoria'] ? this.selectedCategory = Number(params['categoria']) : null;
@@ -166,15 +173,14 @@ export class ProductsList implements OnInit {
 
   getSeverity(product: any): string {
     switch (product.estado) {
-      case 'EN_STOCK':
+      case 'DISPONIBLE':
         return 'success';
-
-      case 'LOWSTOCK':
+      case 'SOLICITADO':
         return 'warn';
-
-      case 'OUTOFSTOCK':
+      case 'RESERVADO':
         return 'danger';
-
+      case 'ENTREGADO':
+        return 'danger';
       default:
         return 'success';
     }
