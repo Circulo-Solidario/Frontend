@@ -16,6 +16,7 @@ import { ScrollTopModule } from 'primeng/scrolltop';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { Skeleton } from 'primeng/skeleton';
 import { LoginService } from '../../services/login';
+import { Requests } from '../../services/requests';
 @Component({
   selector: 'app-products-list',
   imports: [
@@ -46,6 +47,8 @@ export class ProductsList implements OnInit {
   private categoriesService: Categories = inject(Categories);
   private location: Location = inject(Location);
   private loginService: LoginService = inject(LoginService);
+  private requestService: Requests = inject(Requests);
+  logedUser: any;
   currentPage: number = 0;
   pageSize: number = 10;
   isLoading: boolean = false;
@@ -62,6 +65,7 @@ export class ProductsList implements OnInit {
 
   ngOnInit(): void {
     this.loginService.getLoggedUser().subscribe((user: any) => {
+      this.logedUser = user;
       if (user == null) {
         this.router.navigate(['/login']);
       }
@@ -92,8 +96,24 @@ export class ProductsList implements OnInit {
     });
   }
 
-  requestProduct(item: any, event: MouseEvent): void{
+  requestProduct(item: any, event: MouseEvent): void {
     event.stopPropagation();
+    this.requestService.requestProduct({
+      idUsuario: this.logedUser.id,
+      idProducto: item.id
+    }).subscribe({
+      next: () => {
+        this.toasts.showToast({
+          severity: 'success', summary: 'Producto solicitado!', detail: 'Notificamos al donante sobre tu solicitud'
+        });
+        this.filterData();
+      },
+      error: () => {
+        this.toasts.showToast({
+          severity: 'error', summary: 'Error al solicitar producto', detail: 'No pudimos procesar tu solicitud, intente nuevamente...'
+        })
+      }
+    });
   }
 
   getProducts() {
