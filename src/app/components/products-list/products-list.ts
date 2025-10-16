@@ -96,6 +96,13 @@ export class ProductsList implements OnInit {
     });
   }
 
+  searchRequest(item: any): boolean{
+    if(item.solicitantes.find((s: any) => s.id == this.logedUser.id)){
+      return true;
+    }
+    return false;
+  }
+
   requestProduct(item: any, event: MouseEvent): void {
     event.stopPropagation();
     this.requestService.requestProduct({

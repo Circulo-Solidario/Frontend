@@ -99,7 +99,7 @@
                     <p-button
                       icon="pi pi-thumbs-up"
                       label="Solicitar"
-                      [disabled]="'|RESERVADO|ENTREGADO'.includes(item.estado)"
+                      [disabled]="'|RESERVADO|ENTREGADO'.includes(item.estado) || searchRequest(item) || item.idUsuario == logedUser.id"
                       class="flex-grow-1 flex-md-grow-0 text-nowrap"
                       (click)="requestProduct(item, $event)"
                     ></p-button>
@@ -164,7 +164,7 @@
                       icon="pi pi-thumbs-up"
                       label="Solicitar"
                       class="flex-grow-1 text-nowrap"
-                      [disabled]="'|RESERVADO|ENTREGADO'.includes(item.estado)"
+                      [disabled]="'|RESERVADO|ENTREGADO'.includes(item.estado) || searchRequest(item) || item.idUsuario == logedUser.id"
                       (click)="requestProduct(item, $event)"
                     ></p-button>
                   </div>
