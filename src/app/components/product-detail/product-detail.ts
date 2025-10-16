@@ -8,6 +8,8 @@ import { Button } from 'primeng/button';
 import { Avatar } from 'primeng/avatar';
 import { Badge } from 'primeng/badge';
 import { Tag } from 'primeng/tag';
+import { LoginService } from '../../services/login';
+import { Requests } from '../../services/requests';
 
 @Component({
   selector: 'app-product-detail',
@@ -25,12 +27,21 @@ export class ProductDetail implements OnInit {
   private productService: Products = inject(Products);
   private userService: Users = inject(Users);
   private toasts: Toasts = inject(Toasts);
+  private loginService: LoginService = inject(LoginService);
+  private requestService: Requests = inject(Requests);
   id: any;
   filters: any;
   productData: any;
   donorData: any;
+  logedUser: any;
 
   async ngOnInit(): Promise<void> {
+    this.loginService.getLoggedUser().subscribe((user: any) => {
+      this.logedUser = user;
+      if (user == null) {
+        this.router.navigate(['/login']);
+      }
+    });
     const navigation = this.router.currentNavigation();
     const state = navigation?.extras?.state || history.state;
     this.id = state?.['id'];
@@ -51,6 +62,32 @@ export class ProductDetail implements OnInit {
 
   async getDonorData(): Promise<void> {
     this.donorData = await firstValueFrom(this.userService.getUserInfoId(this.productData.idUsuario));
+  }
+
+  searchRequest(): boolean{
+    if(this.productData.solicitantes.find((s: any) => s.id == this.logedUser.id)){
+      return true;
+    }
+    return false;
+  }
+
+  requestProduct(): void {
+    this.requestService.requestProduct({
+      idUsuario: this.logedUser.id,
+      idProducto: this.productData.id
+    }).subscribe({
+      next: () => {
+        this.toasts.showToast({
+          severity: 'success', summary: 'Producto solicitado!', detail: 'Notificamos al donante sobre tu solicitud'
+        });
+        this.getProductData();
+      },
+      error: () => {
+        this.toasts.showToast({
+          severity: 'error', summary: 'Error al solicitar producto', detail: 'No pudimos procesar tu solicitud, intente nuevamente...'
+        })
+      }
+    });
   }
 
   goBack() {
