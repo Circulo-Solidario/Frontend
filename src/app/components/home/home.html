@@ -128,16 +128,47 @@
     </ng-template>
     <ng-template #end>
       <div class="d-flex" style="align-items: baseline">
-        <div class="me-4">
-          <p-overlaybadge value="1">
-            <p-button (onClick)="toggle($event)">
+        <div class="position-relative me-4">
+          @if(unreadCount > 0){
+          <p-overlaybadge [value]="unreadCount">
+            <p-button (click)="popover.toggle($event)">
               <i class="pi pi-bell" style="font-size: 1.5rem"></i>
             </p-button>
           </p-overlaybadge>
+          }@else {
+          <p-button (click)="popover.toggle($event)">
+            <i class="pi pi-bell" style="font-size: 1.5rem"></i>
+          </p-button>
+          }
         </div>
-        <p-popover #op>
+        <p-popover #popover>
           <ng-template #content>
-            <h4>Prueba</h4>
+            @if(notifications.length > 0){ @for (notification of notifications.reverse(); track
+            $index) {
+            <div
+              class="dropdown-item d-flex align-items-start p-3"
+              (click)="markAsRead(notification.id!)"
+            >
+              <div class="flex-grow-1" [ngClass]="notification.seenDate ? '' : 'fw-bold'">
+                <p class="mb-0 small">{{ notification.message }}</p>
+                <div class="d-flex justify-content-between align-items-start mb-1">
+                  @if(!notification.seenDate){
+                  <small class="text-primary">Nueva!</small>
+                  }
+                  <small class="text-muted">{{ notification.date | date : 'shortTime' }}</small>
+                </div>
+              </div>
+              @if(!notification.seenDate){
+              <span
+                class="ms-2 badge bg-primary rounded-circle"
+                style="width: 8px; height: 8px"
+                title="No leído"
+              ></span>
+              }
+            </div>
+            } }@else {
+            <h4 class="m-0">No tiene notificaciones</h4>
+            }
           </ng-template>
         </p-popover>
         <div class="toolbar-end d-none d-sm-block">

@@ -46,6 +46,11 @@
     align-items: center;
     justify-content: center;
 }
+
+.header-toolbar,
+.toolbar-end {
+  overflow: visible !important;
+}
 /*#endregion*/
 
 .main-container {
@@ -208,6 +213,11 @@
     background-color: transparent;
     border: 0;
     color: var(--p-text-color);
+}
+
+::ng-deep .p-popover {
+  position: fixed !important;
+  z-index: 2000 !important;
 }
 
 @media (max-width: 575px) {

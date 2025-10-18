@@ -19,6 +19,8 @@ import { LoginService } from '../../services/login';
 import { Badge } from 'primeng/badge';
 import { ScrollTopModule } from 'primeng/scrolltop';
 import { FormsModule } from "@angular/forms";
+import { Subscription } from 'rxjs';
+import { NotificationInter, Notifications } from '../../services/notifications';
 
 @Component({
   selector: 'app-home',
@@ -49,6 +51,9 @@ export class Home implements OnInit {
   @ViewChild('op') op!: Popover;
   private loginService: LoginService = inject(LoginService);
   private router: Router = inject(Router);
+  private notificationService: Notifications = inject(Notifications);
+  private notificationsSubscription?: Subscription;
+  private usernameSub?: Subscription;
   loggedUser: any;
   isCollapsed = false;
   fullyCollapsed = false;
@@ -57,12 +62,14 @@ export class Home implements OnInit {
   productName: string = '';
   menu: MenuItem[] = [];
   userMenu: MenuItem[] = [];
-
+  notifications: NotificationInter[] = [];
+  unreadCount: number = 0;
+  showNotifications: boolean = false;
+  
   ngOnInit() {
     this.loginService.getLoggedUser().subscribe((user: any) => {
       this.loggedUser = user;
     });
-
     if (this.loggedUser == null) {
       this.router.navigate(['/login']);
     }
@@ -136,6 +143,8 @@ export class Home implements OnInit {
         ],
       },
     ];
+    this.getNotificationsHistory();
+    this.subscribeNotifications();
   }
 
   toggleSidebar() {
@@ -151,10 +160,6 @@ export class Home implements OnInit {
     setTimeout(() => {
       this.rotate = false;
     }, 500);
-  }
-
-  toggle(event: any) {
-    this.op.toggle(event);
   }
 
   goHome() {
@@ -180,5 +185,73 @@ export class Home implements OnInit {
       queryParams: { nombre: this.productName }
     });
     this.productName = '';
+  }
+
+  getNotificationsHistory(){
+    this.notificationService.getNotifications(this.loggedUser.id).subscribe({
+      next: (notifications) => {
+        if(notifications){
+          this.notifications = notifications;
+          this.unreadCount = this.notifications.filter(notification => notification.seenDate == null).length;
+        }else{
+          this.notifications = [];
+        }
+      },
+      error: () => {
+        console.log('Error al obtener historial de notificaciones...');        
+      }
+    })
+  }
+
+  subscribeNotifications(){
+    this.notificationService.subscribeNotification('nm-' + this.loggedUser.id);
+
+    this.notificationsSubscription = this.notificationService.notification$.subscribe({
+      next: (notification: NotificationInter) => {
+        if(notification && notification.message && !this.notifications.includes(notification)){         
+          this.notifications.push(notification);
+          if(!notification.seenDate)
+            this.unreadCount++;
+        }     
+      },
+      error: (error) => {
+        console.log('Error recibiendo notificaciones...', error);        
+      }
+    })
+  }
+
+  toggleNotifications(): void {
+    this.showNotifications = !this.showNotifications;
+    // if (!this.showNotifications) {
+    //   this.markAllAsRead();
+    // }
+  }
+
+  markAsRead(notificationId: number): void {
+    this.notificationService.markReadNotification(notificationId).subscribe({
+      next: () => {
+        this.notifications.find(n => n.id === notificationId)!.seenDate = new Date().toISOString();
+        this.unreadCount > 0 ? this.unreadCount-- : 0;
+      },
+      error: () => {
+        console.log('Error marcando notificación como leída...');        
+      }
+    });    
+  }
+
+  markAllAsRead(): void {
+    this.notifications.forEach(notification => {
+      if(!notification.seenDate && notification.id){
+        this.markAsRead(notification.id);
+        notification.seenDate = new Date().toISOString();
+      }
+    });
+    this.unreadCount = 0;
+  }
+
+  async reloadNotifications() {
+    await this.notificationService.unsubscribeAllNotification();
+    this.getNotificationsHistory();
+    this.subscribeNotifications();
   }
 }
