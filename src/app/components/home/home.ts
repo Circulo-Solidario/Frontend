@@ -1,4 +1,12 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  inject,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
 import { Button } from 'primeng/button';
 import { IconField } from 'primeng/iconfield';
@@ -18,7 +26,7 @@ import { Menu } from 'primeng/menu';
 import { LoginService } from '../../services/login';
 import { Badge } from 'primeng/badge';
 import { ScrollTopModule } from 'primeng/scrolltop';
-import { FormsModule } from "@angular/forms";
+import { FormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { NotificationInter, Notifications } from '../../services/notifications';
 
@@ -42,18 +50,26 @@ import { NotificationInter, Notifications } from '../../services/notifications';
     Menu,
     Badge,
     FormsModule,
-    ScrollTopModule
-],
+    ScrollTopModule,
+  ],
   templateUrl: './home.html',
   styleUrl: './home.css',
 })
-export class Home implements OnInit {
+export class Home implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('op') op!: Popover;
+  @ViewChild('notificationContent') set notificationContentRef(
+    el: ElementRef<HTMLDivElement> | undefined
+  ) {
+    if (el) {
+      this.notificationContent = el;
+      this.initResizeObserver();
+    }
+  }
   private loginService: LoginService = inject(LoginService);
   private router: Router = inject(Router);
   private notificationService: Notifications = inject(Notifications);
   private notificationsSubscription?: Subscription;
-  private usernameSub?: Subscription;
+  private resizeObserver!: ResizeObserver;
   loggedUser: any;
   isCollapsed = false;
   fullyCollapsed = false;
@@ -65,14 +81,19 @@ export class Home implements OnInit {
   notifications: NotificationInter[] = [];
   unreadCount: number = 0;
   showNotifications: boolean = false;
-  
+  hasOverflow = false;
+  notificationContent!: ElementRef<HTMLDivElement>;
+
   ngOnInit() {
     this.loginService.getLoggedUser().subscribe((user: any) => {
       this.loggedUser = user;
+      if (this.loggedUser == null) {
+        this.router.navigate(['/login']);
+        return;
+      }
+      this.getNotificationsHistory();
+      this.subscribeNotifications();
     });
-    if (this.loggedUser == null) {
-      this.router.navigate(['/login']);
-    }
     this.userMenu = [
       {
         label: 'Perfil',
@@ -143,8 +164,32 @@ export class Home implements OnInit {
         ],
       },
     ];
-    this.getNotificationsHistory();
-    this.subscribeNotifications();
+  }
+
+  ngOnDestroy() {
+    if (this.notificationsSubscription) {
+      this.notificationsSubscription.unsubscribe();
+    }
+    this.notificationService.disconnect();
+  }
+
+  initResizeObserver() {
+    this.resizeObserver = new ResizeObserver(() => this.checkOverflow());
+    this.resizeObserver.observe(this.notificationContent.nativeElement);
+    this.checkOverflow();
+  }
+
+  ngAfterViewInit() {
+    this.checkOverflow();
+    this.resizeObserver = new ResizeObserver(() => this.checkOverflow());
+    this.resizeObserver.observe(this.notificationContent.nativeElement);
+  }
+
+  checkOverflow() {
+    if (!this.notificationContent) return;
+    const el = this.notificationContent.nativeElement;
+    this.hasOverflow = el.scrollHeight > el.clientHeight;
+    console.log(this.hasOverflow);
   }
 
   toggleSidebar() {
@@ -177,47 +222,68 @@ export class Home implements OnInit {
     this.router.navigate(['/login']);
   }
 
-  searchProduct(key: KeyboardEvent){
-    if(key.key != 'Enter' || this.productName == ''){
+  searchProduct(key: KeyboardEvent) {
+    if (key.key != 'Enter' || this.productName == '') {
       return;
     }
     this.router.navigate(['/principal/busqueda'], {
-      queryParams: { nombre: this.productName }
+      queryParams: { nombre: this.productName },
     });
     this.productName = '';
   }
 
-  getNotificationsHistory(){
+  getNotificationsHistory() {
+    if (!this.loggedUser || !this.loggedUser.id) {
+      this.notifications = [];
+      this.unreadCount = 0;
+      return;
+    }
+
     this.notificationService.getNotifications(this.loggedUser.id).subscribe({
       next: (notifications) => {
-        if(notifications){
+        if (notifications) {
           this.notifications = notifications;
-          this.unreadCount = this.notifications.filter(notification => notification.seenDate == null).length;
-        }else{
+          this.unreadCount = this.notifications.filter(
+            (notification) => notification.seenDate == null
+          ).length;
+          this.orderNotificationsByDate();
+        } else {
           this.notifications = [];
         }
       },
       error: () => {
-        console.log('Error al obtener historial de notificaciones...');        
-      }
-    })
+        console.log('Error al obtener historial de notificaciones...');
+      },
+    });
   }
 
-  subscribeNotifications(){
+  orderNotificationsByDate() {
+    this.notifications.sort((a: NotificationInter, b: NotificationInter) => {
+      const dateA = new Date(a.date!).getTime();
+      const dateB = new Date(b.date!).getTime();
+      return dateB - dateA;
+    });
+  }
+
+  subscribeNotifications() {
+    if (!this.loggedUser || !this.loggedUser.id) {
+      return;
+    }
+
     this.notificationService.subscribeNotification('nm-' + this.loggedUser.id);
 
     this.notificationsSubscription = this.notificationService.notification$.subscribe({
       next: (notification: NotificationInter) => {
-        if(notification && notification.message && !this.notifications.includes(notification)){         
+        if (notification && notification.message && !this.notifications.includes(notification)) {
           this.notifications.push(notification);
-          if(!notification.seenDate)
-            this.unreadCount++;
-        }     
+          if (!notification.seenDate) this.unreadCount++;
+          this.orderNotificationsByDate();
+        }
       },
       error: (error) => {
-        console.log('Error recibiendo notificaciones...', error);        
-      }
-    })
+        console.log('Error recibiendo notificaciones...', error);
+      },
+    });
   }
 
   toggleNotifications(): void {
@@ -227,22 +293,23 @@ export class Home implements OnInit {
     // }
   }
 
-  markAsRead(notificationId: number): void {
-    this.notificationService.markReadNotification(notificationId).subscribe({
+  markAsRead(notification: NotificationInter): void {
+    console.log(notification);
+    this.notificationService.markReadNotification(notification.id!).subscribe({
       next: () => {
-        this.notifications.find(n => n.id === notificationId)!.seenDate = new Date().toISOString();
+        notification.seenDate = new Date().toISOString();
         this.unreadCount > 0 ? this.unreadCount-- : 0;
       },
       error: () => {
-        console.log('Error marcando notificación como leída...');        
-      }
-    });    
+        console.log('Error marcando notificación como leída...');
+      },
+    });
   }
 
   markAllAsRead(): void {
-    this.notifications.forEach(notification => {
-      if(!notification.seenDate && notification.id){
-        this.markAsRead(notification.id);
+    this.notifications.forEach((notification) => {
+      if (!notification.seenDate && notification.id) {
+        this.markAsRead(notification);
         notification.seenDate = new Date().toISOString();
       }
     });

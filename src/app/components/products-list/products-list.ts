@@ -205,7 +205,7 @@ export class ProductsList implements OnInit {
     }
   }
 
-  getSeverity(product: any): string {
+  getSeverity(product: any): 'success' | 'warn' | 'danger' {
     switch (product.estado) {
       case 'DISPONIBLE':
         return 'success';

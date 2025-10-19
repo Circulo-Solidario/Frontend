@@ -122,7 +122,7 @@ export class DonorProductList implements OnInit {
     this.router.navigate(['/principal']);
   }
 
-  getSeverity(product: any): string {
+  getSeverity(product: any): 'success' | 'warn' | 'danger' {
     switch (product.estado) {
       case 'DISPONIBLE':
         return 'success';

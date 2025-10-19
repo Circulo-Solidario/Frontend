@@ -2,22 +2,12 @@
   <p-toolbar class="header-toolbar">
     <ng-template #start>
       <p-button (click)="toggleSidebar()" styleClass="p-button-text d-none d-sm-block p-0 ms-3">
-        <svg
-          id="logo"
-          class="d-none d-sm-block"
-          version="1.0"
-          xmlns="http://www.w3.org/2000/svg"
-          width="30"
-          height="30"
-          viewBox="0 0 201.000000 219.000000"
-          preserveAspectRatio="xMidYMid meet"
-          [class.rotate-fow]="rotate && isCollapsed"
-          [class.rotate-back]="rotate && !isCollapsed"
-        >
+        <svg id="logo" class="d-none d-sm-block" version="1.0" xmlns="http://www.w3.org/2000/svg" width="30" height="30"
+          viewBox="0 0 201.000000 219.000000" preserveAspectRatio="xMidYMid meet"
+          [class.rotate-fow]="rotate && isCollapsed" [class.rotate-back]="rotate && !isCollapsed">
           <metadata>Created by potrace 1.16, written by Peter Selinger 2001-2019</metadata>
           <g transform="translate(0.000000,219.000000) scale(0.100000,-0.100000)" stroke="none">
-            <path
-              d="M950 2160 c-11 -11 -20 -29 -20 -40 0 -15 -7 -20 -29 -20 -43 0 -71
+            <path d="M950 2160 c-11 -11 -20 -29 -20 -40 0 -15 -7 -20 -29 -20 -43 0 -71
             -28 -78 -78 -5 -36 -9 -42 -30 -42 -13 0 -35 -11 -48 -25 -24 -24 -25 -28 -25
             -185 0 -88 -2 -160 -5 -160 -3 0 -44 23 -92 50 -102 59 -132 62 -165 20 l-23
             -29 -75 44 c-84 49 -129 56 -160 25 -11 -11 -20 -24 -20 -28 0 -4 -16 -8 -36
@@ -99,8 +89,7 @@
             -20 -7 -20 -209 0 -172 -3 -211 -15 -221 -8 -7 -22 -10 -30 -6 -13 5 -15 40
             -15 246 l0 240 -25 0 -25 0 0 -120 c0 -98 -3 -122 -15 -126 -35 -14 -45 14
             -45 130 l0 111 49 32 c85 55 130 133 131 225 0 43 2 47 28 51 15 2 33 2 40 0
-            8 -1 22 -3 33 -3z"
-            />
+            8 -1 22 -3 33 -3z" />
           </g>
         </svg>
       </p-button>
@@ -115,19 +104,13 @@
       <div class="toolbar-center">
         <p-iconfield>
           <p-inputicon class="pi pi-search" />
-          <input
-            [(ngModel)]="productName"
-            type="text"
-            pInputText
-            placeholder="Busca los productos que necesites..."
-            fluid
-            (keypress)="searchProduct($event)"
-          />
+          <input [(ngModel)]="productName" type="text" pInputText placeholder="Busca los productos que necesites..."
+            fluid (keypress)="searchProduct($event)" />
         </p-iconfield>
       </div>
     </ng-template>
     <ng-template #end>
-      <div class="d-flex" style="align-items: baseline">
+      <div class="d-flex" style="align-items: center">
         <div class="position-relative me-4">
           @if(unreadCount > 0){
           <p-overlaybadge [value]="unreadCount">
@@ -143,64 +126,54 @@
         </div>
         <p-popover #popover>
           <ng-template #content>
-            @if(notifications.length > 0){ @for (notification of notifications.reverse(); track
-            $index) {
-            <div
-              class="dropdown-item d-flex align-items-start p-3"
-              (click)="markAsRead(notification.id!)"
-            >
-              <div class="flex-grow-1" [ngClass]="notification.seenDate ? '' : 'fw-bold'">
-                <p class="mb-0 small">{{ notification.message }}</p>
-                <div class="d-flex justify-content-between align-items-start mb-1">
-                  @if(!notification.seenDate){
-                  <small class="text-primary">Nueva!</small>
-                  }
-                  <small class="text-muted">{{ notification.date | date : 'shortTime' }}</small>
-                </div>
-              </div>
-              @if(!notification.seenDate){
-              <span
-                class="ms-2 badge bg-primary rounded-circle"
-                style="width: 8px; height: 8px"
-                title="No leído"
-              ></span>
+            <div class="d-flex justify-content-between align-items-center m-0 p-2">
+              <h4 class="m-0">Notificaciones</h4>
+              @if(unreadCount > 0){
+                <p-button label="Leer todas" variant="text" (click)="markAllAsRead()" size="small"/>
               }
             </div>
-            } }@else {
-            <h4 class="m-0">No tiene notificaciones</h4>
-            }
+            <hr style="border: none; border-top: 0.1px solid var(--p-primary-color);">
+            <div class="notification-content" [class.pe-3]="hasOverflow" #notificationContent>
+              @if(notifications.length > 0){ @for (notification of notifications; track
+              $index) {
+              <div class="dropdown-item d-flex align-items-start p-2" (click)="markAsRead(notification)"
+                style="cursor: pointer;">
+                <div class="flex-grow-1">
+                  @if(!notification.seenDate){
+                  <div class="d-flex justify-content-between align-items-start mb-1">
+                    <small style="color: var(--p-primary-color)">Nueva!</small>
+                  </div>
+                  }
+                  <p class="mb-1 mt-0 small">{{ notification.message }}</p>
+                  <div class="d-flex justify-content-between align-items-start">
+                    <small style="color: var(--color-text-muted);">{{ notification.date | date: 'dd MMM yy - HH:mm'}}</small>
+                  </div>
+                </div>
+              </div>
+              } }@else {
+              <h4 class="m-0">No tiene notificaciones</h4>
+              }
+            </div>
           </ng-template>
         </p-popover>
         <div class="toolbar-end d-none d-sm-block">
-          <p-avatar
-            (click)="menu.toggle($event)"
-            [icon]="loggedUser.urlImagen ? '' : 'pi pi-user fs-4'"
-            [image]="loggedUser.urlImagen ? loggedUser.urlImagen : ''"
-            class="ms-2 me-4 avatar"
-            shape="circle"
-          />
+          <p-avatar (click)="menu.toggle($event)" [icon]="loggedUser?.urlImagen ? '' : 'pi pi-user fs-4'"
+            [image]="loggedUser?.urlImagen ? loggedUser.urlImagen : ''" class="ms-2 me-4 avatar" shape="circle" />
           <p-menu #menu [model]="userMenu" [popup]="true">
             <ng-template #start styleClass="p-2">
               <div class="row align-items-center">
                 <div class="col-auto">
-                  <p-avatar
-                    [icon]="loggedUser.urlImagen ? '' : 'pi pi-user'"
-                    [image]="loggedUser.urlImagen ? loggedUser.urlImagen : ''"
-                    shape="circle"
-                  />
+                  <p-avatar [icon]="loggedUser?.urlImagen ? '' : 'pi pi-user'"
+                    [image]="loggedUser?.urlImagen ? loggedUser.urlImagen : ''" shape="circle" />
                 </div>
                 <div class="col-auto p-0">
                   <div class="row-cols-auto">
-                    <span class="fs-5 p-0">{{ loggedUser.alias }}</span>
+                    <span class="fs-5 p-0">{{ loggedUser?.alias }}</span>
                   </div>
                   <div class="row-cols-auto pe-2 mt-1">
-                    @if(loggedUser.roles.length > 0){ @for (rol of loggedUser.roles; track $index) {
-                    <p-badge
-                      class="text-capitalize mx-1"
-                      [value]="rol.name.toLowerCase()"
-                      severity="secondary"
-                      badgesize="small"
-                    />
+                    @if(loggedUser?.roles?.length > 0){ @for (rol of loggedUser.roles; track $index) {
+                    <p-badge class="text-capitalize mx-1" [value]="rol.name.toLowerCase()" severity="secondary"
+                      badgesize="small" />
                     } } @else {
                     <p-badge value="Organización benéfica" severity="secondary" badgesize="small" />
                     }
@@ -219,21 +192,12 @@
   <p-drawer [(visible)]="visible" [closable]="false" (onHide)="visible = false">
     <ng-template #header>
       <div class="gap-2 d-flex" style="align-items: center">
-        <svg
-          id="logo"
-          version="1.0"
-          xmlns="http://www.w3.org/2000/svg"
-          width="30"
-          height="30"
-          viewBox="0 0 201.000000 219.000000"
-          preserveAspectRatio="xMidYMid meet"
-          [class.rotate-fow]="rotate && isCollapsed"
-          [class.rotate-back]="rotate && !isCollapsed"
-        >
+        <svg id="logo" version="1.0" xmlns="http://www.w3.org/2000/svg" width="30" height="30"
+          viewBox="0 0 201.000000 219.000000" preserveAspectRatio="xMidYMid meet"
+          [class.rotate-fow]="rotate && isCollapsed" [class.rotate-back]="rotate && !isCollapsed">
           <metadata>Created by potrace 1.16, written by Peter Selinger 2001-2019</metadata>
           <g transform="translate(0.000000,219.000000) scale(0.100000,-0.100000)" stroke="none">
-            <path
-              d="M950 2160 c-11 -11 -20 -29 -20 -40 0 -15 -7 -20 -29 -20 -43 0 -71
+            <path d="M950 2160 c-11 -11 -20 -29 -20 -40 0 -15 -7 -20 -29 -20 -43 0 -71
             -28 -78 -78 -5 -36 -9 -42 -30 -42 -13 0 -35 -11 -48 -25 -24 -24 -25 -28 -25
             -185 0 -88 -2 -160 -5 -160 -3 0 -44 23 -92 50 -102 59 -132 62 -165 20 l-23
             -29 -75 44 c-84 49 -129 56 -160 25 -11 -11 -20 -24 -20 -28 0 -4 -16 -8 -36
@@ -315,8 +279,7 @@
             -20 -7 -20 -209 0 -172 -3 -211 -15 -221 -8 -7 -22 -10 -30 -6 -13 5 -15 40
             -15 246 l0 240 -25 0 -25 0 0 -120 c0 -98 -3 -122 -15 -126 -35 -14 -45 14
             -45 130 l0 111 49 32 c85 55 130 133 131 225 0 43 2 47 28 51 15 2 33 2 40 0
-            8 -1 22 -3 33 -3z"
-            />
+            8 -1 22 -3 33 -3z" />
           </g>
         </svg>
         <p class="ms-2 my-0 fs-4" (click)="goHome()">Círculo solidario</p>
@@ -339,24 +302,16 @@
     </p-panelmenu>
     <ng-template #footer>
       <div class="d-flex justify-content-center gap-5" style="align-items: center">
-        <p-button [label]="loggedUser.alias" (onClick)="goEditProfile()" fluid>
-          <p-avatar
-            [icon]="loggedUser.urlImagen ? '' : 'pi pi-user fs-6'"
-            [image]="loggedUser.urlImagen ? loggedUser.urlImagen : ''"
-            class="avatar"
-            shape="circle"
-          />
+        <p-button [label]="loggedUser?.alias" (onClick)="goEditProfile()" fluid>
+          <p-avatar [icon]="loggedUser?.urlImagen ? '' : 'pi pi-user fs-6'"
+            [image]="loggedUser?.urlImagen ? loggedUser.urlImagen : ''" class="avatar" shape="circle" />
         </p-button>
         <p-button label="Cerrar sesión" (click)="logOut()" icon="pi pi-sign-out" fluid />
       </div>
     </ng-template>
   </p-drawer>
   <div class="main-content" [class.expanded]="isCollapsed">
-    <div
-      class="sidebar d-none d-sm-block"
-      [class.collapsed]="isCollapsed"
-      [class.fully-collapsed]="fullyCollapsed"
-    >
+    <div class="sidebar d-none d-sm-block" [class.collapsed]="isCollapsed" [class.fully-collapsed]="fullyCollapsed">
       <!-- <p-panelmenu [model]="items" class="gap-2 p-0" multiple="true" >
         <ng-template #item let-item >
           <div class="sidebar-button">
@@ -372,10 +327,7 @@
       <p-tieredmenu [model]="menu">
         <ng-template #item let-item>
           <div class="sidebar-button">
-            <p-button
-              fluid
-              [styleClass]="fullyCollapsed ? 'justify-content-start' : 'justify-content-start'"
-            >
+            <p-button fluid [styleClass]="fullyCollapsed ? 'justify-content-start' : 'justify-content-start'">
               <i [class]="item.icon + ' text-inherit m-3'" style="font-size: 1.4rem"></i>
               @if(!item.items || (item.items && !isCollapsed)){
               <span class="pe-4 sidebar-text text-start align-middle">
@@ -389,12 +341,8 @@
     </div>
     <div class="components-content container-fluid p-0">
       <router-outlet />
-      <p-scrolltop
-        target="parent"
-        [threshold]="100"
-        icon="pi pi-arrow-up"
-        [buttonProps]="{ severity: 'contrast', raised: true, rounded: true }"
-      />
+      <p-scrolltop target="parent" [threshold]="100" icon="pi pi-arrow-up"
+        [buttonProps]="{ severity: 'contrast', raised: true, rounded: true }" />
     </div>
   </div>
 </div>

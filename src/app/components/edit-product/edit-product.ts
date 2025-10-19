@@ -192,7 +192,7 @@ export class EditProduct implements OnInit {
     }
     let product = {
       id: this.id,
-      estado: 'DISPONIBLE',
+      estado: this.originalData.estado,
       idUsuario: this.loggedUser.id,
       urlImagen: this.imagenUrl,
       ...this.productForm.value,

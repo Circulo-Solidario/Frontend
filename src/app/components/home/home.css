@@ -51,6 +51,11 @@
 .toolbar-end {
   overflow: visible !important;
 }
+
+.notification-content{
+    max-height: 25vh;
+    overflow: auto;
+}
 /*#endregion*/
 
 .main-container {
