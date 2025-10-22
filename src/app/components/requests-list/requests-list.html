@@ -16,7 +16,7 @@
           <p-tabpanel value="1">
             <p-accordion value="0">
               @for (request of requestOfProducts; track $index) {
-              <p-accordion-panel [value]="request.id">
+              <p-accordion-panel [value]="request.id" [style]="$index == requestOfProducts.length - 1 ? 'border: 0' : ''">
                 <p-accordion-header>
                   <ng-template #toggleicon let-active="active">
                     @if (active) {
@@ -36,9 +36,11 @@
                     <ng-template #list let-items>
                       <div>
                         @for (requester of items; track $index) {
+                        @if ($index != 0) {
+                          <p-divider/>
+                        }
                         <div
-                          class="d-flex border rounded flex-row p-3 gap-3 list"
-                          [class.mt-2]="$index != 0"
+                          class="d-flex flex-row p-3 gap-3 list"
                         >
                           <div class="align-content-center">
                             @if(requester.urlImagen){

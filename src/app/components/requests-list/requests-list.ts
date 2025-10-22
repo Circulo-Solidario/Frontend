@@ -10,6 +10,7 @@ import { AvatarModule } from 'primeng/avatar';
 import { BadgeModule } from 'primeng/badge';
 import { DataViewModule } from 'primeng/dataview';
 import { ButtonModule } from 'primeng/button';
+import { DividerModule } from 'primeng/divider';
 
 @Component({
   selector: 'app-requests-list',
@@ -20,7 +21,8 @@ import { ButtonModule } from 'primeng/button';
     AvatarModule,
     BadgeModule,
     DataViewModule,
-    ButtonModule  
+    ButtonModule,
+    DividerModule  
   ],
   templateUrl: './requests-list.html',
   styleUrl: './requests-list.css'
