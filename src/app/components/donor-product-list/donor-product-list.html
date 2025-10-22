@@ -98,6 +98,7 @@
                       label=""
                       class="flex-grow-1 text-nowrap"
                       (onClick)="editProduct(item.id)"
+                      [disabled]="item.estado.replace('_', ' ') != 'DISPONIBLE'"
                     ></p-button>
                     <p-button
                       icon="pi pi-times"
@@ -105,6 +106,7 @@
                       class="flex-grow-1 text-nowrap"
                       severity="danger"
                       (onClick)="deleteProduct($event, item.id)"
+                      [disabled]="item.estado.replace('_', ' ') != 'DISPONIBLE'"
                     ></p-button>
                   </div>
                 </div>

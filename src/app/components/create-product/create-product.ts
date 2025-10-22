@@ -159,7 +159,7 @@ export class CreateProduct implements OnInit {
       return;
     }    
     let product = {
-      estado: 'EN_STOCK',
+      estado: 'DISPONIBLE',
       idUsuario: this.loggedUser.id,
       urlImagen: this.imagenUrl,
       ...this.productForm.value,

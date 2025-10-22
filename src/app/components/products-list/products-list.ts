@@ -17,6 +17,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { Skeleton } from 'primeng/skeleton';
 import { LoginService } from '../../services/login';
 import { Requests } from '../../services/requests';
+import { Notifications, TipoNotificaciones } from '../../services/notifications';
 @Component({
   selector: 'app-products-list',
   imports: [
@@ -48,6 +49,7 @@ export class ProductsList implements OnInit {
   private location: Location = inject(Location);
   private loginService: LoginService = inject(LoginService);
   private requestService: Requests = inject(Requests);
+  private notificationService: Notifications = inject(Notifications);
   logedUser: any;
   currentPage: number = 0;
   pageSize: number = 10;
@@ -106,14 +108,21 @@ export class ProductsList implements OnInit {
   requestProduct(item: any, event: MouseEvent): void {
     event.stopPropagation();
     this.requestService.requestProduct({
-      idUsuario: this.logedUser.id,
-      idProducto: item.id
+      deUsuario: this.logedUser.id,
+      idProducto: item.id,
+      ausuario: item.idUsuario
     }).subscribe({
       next: () => {
         this.toasts.showToast({
           severity: 'success', summary: 'Producto solicitado!', detail: 'Notificamos al donante sobre tu solicitud'
         });
         this.filterData();
+        this.notificationService.sendNotification({
+            tipoNotificacion: TipoNotificaciones.NUEVA_SOLICITUD,
+            deUsuario: this.logedUser.id,
+            ausuario: item.idUsuario,
+            mensaje: `Tienes una nueva solicitud del producto ${item.nombre} desde el usuario ${this.logedUser.alias}`
+          }).subscribe();
       },
       error: () => {
         this.toasts.showToast({
@@ -198,7 +207,7 @@ export class ProductsList implements OnInit {
     }
   }
 
-  getSeverity(product: any): string {
+  getSeverity(product: any): 'success' | 'warn' | 'danger' {
     switch (product.estado) {
       case 'DISPONIBLE':
         return 'success';

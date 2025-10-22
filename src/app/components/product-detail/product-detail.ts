@@ -10,6 +10,7 @@ import { Badge } from 'primeng/badge';
 import { Tag } from 'primeng/tag';
 import { LoginService } from '../../services/login';
 import { Requests } from '../../services/requests';
+import { Notifications, TipoNotificaciones } from '../../services/notifications';
 
 @Component({
   selector: 'app-product-detail',
@@ -29,6 +30,7 @@ export class ProductDetail implements OnInit {
   private toasts: Toasts = inject(Toasts);
   private loginService: LoginService = inject(LoginService);
   private requestService: Requests = inject(Requests);
+  private notificationService: Notifications = inject(Notifications);
   id: any;
   filters: any;
   productData: any;
@@ -71,15 +73,37 @@ export class ProductDetail implements OnInit {
     return false;
   }
 
+  getSeverity(product: any): 'success' | 'warn' | 'danger' {
+    switch (product.estado) {
+      case 'DISPONIBLE':
+        return 'success';
+      case 'SOLICITADO':
+        return 'warn';
+      case 'RESERVADO':
+        return 'danger';
+      case 'ENTREGADO':
+        return 'danger';
+      default:
+        return 'success';
+    }
+  }
+
   requestProduct(): void {
     this.requestService.requestProduct({
-      idUsuario: this.logedUser.id,
-      idProducto: this.productData.id
+      deUsuario: this.logedUser.id,
+      idProducto: this.productData.id,
+      ausuario: this.productData.idUsuario
     }).subscribe({
       next: () => {
         this.toasts.showToast({
           severity: 'success', summary: 'Producto solicitado!', detail: 'Notificamos al donante sobre tu solicitud'
         });
+        this.notificationService.sendNotification({
+                    tipoNotificacion: TipoNotificaciones.NUEVA_SOLICITUD,
+                    deUsuario: this.logedUser.id,
+                    ausuario: this.productData.idUsuario,
+                    mensaje: `Tienes una nueva solicitud del producto ${this.productData.nombre} desde el usuario ${this.logedUser.alias}`
+                  }).subscribe();
         this.getProductData();
       },
       error: () => {

@@ -9,5 +9,7 @@ export const environment = {
         storageBucket: "circulo-solidario-55b57.appspot.com",
         messagingSenderId: "308461408875",
         appId: "circulo-solidario-55b57"
-    }
+    },
+    pusherKey: '20fa743259584ab87cc2',
+    pusherCluster: 'sa1'
 };

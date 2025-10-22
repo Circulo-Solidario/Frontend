@@ -78,7 +78,7 @@ export class EditProduct implements OnInit {
     const navigation = this.router.currentNavigation();
     const state = navigation?.extras?.state || history.state;
     this.id = state?.['id'];
-    if(!this.id){    
+    if (!this.id) {
       this.router.navigate(['/principal/mis-publicaciones']);
     }
     this.categoriesService.getCategories().subscribe({
@@ -103,7 +103,7 @@ export class EditProduct implements OnInit {
         });
         this.imagen = this.originalData.urlImagen;
         this.imagenUrl = this.originalData.urlImagen;
-        this.originalProductImage = this.originalData.urlImagen;       
+        this.originalProductImage = this.originalData.urlImagen;
       },
       error: () => {
         this.toasts.showToast({
@@ -111,7 +111,7 @@ export class EditProduct implements OnInit {
         })
         this.location.back();
       }
-    })    
+    })
   }
 
   goBack() {
@@ -127,8 +127,8 @@ export class EditProduct implements OnInit {
       this.showImageError();
       return;
     }
-    this.imagen = fileSelected.files[0];   
-    
+    this.imagen = fileSelected.files[0];
+
   }
 
   showImageError() {
@@ -170,9 +170,19 @@ export class EditProduct implements OnInit {
         const response = await this.imageService.uploadImage(image);
         this.imagenUrl = response.data.url;
       } catch (error) {
-        errorSavingImage = true;
+        this.toasts.showToast({
+          severity: 'error',
+          summary: 'Error al guardar imagen',
+          detail: 'No se pudo guardar la imagen correctamente, intente más tarde...',
+        });
+        this.setUploading = false;
+        return;
       }
-    } else {
+    }
+    if (this.imagen == this.originalProductImage) {
+      this.imagenUrl = this.originalData.urlImagen;
+    }
+    if (this.imagenUrl == null) {
       this.toasts.showToast({
         severity: 'error',
         summary: 'Error al registrar producto',
@@ -181,23 +191,17 @@ export class EditProduct implements OnInit {
       this.setUploading = false;
       return;
     }
-    if (errorSavingImage || !this.imagenUrl) {
-      this.toasts.showToast({
-        severity: 'error',
-        summary: 'Error al guardar imagen',
-        detail: 'No se pudo guardar la imagen correctamente, intente más tarde...',
-      });
-      this.setUploading = false;
-      return;
+    if (errorSavingImage) {
+
     }
     let product = {
       id: this.id,
-      estado: 'DISPONIBLE',
+      estado: this.originalData.estado,
       idUsuario: this.loggedUser.id,
       urlImagen: this.imagenUrl,
       ...this.productForm.value,
     };
-    this.productService.editProduct(this.id ,product).subscribe({
+    this.productService.editProduct(this.id, product).subscribe({
       next: (response: any) => {
         this.toasts.showToast({
           severity: 'success',

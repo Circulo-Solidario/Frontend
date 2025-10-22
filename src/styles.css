@@ -2,6 +2,25 @@ body {
   background-color: var(--background-color);
 }
 
+::-webkit-scrollbar {
+  width: 4px;              /* ancho de la barra vertical */
+  height: 4px;             /* alto de la barra horizontal */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;     /* color del fondo */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;         /* color de la barra */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;         /* color al pasar el mouse */
+}
+
 :root {
   /* === Base de colores === */
   --dark-green: #00190f;
@@ -21,14 +40,22 @@ body {
   --p-toggleswitch-handle-checked-hover-background: transparent;
 
   /* === Paleta cremosa (tema claro) === */
-  --color-bg-0: #fdfbf6; /* base casi crema */
-  --color-bg-1: #faf7f0; /* un poco más cálido */
-  --color-bg-2: #f3efe5; /* fondo principal */
-  --color-bg-3: #ebe7dc; /* para paneles */
-  --color-bg-4: #ddd8ca; /* hover o bordes sutiles */
-  --color-accent-1: #009b1e; /* forest-green */
-  --color-accent-2: #19730f; /* office-green */
-  --color-accent-3: #2d5537; /* hunter-green */
+  --color-bg-0: #fdfbf6;
+  /* base casi crema */
+  --color-bg-1: #faf7f0;
+  /* un poco más cálido */
+  --color-bg-2: #f3efe5;
+  /* fondo principal */
+  --color-bg-3: #ebe7dc;
+  /* para paneles */
+  --color-bg-4: #ddd8ca;
+  /* hover o bordes sutiles */
+  --color-accent-1: #009b1e;
+  /* forest-green */
+  --color-accent-2: #19730f;
+  /* office-green */
+  --color-accent-3: #2d5537;
+  /* hunter-green */
   --color-text-strong: #1b241c;
   --color-text-muted: #4a574b;
   --color-border: #d2cbbd;

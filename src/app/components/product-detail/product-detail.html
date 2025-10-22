@@ -34,7 +34,7 @@
                 @if(donorData?.roles.length > 0){ @for (rol of donorData?.roles; track $index) {
                 <p-badge
                   class="text-capitalize me-1 mt-1"
-                  [value]="rol.name.toLowerCase()"
+                  [value]="rol.nombre.toLowerCase()"
                   severity="secondary"
                   badgesize="small"
                 />
@@ -62,8 +62,8 @@
             <p-tag
               class="tag"
               icon="pi pi-check"
-              severity="success"
-              value="Disponible"
+              [severity]="getSeverity(productData)"
+              [value]="productData.estado"
               [rounded]="true"
             />
             <p-button class="mt-4 mt-xl-0" icon="pi pi-thumbs-up" fluid label="Solicitar producto" 
