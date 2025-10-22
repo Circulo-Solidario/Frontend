@@ -132,6 +132,10 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
           {
             label: 'Ver solicitudes',
             icon: 'pi pi-comments',
+            command: () => {
+              this.router.navigate(['/principal/solicitudes']);
+              this.visible = false;
+            },
           },
         ],
       },
@@ -189,7 +193,6 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
     if (!this.notificationContent) return;
     const el = this.notificationContent.nativeElement;
     this.hasOverflow = el.scrollHeight > el.clientHeight;
-    console.log(this.hasOverflow);
   }
 
   toggleSidebar() {
@@ -244,7 +247,7 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
         if (notifications) {
           this.notifications = notifications;
           this.unreadCount = this.notifications.filter(
-            (notification) => notification.seenDate == null
+            (notification) => notification.fechaVistaNotificacion == null
           ).length;
           this.orderNotificationsByDate();
         } else {
@@ -259,8 +262,8 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
 
   orderNotificationsByDate() {
     this.notifications.sort((a: NotificationInter, b: NotificationInter) => {
-      const dateA = new Date(a.date!).getTime();
-      const dateB = new Date(b.date!).getTime();
+      const dateA = new Date(a.fechaNotificacion!).getTime();
+      const dateB = new Date(b.fechaNotificacion!).getTime();
       return dateB - dateA;
     });
   }
@@ -270,13 +273,13 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    this.notificationService.subscribeNotification('nm-' + this.loggedUser.id);
+    this.notificationService.subscribeNotification('nn-' + this.loggedUser.id);
 
     this.notificationsSubscription = this.notificationService.notification$.subscribe({
       next: (notification: NotificationInter) => {
-        if (notification && notification.message && !this.notifications.includes(notification)) {
+        if (notification && notification.mensaje && !this.notifications.includes(notification)) {
           this.notifications.push(notification);
-          if (!notification.seenDate) this.unreadCount++;
+          if (!notification.fechaVistaNotificacion) this.unreadCount++;
           this.orderNotificationsByDate();
         }
       },
@@ -294,10 +297,9 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
   }
 
   markAsRead(notification: NotificationInter): void {
-    console.log(notification);
     this.notificationService.markReadNotification(notification.id!).subscribe({
       next: () => {
-        notification.seenDate = new Date().toISOString();
+        notification.fechaVistaNotificacion = new Date().toISOString();
         this.unreadCount > 0 ? this.unreadCount-- : 0;
       },
       error: () => {
@@ -308,9 +310,9 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
 
   markAllAsRead(): void {
     this.notifications.forEach((notification) => {
-      if (!notification.seenDate && notification.id) {
+      if (!notification.fechaVistaNotificacion && notification.id) {
         this.markAsRead(notification);
-        notification.seenDate = new Date().toISOString();
+        notification.fechaVistaNotificacion = new Date().toISOString();
       }
     });
     this.unreadCount = 0;

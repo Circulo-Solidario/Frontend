@@ -17,7 +17,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { Skeleton } from 'primeng/skeleton';
 import { LoginService } from '../../services/login';
 import { Requests } from '../../services/requests';
-import { Notifications } from '../../services/notifications';
+import { Notifications, TipoNotificaciones } from '../../services/notifications';
 @Component({
   selector: 'app-products-list',
   imports: [
@@ -108,8 +108,9 @@ export class ProductsList implements OnInit {
   requestProduct(item: any, event: MouseEvent): void {
     event.stopPropagation();
     this.requestService.requestProduct({
-      idUsuario: this.logedUser.id,
-      idProducto: item.id
+      deUsuario: this.logedUser.id,
+      idProducto: item.id,
+      ausuario: item.idUsuario
     }).subscribe({
       next: () => {
         this.toasts.showToast({
@@ -117,9 +118,10 @@ export class ProductsList implements OnInit {
         });
         this.filterData();
         this.notificationService.sendNotification({
-            fromUser: this.logedUser.id,
-            toUser: item.idUsuario,
-            message: `Tienes una nueva solicitud del producto ${item.nombre} desde el usuario ${this.logedUser.alias}`
+            tipoNotificacion: TipoNotificaciones.NUEVA_SOLICITUD,
+            deUsuario: this.logedUser.id,
+            ausuario: item.idUsuario,
+            mensaje: `Tienes una nueva solicitud del producto ${item.nombre} desde el usuario ${this.logedUser.alias}`
           }).subscribe();
       },
       error: () => {

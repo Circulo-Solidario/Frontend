@@ -35,6 +35,10 @@ export const routes: Routes = [
       {
         path: 'editar-publicacion',
         loadComponent: () => import('./components/edit-product/edit-product').then((m) => m.EditProduct)
+      },
+      {
+        path: 'solicitudes',
+        loadComponent: () => import('./components/requests-list/requests-list').then((m) => m.RequestsList)
       }
     ]
   },

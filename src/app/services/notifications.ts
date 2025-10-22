@@ -6,11 +6,20 @@ import { HttpClient } from '@angular/common/http';
 
 export interface NotificationInter{
   id?: number;
-  message: string;
-  toUser?: string;
-  fromUser: string;
-  date?: string;
-  seenDate?: string | null;
+  mensaje: string;
+  deUsuario?: string | any;
+  aUsuario?: string | any;
+  ausuario?: string | any;
+  tipoNotificacion?: TipoNotificaciones,
+  fechaNotificacion?: string;
+  fechaVistaNotificacion?: string | null;
+}
+
+export enum TipoNotificaciones{
+  NUEVO_MENSAJE,
+  NUEVA_SOLICITUD,
+  SOLICITUD_ACEPTADA,
+  SOLICITUD_RECHAZADA
 }
 
 @Injectable({
@@ -32,11 +41,11 @@ export class Notifications {
     return this.notificationSubject.asObservable();
   }
 
-  getNotifications(userId: string): Observable<Array<NotificationInter>>{
+  getNotifications(userId: string): Observable<Array<any>>{
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     const date = sevenDaysAgo.toISOString();
-    return this.http.get<Array<NotificationInter>>(`${environment.apiUrl}/notificaciones/${userId}`, {
+    return this.http.get<Array<any>>(`${environment.apiUrl}/notificaciones/${userId}`, {
       params: {date}
     });
   }
