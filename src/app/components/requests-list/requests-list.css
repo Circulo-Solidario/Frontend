@@ -12,3 +12,11 @@
     padding: 4vh 4vw;
     height: max-content;
 }
+
+::ng-deep .p-tablist-tab-list, .p-tabpanels{
+  background-color: transparent;
+}
+
+::ng-deep p-accordion .p-ink{
+  display: none;
+}

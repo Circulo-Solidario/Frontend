@@ -12,25 +12,81 @@
           <p-tab value="1">Solicitudes de mis productos</p-tab>
         </p-tablist>
         <p-tabpanels>
-          <p-tabpanel value="0">
-            <p class="m-0">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
-              incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-              exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure
-              dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-              mollit anim id est laborum.
-            </p>
-          </p-tabpanel>
+          <p-tabpanel value="0"> </p-tabpanel>
           <p-tabpanel value="1">
-            <p class="m-0">
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque
-              laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi
-              architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas
-              sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione
-              voluptatem sequi nesciunt. Consectetur, adipisci velit, sed quia non numquam eius
-              modi.
-            </p>
+            <p-accordion value="0">
+              @for (request of requestOfProducts; track $index) {
+              <p-accordion-panel [value]="request.id">
+                <p-accordion-header>
+                  <ng-template #toggleicon let-active="active">
+                    @if (active) {
+                    <i class="pi pi-minus"></i>
+                    } @else {
+                    <i class="pi pi-plus"></i>
+                    }
+                  </ng-template>
+                  <span class="d-flex align-items-center gap-2 w-full">
+                    <p-avatar [image]="request.producto.urlImagen" shape="circle" size="xlarge"/>
+                    <span class="font-bold">{{ request.producto.nombre }}</span>
+                    <p-badge [value]="request.producto.solicitantes.length" class="ml-auto mr-2" />
+                  </span>
+                </p-accordion-header>
+                <p-accordion-content>
+                  <p-dataview #dv [value]="request.producto.solicitantes">
+                    <ng-template #list let-items>
+                      <div>
+                        @for (requester of items; track $index) {
+                        <div
+                          class="d-flex border rounded flex-row p-3 gap-3 list"
+                          [class.mt-2]="$index != 0"
+                        >
+                          <div class="align-content-center">
+                            @if(requester.urlImagen){
+                            <p-avatar  size="large" shape="circle" [image]="requester.urlImagen" />
+                            }@else {
+                            <p-avatar  size="large" shape="circle" icon="pi pi-user" />
+                            }
+                          </div>
+                          <div
+                            class="d-flex flex-column flex-sm-row justify-content-between align-items-center align-items-start align-items-sm-center flex-grow-1 gap-4"
+                          >
+                            <div
+                              class="d-flex flex-row flex-md-column justify-content-evenly align-items-start gap-2"
+                            >
+                              <div>
+                                <div class="fw-medium fs-5">
+                                  {{ requester.nombreApellido }}
+                                </div>
+                                <span class="fw-medium text-secondary small">{{
+                                  requester.alias
+                                }}</span>
+                              </div>
+                            </div>
+                            <div class="d-flex flex-column align-content-center align-items-md-end gap-3">
+                              <div class="d-flex flex-row-reverse flex-md-row gap-2">
+                                <p-button
+                                  icon="pi pi-thumbs-up"
+                                  label="Aceptar"
+                                  class="flex-grow-1 flex-md-grow-0 text-nowrap"
+                                ></p-button>
+                                <p-button
+                                  icon="pi pi-times"
+                                  label="Rechazar"
+                                  class="flex-grow-1 flex-md-grow-0 text-nowrap"
+                                  severity="danger"
+                                ></p-button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        }
+                      </div>
+                    </ng-template>
+                  </p-dataview>
+                </p-accordion-content>
+              </p-accordion-panel>
+              }
+            </p-accordion>
           </p-tabpanel>
         </p-tabpanels>
       </p-tabs>
