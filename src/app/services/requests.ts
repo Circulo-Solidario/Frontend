@@ -17,13 +17,13 @@ export class Requests {
   getRequestsFrom(fromUser?: number | null, toUser?: number | null): Observable<any>{
     let params: any;
     if(fromUser){
-      params = {deUsuario: fromUser}
+      params = { deUsuario: fromUser }
     }
     if(toUser){
-      params = {aUsuario: toUser}
+      params = { aUsuario: toUser }
     }
     return this.httpClient.get(`${environment.apiUrl}${this.apiPath}`, {
-      params: {params}
+      params
     })
   }
 }

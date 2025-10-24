@@ -22,12 +22,12 @@ import { DividerModule } from 'primeng/divider';
     BadgeModule,
     DataViewModule,
     ButtonModule,
-    DividerModule  
+    DividerModule
   ],
   templateUrl: './requests-list.html',
   styleUrl: './requests-list.css'
 })
-export class RequestsList implements OnInit{
+export class RequestsList implements OnInit {
   private loginService: LoginService = inject(LoginService);
   private router: Router = inject(Router);
   private requestService: Requests = inject(Requests);
@@ -44,17 +44,18 @@ export class RequestsList implements OnInit{
       if (user == null) {
         this.router.navigate(['/login']);
       }
+      this.getMyRequests();
+      this.getRequestsOfMyProducts();
     });
-    this.getMyRequests();
-    this.getRequestsOfMyProducts();
+
   }
 
   goHome() {
     this.router.navigate(['/principal']);
   }
 
-  getMyRequests(){
-    this.requestService.getRequestsFrom(this.logedUser.id).subscribe({
+  getMyRequests() {
+    this.requestService.getRequestsFrom(this.logedUser.id, null).subscribe({
       next: (response: any) => {
         this.myRequests = response
       },
@@ -66,7 +67,7 @@ export class RequestsList implements OnInit{
     })
   }
 
-  getRequestsOfMyProducts(){
+  getRequestsOfMyProducts() {
     this.requestService.getRequestsFrom(null, this.logedUser.id).subscribe({
       next: (response: any) => {
         this.requestOfProducts = response;

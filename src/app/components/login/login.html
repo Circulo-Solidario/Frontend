@@ -38,7 +38,7 @@
                   loginForm.invalid && loginForm.touched
                 "
               />
-              @if (loginForm.invalid && loginForm.touched) {
+              @if (loginForm.invalid && loginForm.get('correo')?.touched) {
                 <p-message severity="error" size="small" variant="simple">
                 Ingrese un mail.
                 </p-message>
@@ -47,7 +47,7 @@
             <div
               class="mt-4"
               [ngClass]="[
-                loginForm.invalid && loginForm.touched
+                loginForm.invalid && loginForm.get('correo')?.touched
                   ? ''
                   : 'pb-2'
               ]"
@@ -65,7 +65,7 @@
                   loginForm.invalid && loginForm.touched
                 "
               />
-              @if (loginForm.invalid && loginForm.touched) {
+              @if (loginForm.invalid && loginForm.get('contrasena')?.touched) {
               <p-message severity="error" size="small" variant="simple"
                 >Ingrese una contraseña.</p-message
               >
