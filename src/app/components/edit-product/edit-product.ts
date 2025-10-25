@@ -66,7 +66,7 @@ export class EditProduct implements OnInit {
     this.productForm = new FormGroup({
       nombre: new FormControl('', [Validators.required, Validators.minLength(4)]),
       descripcion: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(255)]),
-      categoria: new FormControl(null, [Validators.required]),
+      categoriaId: new FormControl(null, [Validators.required]),
     });
   }
 
@@ -99,7 +99,7 @@ export class EditProduct implements OnInit {
         this.productForm.setValue({
           nombre: this.originalData.nombre,
           descripcion: this.originalData.descripcion,
-          categoria: this.originalData.categoria
+          categoriaId: this.originalData.categoria.id
         });
         this.imagen = this.originalData.urlImagen;
         this.imagenUrl = this.originalData.urlImagen;
@@ -195,8 +195,6 @@ export class EditProduct implements OnInit {
 
     }
     let product = {
-      id: this.id,
-      estado: this.originalData.estado,
       idUsuario: this.loggedUser.id,
       urlImagen: this.imagenUrl,
       ...this.productForm.value,
@@ -226,7 +224,7 @@ export class EditProduct implements OnInit {
     this.productForm.setValue({
       nombre: this.originalData.nombre,
       descripcion: this.originalData.descripcion,
-      categoria: this.originalData.categoria
+      categoriaId: this.originalData.categoria.id
     });
     this.changeImage = false;
     this.imagen = this.originalData.urlImagen;

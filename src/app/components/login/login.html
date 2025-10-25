@@ -20,11 +20,6 @@
           <form class="me-2 mb-0 mt-2" [formGroup]="loginForm">
             <div
               class="mb-4"
-              [ngClass]="[
-                loginForm.invalid && loginForm.touched
-                  ? ''
-                  : 'pb-2'
-              ]"
             >
               <label class="form-label" for="correo">Correo electrónico</label>
               <input
@@ -35,10 +30,10 @@
                 type="email"
                 formControlName="correo"
                 [invalid]="
-                  loginForm.invalid && loginForm.touched
+                  loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched
                 "
               />
-              @if (loginForm.invalid && loginForm.get('correo')?.touched) {
+              @if (loginForm.get('correo')?.invalid && loginForm.get('correo')?.touched) {
                 <p-message severity="error" size="small" variant="simple">
                 Ingrese un mail.
                 </p-message>
@@ -46,11 +41,6 @@
             </div>
             <div
               class="mt-4"
-              [ngClass]="[
-                loginForm.invalid && loginForm.get('correo')?.touched
-                  ? ''
-                  : 'pb-2'
-              ]"
             >
               <label class="form-label" for="contrasena">Contraseña</label>
               <p-password
@@ -62,10 +52,10 @@
                 [toggleMask]="true"
                 fluid
                 [invalid]="
-                  loginForm.invalid && loginForm.touched
+                  loginForm.get('contrasena')?.invalid && loginForm.get('contrasena')?.touched
                 "
               />
-              @if (loginForm.invalid && loginForm.get('contrasena')?.touched) {
+              @if (loginForm.get('contrasena')?.invalid && loginForm.get('contrasena')?.touched) {
               <p-message severity="error" size="small" variant="simple"
                 >Ingrese una contraseña.</p-message
               >

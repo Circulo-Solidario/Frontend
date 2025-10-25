@@ -157,14 +157,15 @@
           </ng-template>
         </p-popover>
         <div class="toolbar-end d-none d-sm-block">
-          <p-avatar (click)="menu.toggle($event)" [icon]="loggedUser?.urlImagen ? '' : 'pi pi-user fs-4'"
-            [image]="loggedUser?.urlImagen ? loggedUser.urlImagen : ''" class="ms-2 me-4 avatar" shape="circle" />
+          <p-avatar (click)="menu.toggle($event)" [icon]="loggedUser?.urlImagen ? '' : 'pi pi-user'"
+            [image]="loggedUser?.urlImagen ? loggedUser.urlImagen : ''" class="ms-2 me-4 avatar" shape="circle" [size]="loggedUser?.urlImagen ? 'normal' : 'large'" />
           <p-menu #menu [model]="userMenu" [popup]="true">
             <ng-template #start styleClass="p-2">
-              <div class="row align-items-center">
+              <div class="row align-items-center me-1">
                 <div class="col-auto">
                   <p-avatar [icon]="loggedUser?.urlImagen ? '' : 'pi pi-user'"
-                    [image]="loggedUser?.urlImagen ? loggedUser.urlImagen : ''" shape="circle" />
+                    [image]="loggedUser?.urlImagen ? loggedUser.urlImagen : ''" shape="circle" 
+                    [size]="loggedUser?.urlImagen ? 'large' : 'xlarge'"/>
                 </div>
                 <div class="col-auto p-0">
                   <div class="row-cols-auto">

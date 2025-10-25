@@ -49,9 +49,9 @@ export class CreateProfile implements OnInit {
   private loginService: LoginService = inject(LoginService);
   toastService: Toasts = inject(Toasts);
   userRolesOptions = [
-    { label: 'Donante', value: { id: 2 } },
-    { label: 'Donatario', value: { id: 3 } },
-    { label: 'Observador', value: { id: 4 } },
+    { label: 'Donante', value: 2 },
+    { label: 'Donatario', value: 3 },
+    { label: 'Observador', value: 4 },
   ];
   charityForm: FormGroup;
   userForm: FormGroup;
@@ -143,9 +143,7 @@ export class CreateProfile implements OnInit {
     let account;
     
     account = {
-      correo: this.user.email,
-      activo: true,
-      validado: false
+      correo: this.user.email
     }
 
     switch (this.typeSelected) {

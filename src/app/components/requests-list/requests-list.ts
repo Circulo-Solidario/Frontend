@@ -22,10 +22,10 @@ import { DividerModule } from 'primeng/divider';
     BadgeModule,
     DataViewModule,
     ButtonModule,
-    DividerModule
+    DividerModule,
   ],
   templateUrl: './requests-list.html',
-  styleUrl: './requests-list.css'
+  styleUrl: './requests-list.css',
 })
 export class RequestsList implements OnInit {
   private loginService: LoginService = inject(LoginService);
@@ -34,7 +34,7 @@ export class RequestsList implements OnInit {
   private toasts: Toasts = inject(Toasts);
 
   logedUser: any;
-  defaultTab: string = "1";
+  defaultTab: string = '1';
   myRequests: any[] = [];
   requestOfProducts: any[] = [];
 
@@ -47,7 +47,6 @@ export class RequestsList implements OnInit {
       this.getMyRequests();
       this.getRequestsOfMyProducts();
     });
-
   }
 
   goHome() {
@@ -55,29 +54,59 @@ export class RequestsList implements OnInit {
   }
 
   getMyRequests() {
-    this.requestService.getRequestsFrom(this.logedUser.id, null).subscribe({
+    this.requestService.getRequestsFrom(this.logedUser?.id, null).subscribe({
       next: (response: any) => {
-        this.myRequests = response
+        this.myRequests = response;
       },
       error: () => {
         this.toasts.showToast({
-          severity: 'error', summary: 'Error al obtener tus solicitudes', detail: 'No pudimos obtener tus solicitudes, intente nuevamente...'
-        })
-      }
-    })
+          severity: 'error',
+          summary: 'Error al obtener tus solicitudes',
+          detail: 'No pudimos obtener tus solicitudes, intente nuevamente...',
+        });
+      },
+    });
   }
 
   getRequestsOfMyProducts() {
-    this.requestService.getRequestsFrom(null, this.logedUser.id).subscribe({
+    this.requestService.getRequestsFrom(null, this.logedUser?.id).subscribe({
       next: (response: any) => {
-        this.requestOfProducts = response;
+        this.requestOfProducts = response.reduce((acum: any[], actual: any) => {
+          const productId = actual.producto.id;
+
+          // Buscamos si ya existe ese producto en el acumulador
+          let group = acum.find((g) => g.product.id === productId);
+
+          if (!group) {
+            // Si no existe, creamos uno nuevo
+            group = {
+              product: actual.producto,
+              requests: [],
+            };
+            acum.push(group);
+          }
+
+          // Agregamos la solicitud actual al grupo
+          group.requests.push({
+            id: actual.id,
+            fromUser: actual.deUsuario,
+            toUser: actual.ausuario,
+            message: actual.mensaje,
+            requestDate: actual.fechaSolicitud,
+            requestState: actual.estadoSolicitud,
+          });
+
+          return acum;
+        }, []);
+        console.log(this.requestOfProducts);
       },
       error: () => {
         this.toasts.showToast({
-          severity: 'error', summary: 'Error al obtener las solicitudes de tus productos', detail: 'No pudimos obtener las solicitudes de tus productos, intente nuevamente...'
-        })
-      }
-    })
+          severity: 'error',
+          summary: 'Error al obtener las solicitudes de tus productos',
+          detail: 'No pudimos obtener las solicitudes de tus productos, intente nuevamente...',
+        });
+      },
+    });
   }
-
 }

@@ -12,7 +12,7 @@ export class Products {
   private idProduct: any;
 
   publishProduct(product: any): Observable<any> {
-    return this.httpClient.post(`${environment.apiUrl}${this.apiPath}/donador`, product);
+    return this.httpClient.post(`${environment.apiUrl}${this.apiPath}`, product);
   }
 
   getProducts(filters: any): Observable<any> {
