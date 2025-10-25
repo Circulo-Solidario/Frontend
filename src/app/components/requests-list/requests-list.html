@@ -16,10 +16,7 @@
           <p-tabpanel value="1">
             <p-accordion value="0">
               @for (item of requestOfProducts; track $index) {
-              <p-accordion-panel
-                [value]="item"
-                [style]="$index == requestOfProducts.length - 1 ? 'border: 0' : ''"
-              >
+              <p-accordion-panel [value]="item" [style]="$index == requestOfProducts.length - 1 ? 'border: 0' : ''">
                 <p-accordion-header>
                   <ng-template #toggleicon let-active="active">
                     @if (active) {
@@ -34,82 +31,73 @@
                     <p-badge [value]="item.requests.length" class="ml-auto mr-2" />
                   </span>
                 </p-accordion-header>
-                <p-accordion-content [style]="$index == requestOfProducts.length - 1 ? 'border-radius: 0 0 var(--p-content-border-radius) var(--p-content-border-radius)' : ''">
+                <p-accordion-content
+                  [style]="$index == requestOfProducts.length - 1 ? 'border-radius: 0 0 var(--p-content-border-radius) var(--p-content-border-radius)' : ''">
                   <p-dataview #dv [value]="item.requests">
                     <ng-template #list let-items>
                       <div>
-                        @for (request of items; track $index) { 
-                          @if(request.requestState == 'PENDIENTE'){
-                          @if ($index != 0) {
-                            <p-divider />
-                          }
-                          <div class="d-flex flex-row p-3 gap-3 list">
-                            <div class="align-content-center">
-                              @if(request.fromUser.urlImagen){
-                              <p-avatar size="large" shape="circle" [image]="request.fromUser.urlImagen" />
-                              }@else {
-                              <p-avatar size="large" shape="circle" icon="pi pi-user" />
-                              }
-                            </div>
-                            <div
-                              class="d-flex flex-column flex-sm-row justify-content-between align-items-center align-items-start align-items-sm-center flex-grow-1 gap-4"
-                            >
-                              <div
-                                class="d-flex flex-row flex-md-column justify-content-evenly align-items-start gap-2"
-                              >
-                                <div>
-                                  <div class="fw-medium fs-5">
-                                    {{ request.fromUser.nombreApellido }}
-                                  </div>
-                                  <span class="fw-medium text-secondary small">{{
-                                    request.fromUser.alias
-                                  }}</span>
-                                </div>                                
+                        @for (request of items; track $index) {
+                        @if(request.requestState == 'PENDIENTE'){
+                        @if ($index != 0) {
+                        <p-divider />
+                        }
+                        <div class="d-lg-flex flex-row justify-content-between">
+                          <div class="col-auto">
+                            <div class="row">
+                              <div class="col-auto">
+                                <div class="align-content-center mt-1">
+                                  @if(request.fromUser.urlImagen){
+                                  <p-avatar size="large" shape="circle" [image]="request.fromUser.urlImagen" />
+                                  }@else {
+                                  <p-avatar size="large" shape="circle" icon="pi pi-user" />
+                                  }
+                                </div>
                               </div>
-                              <div
-                                class="d-flex flex-row flex-md-column justify-content-evenly align-items-start gap-2"
-                              >
-                                <div>
-                                  <div class="fw-medium fs-6">
+                              <div class="col">
+                                <div class=" flex-md-column justify-content-evenly align-items-start gap-2">
+                                  <div>
+                                    <div class="fw-medium fs-5">
+                                      {{ request.fromUser.nombreApellido }}
+                                    </div>
+                                    <span class="fw-medium text-secondary small">
+                                      {{ request.fromUser.alias }}
+                                    </span>
+                                  </div>
+                                </div>
+                                <div class="d-flex flex-row mt-2">
+                                  <div class="fw-medium fs-6 me-2">
                                     Fecha de solicitud
                                   </div>
-                                  <span class="fw-medium text-secondary small">{{
-                                    request.requestDate
-                                  }}</span>
+                                  <span class="fw-medium text-secondary small">
+                                    {{ request.requestDate }}
+                                  </span>
                                 </div>
-                              </div>
-                              <div
-                                class="d-flex flex-row flex-md-column justify-content-evenly align-items-start gap-2"
-                              >
-                                <div>
-                                  <div class="fw-medium fs-6">
-                                    Mensaje
+                                <div class="d-flex flex-row mt-2">
+                                  <div
+                                    class="d-flex flex-row flex-md-column justify-content-evenly align-items-start gap-2">
+                                    <div>
+                                      <div class="fw-medium fs-6">
+                                        Mensaje
+                                      </div>
+                                      <span class="fw-medium text-secondary small">
+                                        {{ request.message }}
+                                      </span>
+                                    </div>
                                   </div>
-                                  <span class="fw-medium text-secondary small">{{
-                                    request.message
-                                  }}</span>
-                                </div>
-                              </div>
-                              <div
-                                class="d-flex flex-column align-content-center align-items-md-end gap-3"
-                              >
-                                <div class="d-flex flex-row-reverse flex-md-row gap-2">
-                                  <p-button
-                                    icon="pi pi-thumbs-up"
-                                    label="Aceptar"
-                                    class="flex-grow-1 flex-md-grow-0 text-nowrap"
-                                  ></p-button>
-                                  <p-button
-                                    icon="pi pi-times"
-                                    label="Rechazar"
-                                    class="flex-grow-1 flex-md-grow-0 text-nowrap"
-                                    severity="danger"
-                                  ></p-button>
                                 </div>
                               </div>
                             </div>
                           </div>
-                          }
+                          <div class="d-grid col-lg-auto mt-2 align-self-center justify-content-center align-items-center">
+                            <div>
+                            <p-button icon="pi pi-thumbs-up" label="Aceptar"
+                              class="flex-grow-1 flex-md-grow-0 text-nowrap me-2"></p-button>
+                            <p-button icon="pi pi-times" label="Rechazar" class="flex-grow-1 flex-md-grow-0 text-nowrap"
+                              severity="danger"></p-button>
+                              </div>
+                          </div>
+                        </div>
+                        }
                         }
                       </div>
                     </ng-template>
@@ -123,10 +111,6 @@
       </p-tabs>
     </div>
   </div>
-  <p-scrolltop
-    target="parent"
-    [threshold]="100"
-    icon="pi pi-arrow-up"
-    [buttonProps]="{ severity: 'contrast', raised: true, rounded: true }"
-  />
+  <p-scrolltop target="parent" [threshold]="100" icon="pi pi-arrow-up"
+    [buttonProps]="{ severity: 'contrast', raised: true, rounded: true }" />
 </div>
