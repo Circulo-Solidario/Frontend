@@ -7,7 +7,7 @@
     </div>
     <div class="row">
       <p-tabs [value]="defaultTab">
-        <p-tablist>
+        <p-tablist>          
           <p-tab value="0">Mis solicitudes</p-tab>
           <p-tab value="1">Solicitudes de mis productos</p-tab>
         </p-tablist>
@@ -17,7 +17,7 @@
               <ng-template #list let-items>
                 <div>
                   @for (request of items; track $index) {
-                  @if(request.estadoSolicitud == 'PENDIENTE'){
+                  @if(true){
                   @if ($index != 0) {
                   <p-divider class="m-0"/>
                   }
@@ -70,7 +70,8 @@
                     <div class="d-grid col-lg-auto mt-2 align-self-center justify-content-center align-items-center">
                       <div>
                         <p-button icon="pi pi-times" label="Eliminar" class="flex-grow-1 flex-md-grow-0 text-nowrap"
-                          severity="danger"></p-button>
+                          severity="danger" (click)="deleteRequest(request)"
+                          [disabled]="request.estadoSolicitud != 'PENDIENTE'"></p-button>
                       </div>
                     </div>
                   </div>
@@ -104,7 +105,7 @@
                     <ng-template #list let-items>
                       <div>
                         @for (request of items; track $index) {
-                        @if(request.requestState == 'PENDIENTE'){
+                        @if(true){
                         @if ($index != 0) {
                         <p-divider />
                         }
@@ -159,9 +160,13 @@
                             class="d-grid col-lg-auto mt-2 align-self-center justify-content-center align-items-center">
                             <div>
                               <p-button icon="pi pi-thumbs-up" label="Aceptar"
-                                class="flex-grow-1 flex-md-grow-0 text-nowrap me-2"></p-button>
+                                class="flex-grow-1 flex-md-grow-0 text-nowrap me-2"
+                                (click)="aceptRequest(request, item.product)"
+                                [disabled]="request.requestState != 'PENDIENTE'"></p-button>
                               <p-button icon="pi pi-times" label="Rechazar"
-                                class="flex-grow-1 flex-md-grow-0 text-nowrap" severity="danger"></p-button>
+                                class="flex-grow-1 flex-md-grow-0 text-nowrap" severity="danger"
+                                (click)="declineRequest(request)"
+                                [disabled]="request.requestState != 'PENDIENTE'"></p-button>
                             </div>
                           </div>
                         </div>

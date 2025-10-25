@@ -11,6 +11,7 @@ import { BadgeModule } from 'primeng/badge';
 import { DataViewModule } from 'primeng/dataview';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
+import { Notifications, TipoNotificaciones } from '../../services/notifications';
 
 @Component({
   selector: 'app-requests-list',
@@ -29,8 +30,9 @@ import { DividerModule } from 'primeng/divider';
 })
 export class RequestsList implements OnInit {
   private loginService: LoginService = inject(LoginService);
-  private router: Router = inject(Router);
   private requestService: Requests = inject(Requests);
+  private notificationService: Notifications = inject(Notifications)
+  private router: Router = inject(Router);  
   private toasts: Toasts = inject(Toasts);
 
   logedUser: any;
@@ -95,6 +97,8 @@ export class RequestsList implements OnInit {
 
           return acum;
         }, []);
+        console.log(this.requestOfProducts);
+        
       },
       error: () => {
         this.toasts.showToast({
@@ -103,6 +107,60 @@ export class RequestsList implements OnInit {
           detail: 'No pudimos obtener las solicitudes de tus productos, intente nuevamente...',
         });
       },
+    });
+  }
+
+  deleteRequest(request: any){
+    this.requestService.deleteRequest(request.id).subscribe({
+      next: () => {
+        this.toasts.showToast({
+          severity: 'success', summary: 'Solicitud eliminada', detail: 'La solicitud ha sido eliminada correctamente.'
+        });
+        this.myRequests = this.myRequests.filter(requestList => requestList.id !== request.id);
+      },
+      error: () => {
+        this.toasts.showToast({
+          severity: 'error', summary: 'Error al eliminar la solicitud', detail: 'No pudimos eliminar la solicitud, intente nuevamente...'
+        });
+      }
+    });
+  }
+
+  aceptRequest(request: any, product:any){
+    this.requestService.updateRequestState(request.id, 'ACEPTADA').subscribe({
+      next: () => {
+        this.toasts.showToast({
+          severity: 'success', summary: 'Solicitud aceptada', detail: 'La solicitud ha sido aceptada correctamente.'
+        });
+        this.notificationService.sendNotification({
+          deUsuario: request.toUser.id,
+          ausuario: request.fromUser.id,
+          tipoNotificacion: TipoNotificaciones.SOLICITUD_ACEPTADA,
+          mensaje: `Tu solicitud para el producto ${product.nombre} ha sido aceptada.`
+        }).subscribe({
+          next: () => {}
+        });
+      },
+      error: () => {
+        this.toasts.showToast({
+          severity: 'error', summary: 'Error al aceptar la solicitud', detail: 'No pudimos aceptar la solicitud, intente nuevamnte...'
+        });
+      }
+    });
+  }
+
+  declineRequest(request: any){
+    this.requestService.updateRequestState(request.id, 'RECHAZADA').subscribe({
+      next: () => {
+        this.toasts.showToast({
+          severity: 'success', summary: 'Solicitud rechazada', detail: 'La solicitud ha sido rechazada correctamente.'
+        });
+      },
+      error: () => {
+        this.toasts.showToast({
+          severity: 'error', summary: 'Error al rechazar la solicitud', detail: 'No pudimos rechazar la solicitud, intente nuevamnte...'
+        });
+      }
     });
   }
 }

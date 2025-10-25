@@ -8,7 +8,7 @@ import { environment } from '../environments/environment';
 })
 export class Requests {
   private readonly httpClient: HttpClient = inject(HttpClient);
-  private readonly apiPath = '/productosSolicitados';
+  private readonly apiPath = '/solicitudes';
 
   requestProduct(request: any): Observable<any>{
     return this.httpClient.post(`${environment.apiUrl}${this.apiPath}`, request);
@@ -25,5 +25,15 @@ export class Requests {
     return this.httpClient.get(`${environment.apiUrl}${this.apiPath}`, {
       params
     })
+  }
+
+  deleteRequest(requestId: number): Observable<any>{
+    return this.httpClient.delete(`${environment.apiUrl}${this.apiPath}/${requestId}`);
+  }
+
+  updateRequestState(requestId: number, state: string): Observable<any>{
+    return this.httpClient.patch(`${environment.apiUrl}${this.apiPath}/cambiar-estado/${requestId}`, {
+      estado: state
+    });
   }
 }

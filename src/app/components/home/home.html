@@ -171,7 +171,7 @@
                   <div class="row-cols-auto">
                     <span class="fs-5 p-0">{{ loggedUser?.alias }}</span>
                   </div>
-                  <div class="row-cols-auto pe-2 mt-1">
+                  <div class="row-cols-auto mt-1">
                     @if(loggedUser?.roles?.length > 0){ @for (rol of loggedUser.roles; track $index) {
                     <p-badge class="text-capitalize mx-1" [value]="rol.nombre.toLowerCase()" severity="secondary"
                       badgesize="small" />
