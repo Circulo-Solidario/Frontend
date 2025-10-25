@@ -25,3 +25,7 @@
   border-radius: inherit;
 }
 
+::ng-deep .my-requests .p-dataview-content{
+  border-radius: var(--p-content-border-radius);
+}
+

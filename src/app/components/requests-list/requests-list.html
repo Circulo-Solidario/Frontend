@@ -12,7 +12,74 @@
           <p-tab value="1">Solicitudes de mis productos</p-tab>
         </p-tablist>
         <p-tabpanels>
-          <p-tabpanel value="0"> </p-tabpanel>
+          <p-tabpanel value="0">
+            <p-dataview #dv [value]="myRequests" class="my-requests">
+              <ng-template #list let-items>
+                <div>
+                  @for (request of items; track $index) {
+                  @if(request.estadoSolicitud == 'PENDIENTE'){
+                  @if ($index != 0) {
+                  <p-divider class="m-0"/>
+                  }
+                  <div class="d-lg-flex flex-row justify-content-between p-4">
+                    <div class="col-auto">
+                      <div class="row">
+                        <div class="col-auto">
+                          <div class="align-content-center mt-1">
+                            @if(request.producto.urlImagen){
+                            <p-avatar size="xlarge" shape="circle" [image]="request.producto.urlImagen" />
+                            }@else {
+                            <p-avatar size="xlarge" shape="circle" icon="pi pi-gift" />
+                            }
+                          </div>
+                        </div>
+                        <div class="col">
+                          <div class=" flex-md-column justify-content-evenly align-items-start gap-2">
+                            <div>
+                              <div class="fw-medium fs-5">
+                                {{ request.producto.nombre }}
+                              </div>
+                              <span class="fw-medium text-secondary small">
+                                {{ request.producto.categoria.nombre }}
+                              </span>
+                            </div>
+                          </div>
+                          <div class="d-flex flex-row mt-2">
+                            <div class="fw-medium fs-6 me-2">
+                              Fecha de solicitud
+                            </div>
+                            <span class="fw-medium text-secondary small">
+                              {{ request.fechaSolicitud }}
+                            </span>
+                          </div>
+                          <div class="d-flex flex-row mt-2">
+                            <div class="d-flex flex-row flex-md-column justify-content-evenly align-items-start gap-2">
+                              <div>
+                                <div class="fw-medium fs-6">
+                                  Mensaje
+                                </div>
+                                <span class="fw-medium text-secondary small">
+                                  {{ request.mensaje }}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="d-grid col-lg-auto mt-2 align-self-center justify-content-center align-items-center">
+                      <div>
+                        <p-button icon="pi pi-times" label="Eliminar" class="flex-grow-1 flex-md-grow-0 text-nowrap"
+                          severity="danger"></p-button>
+                      </div>
+                    </div>
+                  </div>
+                  }
+                  }
+                </div>
+              </ng-template>
+            </p-dataview>
+          </p-tabpanel>
           <p-tabpanel value="1">
             <p-accordion value="0">
               @for (item of requestOfProducts; track $index) {
@@ -88,13 +155,14 @@
                               </div>
                             </div>
                           </div>
-                          <div class="d-grid col-lg-auto mt-2 align-self-center justify-content-center align-items-center">
+                          <div
+                            class="d-grid col-lg-auto mt-2 align-self-center justify-content-center align-items-center">
                             <div>
-                            <p-button icon="pi pi-thumbs-up" label="Aceptar"
-                              class="flex-grow-1 flex-md-grow-0 text-nowrap me-2"></p-button>
-                            <p-button icon="pi pi-times" label="Rechazar" class="flex-grow-1 flex-md-grow-0 text-nowrap"
-                              severity="danger"></p-button>
-                              </div>
+                              <p-button icon="pi pi-thumbs-up" label="Aceptar"
+                                class="flex-grow-1 flex-md-grow-0 text-nowrap me-2"></p-button>
+                              <p-button icon="pi pi-times" label="Rechazar"
+                                class="flex-grow-1 flex-md-grow-0 text-nowrap" severity="danger"></p-button>
+                            </div>
                           </div>
                         </div>
                         }

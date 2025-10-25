@@ -34,7 +34,7 @@ export class RequestsList implements OnInit {
   private toasts: Toasts = inject(Toasts);
 
   logedUser: any;
-  defaultTab: string = '1';
+  defaultTab: string = '0';
   myRequests: any[] = [];
   requestOfProducts: any[] = [];
 
@@ -56,7 +56,7 @@ export class RequestsList implements OnInit {
   getMyRequests() {
     this.requestService.getRequestsFrom(this.logedUser?.id, null).subscribe({
       next: (response: any) => {
-        this.myRequests = response;
+        this.myRequests = response;       
       },
       error: () => {
         this.toasts.showToast({
@@ -74,11 +74,9 @@ export class RequestsList implements OnInit {
         this.requestOfProducts = response.reduce((acum: any[], actual: any) => {
           const productId = actual.producto.id;
 
-          // Buscamos si ya existe ese producto en el acumulador
           let group = acum.find((g) => g.product.id === productId);
 
           if (!group) {
-            // Si no existe, creamos uno nuevo
             group = {
               product: actual.producto,
               requests: [],
@@ -86,7 +84,6 @@ export class RequestsList implements OnInit {
             acum.push(group);
           }
 
-          // Agregamos la solicitud actual al grupo
           group.requests.push({
             id: actual.id,
             fromUser: actual.deUsuario,
@@ -98,7 +95,6 @@ export class RequestsList implements OnInit {
 
           return acum;
         }, []);
-        console.log(this.requestOfProducts);
       },
       error: () => {
         this.toasts.showToast({
