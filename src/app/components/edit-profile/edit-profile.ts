@@ -57,9 +57,9 @@ export class EditProfile {
   editUserForm: FormGroup;
   isOrganization: boolean = true;
   userRolesOptions = [
-    { label: 'Donante', value: { id: 2 } },
-    { label: 'Donatario', value: { id: 3 } },
-    { label: 'Observador', value: { id: 4 } },
+    { label: 'Donante', value: 2 },
+    { label: 'Donatario', value: 3 },
+    { label: 'Observador', value: 4 },
   ];
   id: number = -1;
   imageUrl: string = '';
@@ -99,9 +99,7 @@ export class EditProfile {
       nombreApellido: this.originalData.nombreApellido ?? '',
       alias: this.originalData.alias ?? '',
       fechaNacimiento:
-        this.originalData.fechaNacimiento != null
-          ? this.reverseDate(this.originalData.fechaNacimiento)
-          : '',
+        this.originalData.fechaNacimiento?.replaceAll('-', '/') ?? '',
       // contrasena: this.originalData.contrasena ?? ''
     });
     if (this.originalData.tipoUsuario != 'ORGANIZACION') {
@@ -110,12 +108,12 @@ export class EditProfile {
         'roles',
         new FormControl(
           this.originalData.roles.map((role: any) => {
-            return { id: role.id };
+            return role.id;
           }),
           [Validators.required]
         )
       );
-    }
+    }    
   }
 
   goHome() {
@@ -125,19 +123,11 @@ export class EditProfile {
   async onSubmit() {
     if (this.editUserForm.valid) {
       let editedUser = {
-        ...this.editUserForm.value,
-        correo: this.originalData.correo,
-        validado: true,
+        ...this.editUserForm.value
       };
 
-      if (typeof editedUser.fechaNacimiento == 'string') {
-        editedUser.fechaNacimiento = editedUser.fechaNacimiento
-          ? new Date(this.reverseDate(editedUser.fechaNacimiento)).toISOString()
-          : null;
-      } else {
-        editedUser.fechaNacimiento = editedUser.fechaNacimiento
-          ? editedUser.fechaNacimiento.toISOString()
-          : null;
+      if(typeof editedUser.fechaNacimiento == 'string') {
+        editedUser.fechaNacimiento = new Date(this.reverseDate(editedUser.fechaNacimiento));        
       }
 
       let errorSavingImage = false;
@@ -196,7 +186,7 @@ export class EditProfile {
   reverseDate(date: string): string {
     const symbol = date.includes('/');
     const parts = date.split(symbol ? '/' : '-');
-    return `${parts[2]}/${parts[1]}/${parts[0]}`;
+    return `${parts[2]}-${parts[1]}-${parts[0]}`;
   }
 
   cancel() {
@@ -204,7 +194,7 @@ export class EditProfile {
     this.editUserForm.get('alias')?.setValue(this.originalData.alias ?? '');
     this.editUserForm
       .get('fechaNacimiento')
-      ?.setValue(this.reverseDate(this.originalData.fechaNacimiento) ?? '');
+      ?.setValue(this.originalData.fechaNacimiento?.replaceAll('-', '/') ?? '');
     // this.editUserForm.get('contrasena')?.setValue(this.originalData.contrasena ?? '');
     if (this.originalData.tipoUsuario != 'ORGANIZACION') {
       this.editUserForm.get('roles')?.setValue(

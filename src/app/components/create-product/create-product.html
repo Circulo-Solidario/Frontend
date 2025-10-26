@@ -47,7 +47,8 @@
             <div class="mt-4 row">
               <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                 <label for="category">Categoría<span style="color: red;">&ensp;*</span></label>
-                <p-select name="category" class="mt-2" formControlName="categoria" [loading]="!categories" optionLabel="nombre"
+                <p-select name="category" class="mt-2" formControlName="categoriaId" [loading]="!categories" optionLabel="nombre"
+                  optionValue="id"
                   [options]="categories" [placeholder]="categories? 'Seleccione una categoría' : ''" fluid
                   [showClear]="true" fluid/>
               </div>

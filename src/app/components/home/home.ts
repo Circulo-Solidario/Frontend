@@ -186,7 +186,9 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit() {
     this.checkOverflow();
     this.resizeObserver = new ResizeObserver(() => this.checkOverflow());
-    this.resizeObserver.observe(this.notificationContent.nativeElement);
+    if(this.notificationContent){
+      this.resizeObserver.observe(this.notificationContent.nativeElement);
+    }
   }
 
   checkOverflow() {

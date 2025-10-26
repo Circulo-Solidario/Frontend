@@ -45,17 +45,17 @@ export class Notifications {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
     const date = sevenDaysAgo.toISOString();
-    return this.http.get<Array<any>>(`${environment.apiUrl}/notificaciones/${userId}`, {
+    return this.http.get<Array<any>>(`${environment.apiUrl}/notificaciones/usuario/${userId}`, {
       params: {date}
     });
   }
 
   sendNotification(notification: NotificationInter): Observable<any>{
-    return this.http.post(`${environment.apiUrl}/notificaciones/push`, notification);
+    return this.http.post(`${environment.apiUrl}/notificaciones/enviar`, notification);
   }
 
   markReadNotification(notificationId: number): Observable<any>{
-    return this.http.patch(`${environment.apiUrl}/notificaciones/markseen`, notificationId);
+    return this.http.patch(`${environment.apiUrl}/notificaciones/${notificationId}/marcar-vista`, {});
   }
 
   subscribeNotification(room: string): void {

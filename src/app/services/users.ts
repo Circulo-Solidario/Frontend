@@ -15,7 +15,7 @@ export class Users {
   }
 
   validateEmail(email: string): Observable<boolean>{
-    return this.httpCliente.get<boolean>(`${environment.apiUrl}${this.apiPath}/existe/${email}`);
+    return this.httpCliente.get<boolean>(`${environment.apiUrl}${this.apiPath}/info`, { params: { email } });
   }
 
   getUserInfoId(id: any): Observable<any>{
@@ -23,7 +23,7 @@ export class Users {
   }
 
   async getUserInfo(email: string): Promise<any>{
-    return await firstValueFrom(this.httpCliente.get(`${environment.apiUrl}${this.apiPath}/info/${email}`));
+    return await firstValueFrom(this.httpCliente.get(`${environment.apiUrl}${this.apiPath}/info`, { params: { email } }));
   }
 
   editUser(id: number, user:any): Observable<any>{

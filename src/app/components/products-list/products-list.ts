@@ -18,6 +18,9 @@ import { Skeleton } from 'primeng/skeleton';
 import { LoginService } from '../../services/login';
 import { Requests } from '../../services/requests';
 import { Notifications, TipoNotificaciones } from '../../services/notifications';
+import { ConfirmationService } from 'primeng/api';
+import { TextareaModule } from 'primeng/textarea';
+import { ConfirmDialog } from 'primeng/confirmdialog';
 @Component({
   selector: 'app-products-list',
   imports: [
@@ -33,8 +36,11 @@ import { Notifications, TipoNotificaciones } from '../../services/notifications'
     SliderModule,
     ScrollTopModule,
     ProgressSpinnerModule,
-    Skeleton
+    Skeleton,
+    TextareaModule,
+    ConfirmDialog
   ],
+  providers: [ConfirmationService],
   templateUrl: './products-list.html',
   styleUrl: './products-list.css',
 })
@@ -50,6 +56,7 @@ export class ProductsList implements OnInit {
   private loginService: LoginService = inject(LoginService);
   private requestService: Requests = inject(Requests);
   private notificationService: Notifications = inject(Notifications);
+  private confirmationService: ConfirmationService = inject(ConfirmationService);
   logedUser: any;
   currentPage: number = 0;
   pageSize: number = 10;
@@ -64,6 +71,7 @@ export class ProductsList implements OnInit {
   selectedCategory: any;
   layout: 'list' | 'grid' = "grid";
   options = ['list', 'grid'];
+  message: string = '';
 
   ngOnInit(): void {
     this.loginService.getLoggedUser().subscribe((user: any) => {
@@ -105,12 +113,12 @@ export class ProductsList implements OnInit {
     return false;
   }
 
-  requestProduct(item: any, event: MouseEvent): void {
-    event.stopPropagation();
+  requestProduct(item: any, message: string): void {    
     this.requestService.requestProduct({
-      deUsuario: this.logedUser.id,
+      idSolicitante: this.logedUser.id,
       idProducto: item.id,
-      ausuario: item.idUsuario
+      idDondador: item.usuario.id,
+      mensaje: message
     }).subscribe({
       next: () => {
         this.toasts.showToast({
@@ -120,7 +128,7 @@ export class ProductsList implements OnInit {
         this.notificationService.sendNotification({
             tipoNotificacion: TipoNotificaciones.NUEVA_SOLICITUD,
             deUsuario: this.logedUser.id,
-            ausuario: item.idUsuario,
+            aUsuario: item.usuario.id,
             mensaje: `Tienes una nueva solicitud del producto ${item.nombre} desde el usuario ${this.logedUser.alias}`
           }).subscribe();
       },
@@ -238,5 +246,29 @@ export class ProductsList implements OnInit {
     const isNearBottom = scrollTop + clientHeight >= scrollHeight - threshold;
 
     return isNearBottom;
+  }
+
+  openRquest(item: any, event: MouseEvent) {
+    event.stopPropagation();
+    this.confirmationService.confirm({
+      header: 'Solicitar producto',
+      message: 'Envíale un mensaje al donador para solicitar el producto:',
+      rejectButtonProps: {
+        label: 'Cancelar',
+        variant: 'outlined',
+        size: 'small',
+      },
+      acceptButtonProps: {
+        label: 'Solicitar',
+        size: 'small',
+      },
+      accept: () => {
+        this.requestProduct(item ,this.message);
+        this.message = '';
+      },
+      reject: () => {
+        this.message = '';
+      },
+    });
   }
 }

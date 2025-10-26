@@ -92,9 +92,10 @@
                 <p-select
                   name="category"
                   class="mt-2"
-                  formControlName="categoria"
+                  formControlName="categoriaId"
                   [loading]="!categories"
                   optionLabel="nombre"
+                  optionValue="id"
                   [options]="categories"
                   [placeholder]="categories ? 'Seleccione una categoría' : ''"
                   fluid

@@ -59,7 +59,7 @@ export class Login implements OnInit {
   }
 
   async login() {
-    this.loginForm.markAsTouched();
+    this.loginForm.markAllAsTouched();
     this.onLogin = true;
     if(!this.loginForm.valid){
       this.onLogin = false;
@@ -80,6 +80,16 @@ export class Login implements OnInit {
     const user = await this.loginGoogleService.loginWithGoogle();
     try {
       const loggedUser = await this.userService.getUserInfo(user.email);
+      if(!loggedUser){
+        this.router.navigate(['/crear-perfil'], {
+          state: {
+            email: user.email,
+            name: user.displayName,
+            imageUrl: user.photoURL
+          }
+        });
+        return;
+      }
       this.loginService.setLoggedUser(loggedUser);
       this.router.navigate(['/principal']);
     } catch (error: any) {

@@ -12,3 +12,26 @@
     padding: 4vh 4vw;
     height: max-content;
 }
+
+#no-data-logo{
+    fill: var(--p-dataview-content-color);
+    width: max-content;
+    height: max-content;
+}
+
+::ng-deep .p-tablist-tab-list, .p-tabpanels, .p-tablist{
+  background-color: transparent !important;
+}
+
+::ng-deep p-accordion .p-ink{
+  display: none;
+}
+
+::ng-deep .p-accordioncontent-content{
+  border-radius: inherit;
+}
+
+::ng-deep .my-requests .p-dataview-content{
+  border-radius: var(--p-content-border-radius);
+}
+

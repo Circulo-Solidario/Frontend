@@ -61,7 +61,7 @@ export class CreateProduct implements OnInit {
     this.productForm = new FormGroup({
       nombre: new FormControl('', [Validators.required, Validators.minLength(4)]),
       descripcion: new FormControl('', [Validators.required, Validators.minLength(4), Validators.maxLength(255)]),
-      categoria: new FormControl(null, [Validators.required]),
+      categoriaId: new FormControl(null, [Validators.required]),
     });
   }
 
@@ -159,7 +159,6 @@ export class CreateProduct implements OnInit {
       return;
     }    
     let product = {
-      estado: 'DISPONIBLE',
       idUsuario: this.loggedUser.id,
       urlImagen: this.imagenUrl,
       ...this.productForm.value,
