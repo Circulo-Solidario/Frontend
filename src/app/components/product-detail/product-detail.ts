@@ -90,9 +90,9 @@ export class ProductDetail implements OnInit {
   requestProduct(message: string): void {
     this.requestService
       .requestProduct({
-        deUsuario: this.logedUser.id,
+        idSolicitante: this.logedUser.id,
         idProducto: this.productData.id,
-        ausuario: this.productData.usuario.id,
+        idDondador: this.productData.usuario.id,
         mensaje: message,
       })
       .subscribe({
@@ -106,7 +106,7 @@ export class ProductDetail implements OnInit {
             .sendNotification({
               tipoNotificacion: TipoNotificaciones.NUEVA_SOLICITUD,
               deUsuario: this.logedUser.id,
-              ausuario: this.productData.usuario.id,
+              aUsuario: this.productData.usuario.id,
               mensaje: `Tienes una nueva solicitud del producto ${this.productData.nombre} desde el usuario ${this.logedUser.alias}`,
             })
             .subscribe();

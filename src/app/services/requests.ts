@@ -17,10 +17,10 @@ export class Requests {
   getRequestsFrom(fromUser?: number | null, toUser?: number | null): Observable<any>{
     let params: any;
     if(fromUser){
-      params = { deUsuario: fromUser }
+      params = { idUsuarioSolicitante: fromUser }
     }
     if(toUser){
-      params = { aUsuario: toUser }
+      params = { idUsuarioDonador: toUser }
     }
     return this.httpClient.get(`${environment.apiUrl}${this.apiPath}`, {
       params
