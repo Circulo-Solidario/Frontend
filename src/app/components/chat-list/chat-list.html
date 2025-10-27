@@ -1,0 +1,24 @@
+<div class="main-container container-fluid">
+  <div class="col-auto justify-content-center align-content-center h-100">
+    <div class="d-flex row mb-2">
+      <h1 class="d-flex my-2 align-items-center mb-4">
+        <i class="pi pi-chevron-left me-3 go-back-buttom" (click)="goHome()"></i> Chats
+      </h1>
+    </div>
+    <div class="row w-100 h-100 bg-black">
+      <div class="col-4 p-0">
+        <p-tabs [value]="defaultTab" class="">
+          <p-tablist>
+            <p-tab value="0">Mis productos</p-tab>
+            <p-tab value="1">Mis solicitudes</p-tab>
+          </p-tablist>
+          <p-tabpanels> 
+            <p-tabpanel value="0"></p-tabpanel>
+            <p-tabpanel value="1"></p-tabpanel>
+          </p-tabpanels>
+        </p-tabs>
+      </div>
+      <div class="col-8 ms-2"></div>
+    </div>
+  </div>
+</div>

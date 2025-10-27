@@ -1,0 +1,18 @@
+@media (max-width: 575px){
+  .main-container{
+    padding-top: 2vh !important;
+  }
+}
+
+.go-back-buttom{
+  cursor: pointer;
+}
+
+.main-container{
+    padding: 4vh 4vw;
+    height: max-content;
+}
+::ng-deep .p-tablist-tab-list, .p-tabpanels, .p-tablist{
+  background-color: transparent !important;
+  z-index: 0;
+}

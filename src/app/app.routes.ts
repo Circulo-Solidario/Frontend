@@ -39,6 +39,16 @@ export const routes: Routes = [
       {
         path: 'solicitudes',
         loadComponent: () => import('./components/requests-list/requests-list').then((m) => m.RequestsList)
+      },
+      {
+        path: 'chats',
+        loadComponent: () => import('./components/chat-list/chat-list').then((m) => m.ChatList),
+        children: [
+          {
+            path: 'mensajes',
+            loadComponent: () => import('./components/chat/chat').then((m) => m.Chat)
+          }
+        ]
       }
     ]
   },

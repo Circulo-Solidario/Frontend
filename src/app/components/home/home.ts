@@ -112,6 +112,7 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
       {
         label: 'Productos',
         icon: 'pi pi-gift',
+        id: 'home',
         items: [
           {
             label: 'Publicar producto',
@@ -140,22 +141,18 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
         ],
       },
       {
-        label: 'Reportes',
-        icon: 'pi pi-chart-bar',
-        items: [
-          {
-            label: 'Mis estadísticas',
-            icon: 'pi pi-chart-scatter',
-          },
-          {
-            label: 'Estadísticas globales',
-            icon: 'pi pi-chart-line',
-          },
-        ],
+        label: 'Chats',
+        icon: 'pi pi-comments',
+        id: 'home',
+        command: () => {
+          this.router.navigate(['/principal/chats']);
+          this.visible = false;
+        },
       },
       {
         label: 'Donaciones',
         icon: 'pi pi-heart',
+        id: 'home',
         items: [
           {
             label: 'Ver donaciones',
@@ -167,6 +164,21 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
           },
         ],
       },
+      {
+        label: 'Reportes',
+        icon: 'pi pi-chart-bar',
+        id: 'home',
+        items: [
+          {
+            label: 'Mis estadísticas',
+            icon: 'pi pi-chart-scatter',
+          },
+          {
+            label: 'Estadísticas globales',
+            icon: 'pi pi-chart-line',
+          },
+        ],
+      }
     ];
   }
 
@@ -186,7 +198,7 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
   ngAfterViewInit() {
     this.checkOverflow();
     this.resizeObserver = new ResizeObserver(() => this.checkOverflow());
-    if(this.notificationContent){
+    if (this.notificationContent) {
       this.resizeObserver.observe(this.notificationContent.nativeElement);
     }
   }
