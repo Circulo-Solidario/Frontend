@@ -112,7 +112,7 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
       {
         label: 'Productos',
         icon: 'pi pi-gift',
-        id: 'home',
+        id: 'home1',
         items: [
           {
             label: 'Publicar producto',
@@ -143,7 +143,7 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
       {
         label: 'Chats',
         icon: 'pi pi-comments',
-        id: 'home',
+        id: 'home2',
         command: () => {
           this.router.navigate(['/principal/chats']);
           this.visible = false;
@@ -152,7 +152,7 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
       {
         label: 'Donaciones',
         icon: 'pi pi-heart',
-        id: 'home',
+        id: 'home3',
         items: [
           {
             label: 'Ver donaciones',
@@ -167,7 +167,7 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
       {
         label: 'Reportes',
         icon: 'pi pi-chart-bar',
-        id: 'home',
+        id: 'home4',
         items: [
           {
             label: 'Mis estadísticas',

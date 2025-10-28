@@ -16,3 +16,8 @@
   background-color: transparent !important;
   z-index: 0;
 }
+
+::ng-deep .p-dataview-content{
+  border-radius: var(--p-content-border-radius);
+  cursor: pointer;
+}

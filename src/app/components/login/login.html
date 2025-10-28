@@ -50,6 +50,7 @@
                 placeholder="Crea una contraseña"
                 [feedback]="false"
                 [toggleMask]="true"
+                (keyup.enter)="login()"
                 fluid
                 [invalid]="
                   loginForm.get('contrasena')?.invalid && loginForm.get('contrasena')?.touched

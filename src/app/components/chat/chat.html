@@ -1,1 +1,37 @@
-<p>chat works!</p>
+<div class="messages-container">
+    <h3>📨 Mensajes ({{ messages.length }})</h3>
+    
+    <div *ngIf="messages.length === 0">
+      <p>No hay mensajes aún. ¡Envía el primero!</p>
+    </div>
+
+    <div *ngFor="let msg of messages; let i = index" class="message">
+      <div [ngClass]="[
+        msg.usuario.id == logedUser.id ? 'text-end' : 'text-start'
+      ]">        
+        <div class="message-content">{{ msg.mensaje }}</div>
+        <div class="message-header">
+          <!-- <strong class="username">{{ msg.username }}</strong> -->
+          <span class="timestamp">{{ msg.timestamp | date:'HH:mm:ss' }}</span>
+        </div>
+      </div>      
+    </div>
+  </div>
+
+  <!-- Input de mensaje -->
+  <div class="message-input">
+    <input 
+      type="text" 
+      [(ngModel)]="message"
+      (keyup.enter)="sendMessage()"
+      placeholder="Escribe tu mensaje..." 
+      class="form-input message-field"
+    >
+    <button 
+      (click)="sendMessage()" 
+      class="btn btn-send"
+      [disabled]="!message.trim()"
+    >
+      📤 Enviar
+    </button>
+  </div>

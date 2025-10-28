@@ -10,7 +10,7 @@ export interface NotificationInter{
   deUsuario?: string | any;
   aUsuario?: string | any;
   ausuario?: string | any;
-  tipoNotificacion?: TipoNotificaciones,
+  tipoNotificacion?: TipoNotificaciones | string,
   fechaNotificacion?: string;
   fechaVistaNotificacion?: string | null;
 }
@@ -74,6 +74,8 @@ export class Notifications {
 
   disconnect(): void{
     this.unsubscribeAllNotification();
-    this.pusher.disconnect();
+    if (this.pusher.connection.state === 'connected') {
+      this.pusher.disconnect();
+    }    
   }
 }

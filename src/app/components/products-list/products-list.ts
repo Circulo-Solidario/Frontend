@@ -117,7 +117,7 @@ export class ProductsList implements OnInit {
     this.requestService.requestProduct({
       idSolicitante: this.logedUser.id,
       idProducto: item.id,
-      idDondador: item.usuario.id,
+      idDonador: item.usuario.id,
       mensaje: message
     }).subscribe({
       next: () => {
@@ -126,9 +126,9 @@ export class ProductsList implements OnInit {
         });
         this.filterData();
         this.notificationService.sendNotification({
-            tipoNotificacion: TipoNotificaciones.NUEVA_SOLICITUD,
+            tipoNotificacion: 'NUEVA_SOLICITUD',
             deUsuario: this.logedUser.id,
-            aUsuario: item.usuario.id,
+            ausuario: item.usuario.id,
             mensaje: `Tienes una nueva solicitud del producto ${item.nombre} desde el usuario ${this.logedUser.alias}`
           }).subscribe();
       },

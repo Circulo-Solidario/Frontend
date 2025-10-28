@@ -5,20 +5,80 @@
         <i class="pi pi-chevron-left me-3 go-back-buttom" (click)="goHome()"></i> Chats
       </h1>
     </div>
-    <div class="row w-100 h-100 bg-black">
+    <div class="row w-100 h-100">
       <div class="col-4 p-0">
-        <p-tabs [value]="defaultTab" class="">
+        <p-tabs [value]="defaultTab">
           <p-tablist>
             <p-tab value="0">Mis productos</p-tab>
             <p-tab value="1">Mis solicitudes</p-tab>
           </p-tablist>
-          <p-tabpanels> 
-            <p-tabpanel value="0"></p-tabpanel>
-            <p-tabpanel value="1"></p-tabpanel>
+          <p-tabpanels>
+            <p-tabpanel value="0">
+              <p-dataview #dv [value]="myRequetsChats" class="my-requests">
+                <ng-template #list>
+                  @for (chat of myRequetsChats; track $index) { @if($index != 0){
+                  <p-divider />
+                  }
+                  <div class="d-flex flex-row justify-content-between p-2" (click)="loadChat(chat)">
+                    <div class="col-auto align-content-center me-2">
+                      @if(chat.solicitud.donador.urlImagen){
+                      <p-avatar
+                        size="large"
+                        shape="circle"
+                        [image]="chat.solicitud.donador.urlImagen"
+                      />
+                      }@else {
+                      <p-avatar size="large" shape="circle" icon="pi pi-gift" />
+                      }
+                    </div>
+                    <div class="col">
+                      <div class="flex-md-column justify-content-evenly align-items-start gap-2">
+                        <div class="fw-medium fs-5">
+                          {{ chat.solicitud.donador.alias }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  }
+                </ng-template>
+              </p-dataview>
+            </p-tabpanel>
+            <p-tabpanel value="1">
+              <p-dataview #dv [value]="myProductsChats" class="my-requests">
+                <ng-template #list>
+                  @for (chat of myProductsChats; track $index) { @if($index != 0){
+                  <p-divider />
+                  }
+                  <div class="d-flex flex-row justify-content-between p-2" (click)="loadChat(chat)">
+                    <div class="col-auto align-content-center me-2">
+                      @if(chat.solicitud.solicitante.urlImagen){
+                      <p-avatar
+                        size="large"
+                        shape="circle"
+                        [image]="chat.solicitud.solicitante.urlImagen"
+                      />
+                      }@else {
+                      <p-avatar size="large" shape="circle" icon="pi pi-gift" />
+                      }
+                    </div>
+                    <div class="col">
+                      <div class="flex-md-column justify-content-evenly align-items-start gap-2">
+                        <div class="fw-medium fs-5">
+                          {{ chat.solicitud.solicitante.alias }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  }
+                </ng-template>
+              </p-dataview>
+            </p-tabpanel>
           </p-tabpanels>
         </p-tabs>
       </div>
-      <div class="col-8 ms-2"></div>
+      <div class="col-8 ps-2">
+        <router-outlet />
+      </div>
     </div>
   </div>
 </div>
