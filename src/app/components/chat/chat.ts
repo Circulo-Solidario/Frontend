@@ -50,6 +50,7 @@ export class Chat implements OnInit, OnDestroy {
     this.roomService.chat$.subscribe(chat => {
       if (!chat) {
         this.router.navigate(['principal/chats']);
+        return;
       }
       this.chat = chat;
       this.messagesService.joinRoom(this.chat.nombreSala);
