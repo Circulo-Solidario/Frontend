@@ -45,20 +45,9 @@ export class Messages {
   }
 
   disconnect(): void {
-    try {
-      if (this.channel) {
-        this.pusher.unsubscribe(this.channel.name);
-        this.channel = null;
-      }
-    } catch (e) {
+    if (this.channel) {
+      this.pusher.unsubscribe(this.channel.name);
     }
-
-    const state = this.pusher.connection.state;
-    if (state === 'connected' || state === 'connecting') {
-      try {
-        this.pusher.disconnect();
-      } catch (e) {
-      }
-    }
+    this.pusher.disconnect();
   }
 }

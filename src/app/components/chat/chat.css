@@ -1,14 +1,20 @@
-@media (max-width: 575px){
-  .main-container{
-    padding-top: 2vh !important;
-  }
+@media (max-width: 575px) {
+    .main-container {
+        padding-top: 2vh !important;
+    }
 }
 
-.go-back-buttom{
+.go-back-buttom {
     cursor: pointer;
 }
 
-.chat-header{
+p {
+    white-space: normal;
+    word-wrap: break-word;
+    margin: 0;
+}
+
+.chat-header {
     border-radius: var(--p-content-border-radius);
     background-color: var(--p-content-background);
 }

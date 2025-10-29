@@ -1,12 +1,12 @@
-<div class="main-container">
-  <div class="col-auto justify-content-center align-content-center">
-    <div class="d-flex row mb-4">
+<div class="main-container container-fluid">
+  <div class="container-fluid d-flex flex-column justify-content-start align-items-stretch h-100 p-0">
+    <div class="d-flex p-0 mb-4 flex-shrink-0">
       <h1 class="d-flex align-items-center m-0">
         <i class="pi pi-chevron-left me-3 go-back-buttom" (click)="goHome()"></i> Chats
       </h1>
     </div>
-    <div class="row w-100 h-100">
-      <div class="col-auto p-0 pe-2 chat-list">
+    <div class="d-flex p-0 flex-grow-1 overflow-hidden">
+      <div class="col-auto p-0 pe-3 chat-list">
         <p-tabs [value]="defaultTab">
           <p-tablist>
             <p-tab value="0">Mis productos</p-tab>
@@ -76,7 +76,7 @@
           </p-tabpanels>
         </p-tabs>
       </div>
-      <div class="col ps-4">
+      <div class="col ps-4 h-100">
         <router-outlet />
       </div>
     </div>

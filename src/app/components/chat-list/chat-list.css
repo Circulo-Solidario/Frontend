@@ -16,7 +16,6 @@
 .chat-list {
   border-right: 1px solid var(--p-primary-color);
   min-height: 100%;
-  overflow: auto;
 }
 
 ::ng-deep .p-tablist-tab-list,
@@ -29,4 +28,23 @@
 ::ng-deep .p-dataview-content {
   border-radius: var(--p-content-border-radius);
   cursor: pointer;
+}
+
+::ng-deep .p-tabpanels{
+  max-height: 100%;
+  overflow: auto;
+}
+
+::ng-deep .p-tabs{
+  max-height: 100%;
+}
+
+::ng-deep p-tablist{
+  min-height: max-content;
+  margin-bottom: 1rem;
+}
+
+::ng-deep .p-tabpanels{
+  padding-top: 0;
+  padding-bottom: 0;
 }

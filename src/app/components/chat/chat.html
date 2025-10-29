@@ -1,36 +1,7 @@
-<!-- <div class="messages-container">
-  <h3>📨 Mensajes ({{ messages.length }})</h3>
-
-  <div *ngIf="messages.length === 0">
-    <p>No hay mensajes aún. ¡Envía el primero!</p>
-  </div>
-
-  <div *ngFor="let msg of messages; let i = index" class="message">
-    <div [ngClass]="[msg.usuario.id == logedUser.id ? 'text-end' : 'text-start']">
-      <div class="message-content">{{ msg.mensaje }}</div>
-      <div class="message-header">        
-        <span class="timestamp">{{ msg.timestamp | date : 'HH:mm:ss' }}</span>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="message-input">
-  <input
-    type="text"
-    [(ngModel)]="message"
-    (keyup.enter)="sendMessage()"
-    placeholder="Escribe tu mensaje..."
-    class="form-input message-field"
-  />
-  <button (click)="sendMessage()" class="btn btn-send" [disabled]="!message.trim()">
-    📤 Enviar
-  </button>
-</div> -->
 <div class="main-container container-fluid">
-  <div class="col-auto justify-content-center align-content-center h-100">
-    <div class="d-flex row mb-2">
-      <div class="row align-items-center p-1 chat-header">
+  <div class="row" style="height: 100%">
+    <div class="col d-flex flex-column p-0 ps-2 h-100">
+      <div class="row align-items-center p-1 chat-header w-100 flex-shrink-0">
         <div class="col-auto justify-content-center d-flex">
           <i class="pi pi-chevron-left go-back-buttom"></i>
         </div>
@@ -52,10 +23,41 @@
           </span>
         </div>
       </div>
-    </div>
-    <div class="row w-100 h-100">
-      <div></div>
-      <div></div>
+      <div class="row w-100 h-100">
+        <div class="col d-flex flex-column p-0 h-100 w-100">
+          <div class="row w-100 flex-grow-1 overflow-auto" style="height: 80%; max-height: 80%">
+            @for (message of messages; track $index) {
+            <div [ngClass]="[message.usuario.id == logedUser.id ? 'text-end' : 'text-start']"
+            [class.mt-2]="$index != 0">
+              <p>{{ message.mensaje }}</p>
+              <span>{{ message.fechaMensaje | date : 'HH:mm:ss' }}</span>
+            </div>
+            }
+          </div>
+          <div class="row w-100" style="height: 20%">
+            <div class="col">
+              <textarea
+                placeholder="Escribe un mensaje..."
+                pTextarea
+                fluid
+                [(ngModel)]="message"
+                (keydown.enter)="sendMessage()"
+                style="min-height: 100%; max-height: 100%; resize: none"
+              ></textarea>
+            </div>
+            <div class="col-auto">
+              <p-button
+                icon="pi pi-angle-double-up"
+                variant="outlined"
+                raised="true"
+                [rounded]="true"
+                (click)="sendMessage()"
+                [disabled]="!message.trim()"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
