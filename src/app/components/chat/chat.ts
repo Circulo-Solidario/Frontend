@@ -7,12 +7,18 @@ import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { Rooms } from '../../services/rooms';
+import { AvatarModule } from 'primeng/avatar';
+import { TextareaModule } from 'primeng/textarea';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-chat',
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    AvatarModule,
+    TextareaModule,
+    ButtonModule
   ],
   templateUrl: './chat.html',
   styleUrl: './chat.css'
@@ -26,6 +32,7 @@ export class Chat implements OnInit, OnDestroy {
   private messageSubscription?: Subscription;
   logedUser: any;
   chat: any;
+  userChat: any;
   message: string = '';
   messages: any[] = [];
 
@@ -53,10 +60,16 @@ export class Chat implements OnInit, OnDestroy {
         return;
       }
       this.chat = chat;
+      if(chat.solicitud.donador.id == this.logedUser.id){
+        this.userChat = chat.solicitud.solicitante;
+      }else{
+        this.userChat = chat.solicitud.donador;
+      }      
       this.messagesService.joinRoom(this.chat.nombreSala);
       this.loadChatMessages();
       this.subscribeToMessages();
     });
+
   }
 
   loadChatMessages() {

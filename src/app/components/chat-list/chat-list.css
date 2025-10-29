@@ -1,23 +1,32 @@
-@media (max-width: 575px){
-  .main-container{
+@media (max-width: 575px) {
+  .main-container {
     padding-top: 2vh !important;
   }
 }
 
-.go-back-buttom{
+.go-back-buttom {
   cursor: pointer;
 }
 
-.main-container{
-    padding: 4vh 4vw;
-    height: max-content;
+.main-container {
+  padding: 4vh;
+  height: 100%;
 }
-::ng-deep .p-tablist-tab-list, .p-tabpanels, .p-tablist{
+
+.chat-list {
+  border-right: 1px solid var(--p-primary-color);
+  min-height: 100%;
+  overflow: auto;
+}
+
+::ng-deep .p-tablist-tab-list,
+.p-tabpanels,
+.p-tablist {
   background-color: transparent !important;
   z-index: 0;
 }
 
-::ng-deep .p-dataview-content{
+::ng-deep .p-dataview-content {
   border-radius: var(--p-content-border-radius);
   cursor: pointer;
 }

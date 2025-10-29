@@ -124,7 +124,7 @@
 /*#region Sidebar colapsada*/
 .sidebar.collapsed {
     width: max-content;
-    padding: 1rem;
+    padding: 1rem 0;
     min-width: 40px;
     color: transparent;
     transition: width 0.3s ease;
