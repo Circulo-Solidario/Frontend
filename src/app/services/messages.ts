@@ -48,6 +48,8 @@ export class Messages {
     if (this.channel) {
       this.pusher.unsubscribe(this.channel.name);
     }
-    this.pusher.disconnect();
+    if(this.pusher){
+      this.pusher.disconnect();
+    }
   }
 }

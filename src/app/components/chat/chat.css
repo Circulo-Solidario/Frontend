@@ -8,6 +8,18 @@
     cursor: pointer;
 }
 
+.main-container .row {
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.message-container{
+    border-radius: var(--p-content-border-radius);
+    background-color: var(--p-content-background);
+    width: max-content;
+    max-width: 65%;
+}
+
 p {
     white-space: normal;
     word-wrap: break-word;

@@ -3,7 +3,7 @@ import { LoginService } from '../../services/login';
 import { Router } from '@angular/router';
 import { Messages } from '../../services/messages';
 import { Toasts } from '../../services/toasts';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { FormsModule } from '@angular/forms';
 import { Rooms } from '../../services/rooms';
@@ -29,6 +29,7 @@ export class Chat implements OnInit, OnDestroy {
   private roomService: Rooms = inject(Rooms);
   private toasts: Toasts = inject(Toasts);
   private router: Router = inject(Router);
+  private location: Location = inject(Location)
   private messageSubscription?: Subscription;
   logedUser: any;
   chat: any;
@@ -42,6 +43,8 @@ export class Chat implements OnInit, OnDestroy {
         if (message && message.mensaje) {
           this.messages.push(message);
         }
+        console.log(this.messages);
+        
       }
     });
   }
@@ -60,16 +63,20 @@ export class Chat implements OnInit, OnDestroy {
         return;
       }
       this.chat = chat;
-      if(chat.solicitud.donador.id == this.logedUser.id){
+      if (chat.solicitud.donador.id == this.logedUser.id) {
         this.userChat = chat.solicitud.solicitante;
-      }else{
+      } else {
         this.userChat = chat.solicitud.donador;
-      }      
+      }
       this.messagesService.joinRoom(this.chat.nombreSala);
       this.loadChatMessages();
       this.subscribeToMessages();
     });
 
+  }
+
+  goBack(){
+    this.location.back();
   }
 
   loadChatMessages() {
