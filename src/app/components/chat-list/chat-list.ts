@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { LoginService } from '../../services/login';
 import { Router, RouterOutlet } from '@angular/router';
 import { TabsModule } from 'primeng/tabs';
@@ -25,10 +25,17 @@ export class ChatList implements OnInit {
   private roomService: Rooms = inject(Rooms);
   private toasts: Toasts = inject(Toasts);
   private router: Router = inject(Router);
+  screenWidth: number = window.innerWidth;
+  currentRoute: string = '';
   myProductsChats: any[] = [];
   myRequetsChats: any[] = [];
   logedUser: any;
   defaultTab = "0";
+
+  @HostListener('window:resize')
+  onResize() {
+    this.screenWidth = window.innerWidth;
+  }
 
   ngOnInit(): void {
     this.loginService.getLoggedUser().subscribe((user: any) => {
@@ -40,6 +47,10 @@ export class ChatList implements OnInit {
     });
     this.getRequesterRooms();
     this.getDonorRooms();
+    this.router.events.subscribe(() => {
+      this.currentRoute = this.router.url;
+    });
+    this.currentRoute = this.router.url;
   }
 
   getRequesterRooms() {
@@ -75,6 +86,10 @@ export class ChatList implements OnInit {
 
   goHome() {
     this.router.navigate(['/principal']);
+  }
+
+  shouldShowMobileVersion(): boolean {
+    return this.currentRoute.includes('/principal/chats/mensajes') && this.screenWidth < 767;
   }
 
 }

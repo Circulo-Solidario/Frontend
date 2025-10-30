@@ -4,6 +4,12 @@
   }
 }
 
+@media (max-width: 767px){
+  .chat-list {
+    border-right: 0 !important;
+  }
+}
+
 .go-back-buttom {
   cursor: pointer;
 }
@@ -47,4 +53,8 @@
 ::ng-deep .p-tabpanels{
   padding-top: 0;
   padding-bottom: 0;
+}
+
+::ng-deep .p-divider{
+  margin: 0;
 }

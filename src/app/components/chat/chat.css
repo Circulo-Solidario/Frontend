@@ -1,6 +1,6 @@
-@media (max-width: 575px) {
+@media (max-width: 767px) {
     .main-container {
-        padding-top: 2vh !important;
+        padding-top: 0 !important;
     }
 }
 

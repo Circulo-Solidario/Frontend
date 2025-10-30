@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { LoginService } from '../../services/login';
 import { Router } from '@angular/router';
 import { Messages } from '../../services/messages';
@@ -23,7 +23,8 @@ import { ButtonModule } from 'primeng/button';
   templateUrl: './chat.html',
   styleUrl: './chat.css'
 })
-export class Chat implements OnInit, OnDestroy {
+export class Chat implements OnInit, OnDestroy, AfterViewChecked {
+  @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
   private loginService: LoginService = inject(LoginService);
   private messagesService: Messages = inject(Messages);
   private roomService: Rooms = inject(Rooms);
@@ -38,15 +39,24 @@ export class Chat implements OnInit, OnDestroy {
   messages: any[] = [];
 
   private subscribeToMessages(): void {
+    if(this.messageSubscription){
+      this.messageSubscription.unsubscribe();
+    }
     this.messageSubscription = this.messagesService.messages$.subscribe({
       next: (message: any) => {
         if (message && message.mensaje) {
           this.messages.push(message);
         }
-        console.log(this.messages);
-        
+        console.log(this.messages);        
       }
     });
+  }
+
+  private scrollToBottom(): void {
+    try {
+      const el = this.messagesContainer.nativeElement;
+      el.scrollTop = el.scrollHeight;
+    } catch (err) { }
   }
 
   ngOnInit(): void {
@@ -72,7 +82,17 @@ export class Chat implements OnInit, OnDestroy {
       this.loadChatMessages();
       this.subscribeToMessages();
     });
+  }
 
+  ngOnDestroy(): void {
+    if (this.messageSubscription) {
+      this.messageSubscription.unsubscribe();
+    }
+    //this.messagesService.disconnect();
+  }
+
+  ngAfterViewChecked() {
+    this.scrollToBottom();
   }
 
   goBack(){
@@ -113,12 +133,5 @@ export class Chat implements OnInit, OnDestroy {
         })
       }
     })
-  }
-
-  ngOnDestroy(): void {
-    if (this.messageSubscription) {
-      this.messageSubscription.unsubscribe();
-    }
-    this.messagesService.disconnect();
   }
 }

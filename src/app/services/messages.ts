@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import Pusher from 'pusher-js';
+import Pusher, { Channel } from 'pusher-js';
 import { environment } from '../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 
@@ -9,7 +9,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class Messages {
   private pusher: Pusher;
-  private channel: any = null;
+  private channel: Channel | null = null;
   private messageSubject: BehaviorSubject<any> = new BehaviorSubject<any>({} as any);
   
 
@@ -26,6 +26,7 @@ export class Messages {
 
   joinRoom(room: string): void {
     if (this.channel) {
+      this.channel.unbind_all();
       this.pusher.unsubscribe(this.channel.name);
     }
 
