@@ -207,11 +207,11 @@
                             <div class="row">
                               <div class="col-auto">
                                 <div class="align-content-center mt-1">
-                                  @if(request.fromUser.urlImagen){
+                                  @if(request.fromUser?.urlImagen){
                                   <p-avatar
                                     size="large"
                                     shape="circle"
-                                    [image]="request.fromUser.urlImagen"
+                                    [image]="request.fromUser?.urlImagen"
                                   />
                                   }@else {
                                   <p-avatar size="large" shape="circle" icon="pi pi-user" />
@@ -224,10 +224,10 @@
                                 >
                                   <div>
                                     <div class="fw-medium fs-5">
-                                      {{ request.fromUser.nombreApellido }}
+                                      {{ request.fromUser?.nombreApellido }}
                                     </div>
                                     <span class="fw-medium text-secondary small">
-                                      {{ request.fromUser.alias }}
+                                      {{ request.fromUser?.alias }}
                                     </span>
                                   </div>
                                 </div>

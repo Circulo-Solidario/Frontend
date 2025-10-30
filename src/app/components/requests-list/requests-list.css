@@ -21,6 +21,7 @@
 
 ::ng-deep .p-tablist-tab-list, .p-tabpanels, .p-tablist{
   background-color: transparent !important;
+  z-index: 0;
 }
 
 ::ng-deep p-accordion .p-ink{

@@ -43,6 +43,7 @@ export class ProductDetail implements OnInit {
       this.logedUser = user;
       if (user == null) {
         this.router.navigate(['/login']);
+        return;
       }
     });
     const navigation = this.router.currentNavigation();
@@ -92,7 +93,7 @@ export class ProductDetail implements OnInit {
       .requestProduct({
         idSolicitante: this.logedUser.id,
         idProducto: this.productData.id,
-        idDondador: this.productData.usuario.id,
+        idDonador: this.productData.usuario.id,
         mensaje: message,
       })
       .subscribe({
@@ -104,9 +105,9 @@ export class ProductDetail implements OnInit {
           });
           this.notificationService
             .sendNotification({
-              tipoNotificacion: TipoNotificaciones.NUEVA_SOLICITUD,
+              tipoNotificacion: 'NUEVA_SOLICITUD',
               deUsuario: this.logedUser.id,
-              aUsuario: this.productData.usuario.id,
+              ausuario: this.productData.usuario.id,
               mensaje: `Tienes una nueva solicitud del producto ${this.productData.nombre} desde el usuario ${this.logedUser.alias}`,
             })
             .subscribe();

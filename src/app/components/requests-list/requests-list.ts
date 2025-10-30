@@ -88,17 +88,15 @@ export class RequestsList implements OnInit {
 
           group.requests.push({
             id: actual.id,
-            fromUser: actual.deUsuario,
-            toUser: actual.ausuario,
+            fromUser: actual.solicitante,
+            toUser: actual.donador,
             message: actual.mensaje,
             requestDate: actual.fechaSolicitud,
             requestState: actual.estadoSolicitud,
           });
 
           return acum;
-        }, []);
-        console.log(this.requestOfProducts);
-        
+        }, []);        
       },
       error: () => {
         this.toasts.showToast({
@@ -132,6 +130,7 @@ export class RequestsList implements OnInit {
         this.toasts.showToast({
           severity: 'success', summary: 'Solicitud aceptada', detail: 'La solicitud ha sido aceptada correctamente.'
         });
+        this.getRequestsOfMyProducts(); 
         this.notificationService.sendNotification({
           deUsuario: request.toUser.id,
           ausuario: request.fromUser.id,

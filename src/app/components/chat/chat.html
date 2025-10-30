@@ -1,0 +1,77 @@
+<div class="main-container container-fluid p-0">
+  <div
+    class="container-fluid d-flex flex-column justify-content-start align-items-stretch h-100 p-0"
+  >
+    <div class="d-flex align-items-center p-0 py-2 flex-shrink-0 chat-header mb-2">
+      <div class="col-auto ms-2 justify-content-center d-flex" (click)="goBack()">
+        <i class="pi pi-chevron-left go-back-buttom"></i>
+      </div>
+      <div class="col-auto mx-2">
+        @if(userChat?.urlImagen){
+        <p-avatar size="large" shape="circle" [image]="userChat?.urlImagen" />
+        }@else {
+        <p-avatar size="large" shape="circle" icon="pi pi-gift" />
+        }
+      </div>
+      <div class="col-auto d-block">
+        <div>
+          <span class="fw-medium fs-4">
+            {{ userChat?.alias }}
+          </span>
+        </div>
+        <span class="fw-medium text-secondary fs-6">
+          {{ userChat?.nombreApellido }}
+        </span>
+      </div>
+    </div>
+    <div class="d-flex p-0 flex-grow-1 overflow-hidden">
+      <div class="col d-flex flex-column p-0 h-100 w-100">
+        <div
+          #messagesContainer
+          class="row d-block w-100 flex-grow-1 overflow-auto"
+          style="height: 80%; max-height: 80%"
+        >
+          @for (message of messages; track $index) {
+          <div
+            [ngClass]="
+              message.usuario.id == logedUser.id ? 'text-start ms-auto' : 'text-start me-auto'
+            "
+            [class.mt-2]="$index != 0"
+            class="message-container p-2"
+          >
+            <p class="fw-medium">{{ message.mensaje }}</p>
+            <div class="text-end">
+              <span class="fw-medium text-secondary">{{
+                message.fechaMensaje | date : 'HH:mm'
+              }}</span>
+            </div>
+          </div>
+          }
+        </div>
+        <div class="row w-100 mt-2" style="height: 20%">
+          <div class="col p-0">
+            <textarea
+              placeholder="Escribe un mensaje..."
+              maxlength="255"
+              pTextarea
+              fluid
+              [(ngModel)]="message"
+              (keydown.enter)="sendMessage()"
+              style="min-height: 100%; max-height: 100%; resize: none"
+            ></textarea>
+          </div>
+          <div class="col-auto">
+            <p-button
+              icon="pi pi-angle-double-up"
+              variant="outlined"
+              raised="true"
+              [rounded]="true"
+              (click)="sendMessage()"
+              [disabled]="!message.trim()"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

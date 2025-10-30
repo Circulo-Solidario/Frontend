@@ -330,7 +330,7 @@
           <div class="sidebar-button">
             <p-button fluid [styleClass]="fullyCollapsed ? 'justify-content-start' : 'justify-content-start'">
               <i [class]="item.icon + ' text-inherit m-3'" style="font-size: 1.4rem"></i>
-              @if(!item.items || (item.items && !isCollapsed)){
+              @if(!item.id?.includes('home') || (item.id?.includes('home') && !isCollapsed)){
               <span class="pe-4 sidebar-text text-start align-middle">
                 {{ item.label }}
               </span>

@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { Notifications } from './notifications';
+import { Requests } from '../requests';
 
-describe('Notifications', () => {
-  let service: Notifications;
+describe('Requests', () => {
+  let service: Requests;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(Notifications);
+    service = TestBed.inject(Requests);
   });
 
   it('should be created', () => {
