@@ -46,8 +46,7 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
       next: (message: any) => {
         if (message && message.mensaje) {
           this.messages.push(message);
-        }
-        console.log(this.messages);        
+        }     
       }
     });
   }
