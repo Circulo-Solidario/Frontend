@@ -155,8 +155,12 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
         id: 'home3',
         items: [
           {
-            label: 'Ver donaciones',
+            label: 'Proyectos solidarios',
             icon: 'pi pi-list',
+            command: () => {
+              this.router.navigate(['/principal/proyectos']);
+              this.visible = false;
+            },
           },
           {
             label: 'Publicar proyecto',
