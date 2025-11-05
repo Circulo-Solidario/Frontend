@@ -1,0 +1,67 @@
+<div class="main-container container-fluid pt-3">
+  <div class="col-auto justify-content-center align-content-center h-100">
+    <h1 class="d-flex my-2 align-items-center mb-4">
+      <i class="pi pi-chevron-left me-3 go-back-buttom" (click)="goBack()"></i>
+      Detalles del proyecto
+    </h1>
+    <div class="container-fluid">
+      <div class="row m-auto justify-content-center w-75 row-cols-2 p-4 product-content">
+        <div class="col-auto pe-md-5">
+          <div class="row">
+            <img class="d-block mx-auto image" [src]="proyectData?.imagenes[0].urlImagen" />
+          </div>
+          <div class="row mt-4">
+            <h2 class="p-0">Información de la organizacion</h2>
+          </div>
+          <div class="row">
+            <div class="col-auto ps-0 pe-0">
+              <p-avatar
+                [icon]="proyectData?.organizacion.urlImagen ? '' : 'pi pi-user fs-4'"
+                [image]="
+                  proyectData?.organizacion.urlImagen ? proyectData?.organizacion.urlImagen : ''
+                "
+                class="avatar me-2"
+                shape="circle"
+                size="xlarge"
+              />
+            </div>
+            <div class="col-8 col-xl-auto p-0">
+              <div class="row-cols-auto" style="max-width: max-content">
+                <span class="fs-5 p-0">{{ proyectData?.organizacion.alias }}</span>
+              </div>
+              <div class="row-cols-auto mt-1" style="max-width: max-content">
+                <p-badge value="Organización benéfica" severity="secondary" badgesize="small" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-12 col-xl-6 mt-4 mt-xl-0" style="display: inline-grid">
+          <div class="row" style="display: block">
+            <h1 class="mb-1" style="height: max-content">{{ proyectData?.nombre }}</h1>
+            <div style="display: block">
+              <span>Fecha finalización: </span>
+              <span> {{ proyectData?.fechaFin.replaceAll('-', '/') }}</span>
+              <br>
+              <span>Recaudado: </span>
+              <span> {{ proyectData?.recaudado | currency:'ARS':'symbol':'1.2-2'}} / {{ proyectData?.objetivo | currency:'ARS':'symbol':'1.2-2'}}</span>
+            </div>
+          </div>
+          <div class="row align-items-start mt-4 mt-xl-0" style="display: block">
+            <label for="description" style="height: max-content">Descripción:</label>
+            <p name="description" class="description">{{ proyectData?.descripcion }}</p>
+          </div>
+          <div class="row mt-2 align-items-end mt-2 mt-xl-0">
+            <h3 class="title mb-0">Estado</h3>
+            <p-tag
+              class="tag"
+              icon="pi pi-check"
+              [severity]="getSeverity(proyectData?.estado)"
+              [value]="proyectData?.estado"
+              [rounded]="true"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

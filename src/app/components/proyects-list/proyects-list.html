@@ -59,7 +59,7 @@
         <ng-template #list let-items>
           <div [class.p-3]="!items">
             @for (item of items; track $index) {
-            <div class="d-flex border rounded flex-row p-3 gap-3 list" [class.mt-3]="$index != 0">
+            <div class="d-flex border rounded flex-row p-3 gap-3 list" [class.mt-3]="$index != 0" (click)="goProyectDetail(item)">
               <div class="position-relative">
                 <img
                   class="d-block mx-auto rounded image"

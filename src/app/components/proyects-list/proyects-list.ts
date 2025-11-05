@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -36,7 +36,7 @@ import { InputTextModule } from 'primeng/inputtext';
   templateUrl: './proyects-list.html',
   styleUrl: './proyects-list.css'
 })
-export class ProyectsList implements OnInit{
+export class ProyectsList implements OnInit {
   @ViewChild('dataView') dataView: any;
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
   private router: Router = inject(Router);
@@ -45,6 +45,7 @@ export class ProyectsList implements OnInit{
   private loginService: LoginService = inject(LoginService);
   private userService: Users = inject(Users);
   private proyectService: Proyects = inject(Proyects);
+  private location: Location = inject(Location);
   logedUser: any;
   collapsed: boolean = true;
   name: any;
@@ -54,10 +55,10 @@ export class ProyectsList implements OnInit{
   organizations: any;
   selectedOrganization: any;
   statesOptions = [
-    { name: 'Activos', state: 'ACTIVO'},
-    { name: 'Cancelados', state: 'CANCELADO'},
-    { name: 'Objetivo logrado', state: 'FINALIZADO_EXITOSO'},
-    { name: 'No alcanzó objetivo', state: 'FINALIZADO_NO_EXITOSO'},
+    { name: 'Activos', state: 'ACTIVO' },
+    { name: 'Cancelados', state: 'CANCELADO' },
+    { name: 'Objetivo logrado', state: 'FINALIZADO_EXITOSO' },
+    { name: 'No alcanzó objetivo', state: 'FINALIZADO_NO_EXITOSO' },
   ]
 
   ngOnInit(): void {
@@ -67,17 +68,46 @@ export class ProyectsList implements OnInit{
         this.router.navigate(['/login']);
       }
     });
-    this.name = null;
-    this.selectedState = null;
-    this.selectedOrganization = null;
+    this.route.queryParams.subscribe((params) => {
+      this.name = params['nombre'] ?? null;
+      params['organizacion'] ? this.selectedOrganization = params['organizacion'] : null;
+      params['estado'] ? this.selectedState = params['estado'] : null;
+      this.filterData();
+    });
     this.getOrganizations();
     this.getProyects();
   }
 
-  getProyects(){
+  getProyects() {
+    let queryString = '';
+    this.filters = {}
+    if (this.name) {
+      queryString += `&nombre=${this.name}`;
+      this.filters = {
+        nombre: this.name
+      }
+    }
+    if (this.selectedOrganization) {
+      this.filters = {
+        ...this.filters,
+        organizacion: this.selectedOrganization
+      }
+      queryString += `&organizacion=${this.selectedOrganization}`;
+    }
+    if (this.selectedState) {
+      this.filters = {
+        ...this.filters,
+        estado: this.selectedState
+      }
+      queryString += `&estado=${this.selectedState}`;
+    }
+    if (queryString) {
+      this.location.replaceState(`/principal/proyectos?${queryString.replace('&', '')}`);
+    } else{
+      this.location.replaceState(`/principal/proyectos`);
+    }
     this.proyectService.getProyects(this.selectedOrganization, this.selectedState, this.name).subscribe({
       next: (response: any) => {
-        console.log(response);
         this.proyects = response;
       },
       error: () => {
@@ -88,10 +118,9 @@ export class ProyectsList implements OnInit{
     })
   }
 
-  getOrganizations(){
+  getOrganizations() {
     this.userService.getFilteredUsers(true, 'ORGANIZACION').subscribe({
       next: (response: any) => {
-        console.log(response);
         this.organizations = response;
       },
       error: () => {
@@ -102,6 +131,12 @@ export class ProyectsList implements OnInit{
     })
   }
 
+  goProyectDetail(proyect: any) {
+    this.router.navigate(['/principal/detalles-proyecto'], {
+      state: { id: proyect.id, filters: this.filters }
+    });
+  }
+
   filterData() {
     this.proyects = [];
     (document.activeElement as HTMLElement)?.blur();
@@ -110,14 +145,14 @@ export class ProyectsList implements OnInit{
   }
 
   clearFilters() {
-    this.name = '';
+    this.name = null;
     this.selectedOrganization = null;
     this.selectedState = null;
     this.filterData();
   }
 
-  getSeverity(product: any): 'success' | 'warn' | 'danger' {
-    switch (product.estado) {
+  getSeverity(proyect: any): 'success' | 'warn' | 'danger' {
+    switch (proyect.estado) {
       case 'ACTIVO':
         return 'success';
       case 'CANCELADO':
