@@ -57,7 +57,11 @@ export const routes: Routes = [
       {
         path: 'proyectos',
         loadComponent: () => import('./components/proyects-list/proyects-list').then((m) => m.ProyectsList)
-      }
+      },
+      {
+        path: 'detalles-proyecto',
+        loadComponent: () => import('./components/proyect-detail/proyect-detail').then((m) => m.ProyectDetail)
+      },
     ]
   },
   {
