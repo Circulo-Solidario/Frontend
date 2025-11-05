@@ -1,5 +1,4 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { ThemeSwitcher } from './components/theme-switcher/theme-switcher';
 import { RouterOutlet } from '@angular/router';
 import { Toast } from 'primeng/toast';
 import { MessageService, ToastMessageOptions } from 'primeng/api';

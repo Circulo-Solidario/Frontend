@@ -29,4 +29,22 @@ export class Users {
   editUser(id: number, user:any): Observable<any>{
     return this.httpCliente.put(`${environment.apiUrl}${this.apiPath}/${id}`, user); 
   }
+
+  getFilteredUsers(active: any, userType: any): Observable<any>{
+    let filters: any;
+    if(active){
+      filters = {
+        activo: active
+      }
+    }
+    if(userType){
+      filters = {
+        ...filters,
+        tipoUsuario: userType
+      }
+    }
+    return this.httpCliente.get(`${environment.apiUrl}${this.apiPath}/filtrar`, {
+      params: filters
+    })
+  }
 }
