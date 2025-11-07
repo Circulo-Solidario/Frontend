@@ -9,6 +9,7 @@ import { TagModule } from 'primeng/tag';
 import { Toasts } from '../../services/toasts';
 import { LoginService } from '../../services/login';
 import { Proyects } from '../../services/proyects';
+import { Donation } from '../../services/donation';
 
 @Component({
   selector: 'app-proyect-detail',
@@ -28,10 +29,13 @@ export class ProyectDetail implements OnInit{
   private toasts: Toasts = inject(Toasts);
   private loginService: LoginService = inject(LoginService);
   private proyectService: Proyects = inject(Proyects);
+  private donationService: Donation = inject(Donation);
   id: any;
   filters: any;
   proyectData: any;
   logedUser: any;
+  loading = false;
+
 
   ngOnInit(): void {
     this.loginService.getLoggedUser().subscribe((user: any) => {
@@ -46,6 +50,14 @@ export class ProyectDetail implements OnInit{
     this.id = state?.['id'];
     this.filters = state?.['filters'];
     this.getProyectData();
+    
+  }
+
+  async donate(amount: number){
+    this.loading = true;
+    const preferenceId = await this.donationService.createPreference(this.proyectData?.nombre, amount, this.logedUser.correo);
+    await this.donationService.createPayButton(preferenceId);
+    this.loading = false;
   }
 
   getProyectData(){
