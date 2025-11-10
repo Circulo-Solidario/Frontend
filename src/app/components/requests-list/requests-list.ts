@@ -154,6 +154,7 @@ export class RequestsList implements OnInit {
         this.toasts.showToast({
           severity: 'success', summary: 'Solicitud rechazada', detail: 'La solicitud ha sido rechazada correctamente.'
         });
+        this.getRequestsOfMyProducts(); 
       },
       error: () => {
         this.toasts.showToast({

@@ -14,6 +14,12 @@
   cursor: pointer;
 }
 
+#no-data-logo{
+    fill: var(--p-tabs-tabpanel-color);
+    width: max-content;
+    height: max-content;
+}
+
 .main-container {
   padding: 4vh;
   height: 100%;
@@ -33,6 +39,10 @@
 
 ::ng-deep .p-dataview-content {
   border-radius: var(--p-content-border-radius);
+}
+
+::ng-deep .p-dataview-content.chat-link {
+  
   cursor: pointer;
 }
 

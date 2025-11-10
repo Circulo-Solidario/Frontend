@@ -14,7 +14,7 @@
 }
 
 #no-data-logo{
-    fill: var(--p-dataview-content-color);
+    fill: var(--p-tabs-tabpanel-color);
     width: max-content;
     height: max-content;
 }
