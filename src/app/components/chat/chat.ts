@@ -1,4 +1,12 @@
-import { AfterViewChecked, Component, ElementRef, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewChecked,
+  Component,
+  ElementRef,
+  inject,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { LoginService } from '../../services/login';
 import { Router } from '@angular/router';
 import { Messages } from '../../services/messages';
@@ -10,6 +18,8 @@ import { Rooms } from '../../services/rooms';
 import { AvatarModule } from 'primeng/avatar';
 import { TextareaModule } from 'primeng/textarea';
 import { ButtonModule } from 'primeng/button';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   selector: 'app-chat',
@@ -18,19 +28,22 @@ import { ButtonModule } from 'primeng/button';
     FormsModule,
     AvatarModule,
     TextareaModule,
-    ButtonModule
+    ButtonModule,
+    ConfirmDialogModule,
   ],
+  providers: [ConfirmationService],
   templateUrl: './chat.html',
-  styleUrl: './chat.css'
+  styleUrl: './chat.css',
 })
 export class Chat implements OnInit, OnDestroy, AfterViewChecked {
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
   private loginService: LoginService = inject(LoginService);
   private messagesService: Messages = inject(Messages);
   private roomService: Rooms = inject(Rooms);
+  private confirmationService: ConfirmationService = inject(ConfirmationService);
   private toasts: Toasts = inject(Toasts);
   private router: Router = inject(Router);
-  private location: Location = inject(Location)
+  private location: Location = inject(Location);
   private messageSubscription?: Subscription;
   logedUser: any;
   chat: any;
@@ -39,15 +52,15 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
   messages: any[] = [];
 
   private subscribeToMessages(): void {
-    if(this.messageSubscription){
+    if (this.messageSubscription) {
       this.messageSubscription.unsubscribe();
     }
     this.messageSubscription = this.messagesService.messages$.subscribe({
       next: (message: any) => {
         if (message && message.mensaje) {
           this.messages.push(message);
-        }     
-      }
+        }
+      },
     });
   }
 
@@ -55,7 +68,7 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
     try {
       const el = this.messagesContainer.nativeElement;
       el.scrollTop = el.scrollHeight;
-    } catch (err) { }
+    } catch (err) {}
   }
 
   ngOnInit(): void {
@@ -66,7 +79,7 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
         return;
       }
     });
-    this.roomService.chat$.subscribe(chat => {
+    this.roomService.chat$.subscribe((chat) => {
       if (!chat) {
         this.router.navigate(['principal/chats']);
         return;
@@ -94,7 +107,7 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
     this.scrollToBottom();
   }
 
-  goBack(){
+  goBack() {
     this.location.back();
   }
 
@@ -105,10 +118,12 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
       },
       error: () => {
         this.toasts.showToast({
-          severity: 'error', summary: 'Error al obtener mensajes', detail: 'No pudimos obtener el historial del chat, intente nuevamente...'
-        })
-      }
-    })
+          severity: 'error',
+          summary: 'Error al obtener mensajes',
+          detail: 'No pudimos obtener el historial del chat, intente nuevamente...',
+        });
+      },
+    });
   }
 
   sendMessage() {
@@ -119,8 +134,8 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
     const messageRequest = {
       mensaje: this.message,
       idUsuario: this.logedUser.id,
-      idSala: this.chat.id
-    }
+      idSala: this.chat.id,
+    };
 
     this.messagesService.sendMessage(messageRequest).subscribe({
       next: (response: any) => {
@@ -128,9 +143,60 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
       },
       error: () => {
         this.toasts.showToast({
-          severity: 'error', summary: 'Error al enviar mensaje', detail: 'No pudimos enviar tu mensaje, intente nuevamente...'
-        })
-      }
-    })
+          severity: 'error',
+          summary: 'Error al enviar mensaje',
+          detail: 'No pudimos enviar tu mensaje, intente nuevamente...',
+        });
+      },
+    });
+  }
+
+  openCloseChatDialog() {
+    this.confirmationService.confirm({
+      header: 'Finalizar chat',
+      message: 'Por favor confirma como deseas finalizar el chat.',
+      accept: (delivered: boolean) => {
+        if (delivered) {
+          this.roomService.closeChat(this.chat.id, true).subscribe({
+            next: () => {
+              this.toasts.showToast({
+                severity: 'success',
+                summary: 'Chat finalizado',
+                detail: 'Has finalizado el chat y marcado como entregado.',
+              });
+              this.location.back();
+              this.chat.estado = 'ENTREGADO';
+            },
+            error: () => {
+              this.toasts.showToast({
+                severity: 'error',
+                summary: 'Error al finalizar chat',
+                detail: 'No pudimos finalizar el chat, intente nuevamente...',
+              });
+            },
+          });
+        } else {
+          this.roomService.closeChat(this.chat.id, false).subscribe({
+            next: () => {
+              this.toasts.showToast({
+                severity: 'success',
+                summary: 'Chat finalizado',
+                detail: 'Has finalizado el chat y marcado como rechazado.',
+              });
+              this.location.back();
+              this.chat.estado = 'RECHAZADO';
+            },
+            error: () => {
+              this.toasts.showToast({
+                severity: 'error',
+                summary: 'Error al finalizar chat',
+                detail: 'No pudimos finalizar el chat, intente nuevamente...',
+              });
+            },
+          });
+        }
+      },
+      reject: () => {},
+    });
   }
 }

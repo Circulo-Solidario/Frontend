@@ -41,16 +41,19 @@
             <div style="display: block">
               <span>Fecha finalización: </span>
               <span> {{ proyectData?.fechaFin.replaceAll('-', '/') }}</span>
-              <br>
+              <br />
               <span>Recaudado: </span>
-              <span> {{ proyectData?.recaudado | currency:'ARS':'symbol':'1.2-2'}} / {{ proyectData?.objetivo | currency:'ARS':'symbol':'1.2-2'}}</span>
+              <span>
+                {{ proyectData?.recaudado | currency : 'ARS' : 'symbol' : '1.2-2' }} /
+                {{ proyectData?.objetivo | currency : 'ARS' : 'symbol' : '1.2-2' }}</span
+              >
             </div>
           </div>
           <div class="row align-items-start mt-4 mt-xl-0" style="display: block">
             <label for="description" style="height: max-content">Descripción:</label>
             <p name="description" class="description">{{ proyectData?.descripcion }}</p>
           </div>
-          <div class="row mt-2 align-items-end mt-2 mt-xl-0">
+          <div class="row mt-2 align-items-end mt-2 mt-xl-0 donor-buttons">
             <h3 class="title mb-0">Estado</h3>
             <p-tag
               class="tag"
@@ -59,9 +62,49 @@
               [value]="proyectData?.estado"
               [rounded]="true"
             />
+            <p-inputgroup>
+              <p-inputnumber class="mt-1" [min]="0" fluid [(ngModel)]="amount" inputId="currency-ars" mode="currency" currency="ARS" locale="es-AR" placeholder="$ 100,00"/>
+              <p-button label="Donar" [disabled]="amount <= 0" (onClick)="donate()" />
+            </p-inputgroup>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+<p-confirmdialog key="donation">
+  <ng-template #message>
+    <div
+      class="d-flex flex-column justify-content-center align-items-center w-100"
+      style="overflow: hidden"
+    >
+      @if(loading){
+      <div>
+        <p-progress-spinner ariaLabel="loading" />
+      </div>
+      }
+      <div id="wallet_container"></div>
+    </div>
+  </ng-template>
+</p-confirmdialog>
+<p-confirmdialog key="approvedPay">
+  <ng-template #headless let-onReject="onReject">
+    <div class="d-flex flex-column align-items-center p-4 rounded position-relative">
+
+      <!-- Círculo con ícono -->
+      <div class="rounded-circle d-flex justify-content-center align-items-center"
+        style="height: 96px; width: 96px; position: absolute; top: -48px; background-color: var(--p-menu-background);">
+        <i class="pi pi-check fs-1"></i>
+      </div>
+
+      <!-- Contenido -->
+      <div class="mt-2 pt-4 text-center">
+        <span class="fw-bold fs-3 d-block mb-2">Donación realizada!</span>
+        <p class="mb-0">Hemos realizado el depósito de la donación a la organización, gracias por tu ayuda!</p>
+      </div>
+      <div class="d-flex justify-content-center align-items-center gap-2 mt-4">
+          <p-button label="Aceptar" fluid outlined="true" (click)="onReject()"/>
+        </div>
+    </div>
+  </ng-template>
+</p-confirmdialog>

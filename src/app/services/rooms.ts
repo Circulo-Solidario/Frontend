@@ -26,4 +26,17 @@ export class Rooms {
   getDonorRooms(userId: number): Observable<any>{
     return this.httpClient.get(`${environment.apiUrl}${this.apiPath}/donador/${userId}`);
   }
+
+  closeChat(id: any, delivered: boolean): Observable<any>{
+    let body = {
+      estado: 'ENTREGADA'
+    }
+    if(!delivered){
+      body = {
+        estado: 'RECHAZADA'
+      }
+    }
+    return this.httpClient.patch(`${environment.apiUrl}${this.apiPath}/${id}/cambiar-estado`, body);
+  }
 }
+
