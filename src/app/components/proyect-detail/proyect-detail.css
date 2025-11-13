@@ -53,3 +53,13 @@
     padding: 4vh 4vw;
     height: max-content;
 }
+
+::ng-deep .donor-buttons p-inputgroup{
+    align-items: baseline;
+}
+
+::ng-deep .donor-buttons .p-button{
+    height: max-content;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}

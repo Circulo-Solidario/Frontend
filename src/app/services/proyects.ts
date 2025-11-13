@@ -42,4 +42,14 @@ export class Proyects {
     return this.http.get(`${this.apiPath}/${id}`);
   }
 
+  saveIdProyect(id: any){
+    localStorage.setItem('proyectId', id);
+  }
+
+  updateFounding(id: any, amount: any): Observable<any>{
+    let founding = {
+      "recaudado": amount
+    }
+    return this.http.patch(`${this.apiPath}/${id}/actualizar-recaudado`, founding);
+  }
 }
