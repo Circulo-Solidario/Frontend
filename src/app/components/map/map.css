@@ -1,0 +1,113 @@
+/* Leaflet container */
+#people-map {
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* Main container fills available space */
+.main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Inner column grows to fill space */
+.main-container .col {
+    display: flex !important;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+/* Map wrapper styling - flex-grow to fill available space */
+.map-wrapper {
+    position: relative;
+    flex: 1;
+    background: var(--p-content-background);
+    border-radius: var(--p-border-radius-xl);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 0;
+    margin-bottom: 0.5rem;
+}
+
+/* Leaflet tile images - render correctly */
+#people-map img.leaflet-tile {
+    max-width: none !important;
+}
+
+/* Leaflet panes - all except tile-pane should have high z-index */
+.leaflet-pane {
+    position: absolute !important;
+}
+
+.leaflet-marker-pane {
+    position: absolute !important;
+    z-index: 1060 !important;
+}
+
+.leaflet-popup-pane {
+    position: absolute !important;
+    z-index: 1070 !important;
+}
+
+.leaflet-overlay-pane {
+    position: absolute !important;
+    z-index: 1040 !important;
+}
+
+.leaflet-shadow-pane {
+    position: absolute !important;
+    z-index: 1050 !important;
+}
+
+.leaflet-tooltip-pane {
+    position: absolute !important;
+    z-index: 1080 !important;
+}
+
+/* Leaflet attribution - make sure it appears over tiles */
+.leaflet-attribution-control {
+    position: absolute !important;
+    z-index: 1050 !important;
+    bottom: 10px !important;
+    left: 10px !important;
+}
+
+/* Ensure controls appear over map */
+.leaflet-control {
+    position: absolute !important;
+    z-index: 1050 !important;
+}
+
+/* Map controls overlay */
+.map-controls {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 2001;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    pointer-events: auto;
+}
+
+.control-btn {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.go-back-buttom {
+    cursor: pointer;
+}
+
+/* Left side controls */
+.map-controls-left {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 2001;
+    display: flex;
+}

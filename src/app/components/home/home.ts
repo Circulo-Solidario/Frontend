@@ -173,9 +173,18 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
         ],
       },
       {
+        label: 'Personas en situación de calle',
+        icon: 'pi pi-map',
+        id: 'home4',
+        command: () => {
+          this.router.navigate(['/principal/mapa']);
+          this.visible = false;
+        }
+      },
+      {
         label: 'Reportes',
         icon: 'pi pi-chart-bar',
-        id: 'home4',
+        id: 'home5',
         items: [
           {
             label: 'Mis estadísticas',
