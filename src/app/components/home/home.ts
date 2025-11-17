@@ -19,6 +19,7 @@ import { Drawer } from 'primeng/drawer';
 import { ThemeSwitcher } from '../theme-switcher/theme-switcher';
 import { CommonModule } from '@angular/common';
 import { TieredMenu } from 'primeng/tieredmenu';
+import { Dialog } from 'primeng/dialog';
 import { Avatar } from 'primeng/avatar';
 import { OverlayBadge } from 'primeng/overlaybadge';
 import { Popover } from 'primeng/popover';
@@ -45,6 +46,7 @@ import { NotificationInter, Notifications } from '../../services/notifications';
     CommonModule,
     TieredMenu,
     Avatar,
+    Dialog,
     OverlayBadge,
     Popover,
     Menu,
@@ -75,6 +77,7 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
   fullyCollapsed = false;
   rotate = false;
   visible = false;
+  showTerms: boolean = false;
   productName: string = '';
   menu: MenuItem[] = [];
   userMenu: MenuItem[] = [];
@@ -344,5 +347,15 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
     await this.notificationService.unsubscribeAllNotification();
     this.getNotificationsHistory();
     this.subscribeNotifications();
+  }
+
+  openTerms(): void {
+    this.showTerms = true;
+    // if the drawer is open on mobile, close it to show the modal clearly
+    this.visible = false;
+  }
+
+  closeTerms(): void {
+    this.showTerms = false;
   }
 }
