@@ -237,4 +237,8 @@
     }
 }
 
-/* #endregion */
+.terms-content{
+    max-height: 60vh;
+    overflow: auto;
+    padding: 1rem;
+}
