@@ -351,7 +351,6 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
 
   openTerms(): void {
     this.showTerms = true;
-    // if the drawer is open on mobile, close it to show the modal clearly
     this.visible = false;
   }
 
