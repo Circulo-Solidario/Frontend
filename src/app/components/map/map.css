@@ -101,3 +101,26 @@
     z-index: 700;
     display: flex;
 }
+
+/* Dialog styling */
+.point-dialog {
+    border-radius: var(--p-border-radius-xl);
+}
+
+.dialog-content {
+    padding: 1rem 0;
+}
+
+.dialog-content label {
+    font-weight: 500;
+    color: var(--p-text-color);
+}
+
+.dialog-content textarea {
+    background-color: var(--p-inputtext-bg);
+    border: 1px solid var(--p-inputtext-border-color);
+    border-radius: var(--p-border-radius-lg);
+    color: var(--p-inputtext-color);
+    padding: 0.75rem;
+    font-size: 0.95rem;
+}

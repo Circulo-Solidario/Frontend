@@ -2,12 +2,22 @@
   <p-toolbar class="header-toolbar">
     <ng-template #start>
       <p-button (click)="toggleSidebar()" styleClass="p-button-text d-none d-sm-block p-0 ms-3">
-        <svg id="logo" class="d-none d-sm-block" version="1.0" xmlns="http://www.w3.org/2000/svg" width="30" height="30"
-          viewBox="0 0 201.000000 219.000000" preserveAspectRatio="xMidYMid meet"
-          [class.rotate-fow]="rotate && isCollapsed" [class.rotate-back]="rotate && !isCollapsed">
+        <svg
+          id="logo"
+          class="d-none d-sm-block"
+          version="1.0"
+          xmlns="http://www.w3.org/2000/svg"
+          width="30"
+          height="30"
+          viewBox="0 0 201.000000 219.000000"
+          preserveAspectRatio="xMidYMid meet"
+          [class.rotate-fow]="rotate && isCollapsed"
+          [class.rotate-back]="rotate && !isCollapsed"
+        >
           <metadata>Created by potrace 1.16, written by Peter Selinger 2001-2019</metadata>
           <g transform="translate(0.000000,219.000000) scale(0.100000,-0.100000)" stroke="none">
-            <path d="M950 2160 c-11 -11 -20 -29 -20 -40 0 -15 -7 -20 -29 -20 -43 0 -71
+            <path
+              d="M950 2160 c-11 -11 -20 -29 -20 -40 0 -15 -7 -20 -29 -20 -43 0 -71
             -28 -78 -78 -5 -36 -9 -42 -30 -42 -13 0 -35 -11 -48 -25 -24 -24 -25 -28 -25
             -185 0 -88 -2 -160 -5 -160 -3 0 -44 23 -92 50 -102 59 -132 62 -165 20 l-23
             -29 -75 44 c-84 49 -129 56 -160 25 -11 -11 -20 -24 -20 -28 0 -4 -16 -8 -36
@@ -89,7 +99,8 @@
             -20 -7 -20 -209 0 -172 -3 -211 -15 -221 -8 -7 -22 -10 -30 -6 -13 5 -15 40
             -15 246 l0 240 -25 0 -25 0 0 -120 c0 -98 -3 -122 -15 -126 -35 -14 -45 14
             -45 130 l0 111 49 32 c85 55 130 133 131 225 0 43 2 47 28 51 15 2 33 2 40 0
-            8 -1 22 -3 33 -3z" />
+            8 -1 22 -3 33 -3z"
+            />
           </g>
         </svg>
       </p-button>
@@ -104,8 +115,14 @@
       <div class="toolbar-center">
         <p-iconfield>
           <p-inputicon class="pi pi-search" />
-          <input [(ngModel)]="productName" type="text" pInputText placeholder="Busca los productos que necesites..."
-            fluid (keypress)="searchProduct($event)" />
+          <input
+            [(ngModel)]="productName"
+            type="text"
+            pInputText
+            placeholder="Busca los productos que necesites..."
+            fluid
+            (keypress)="searchProduct($event)"
+          />
         </p-iconfield>
       </div>
     </ng-template>
@@ -129,15 +146,17 @@
             <div class="d-flex justify-content-between align-items-center m-0 p-2">
               <h4 class="m-0">Notificaciones</h4>
               @if(unreadCount > 0){
-                <p-button label="Leer todas" variant="text" (click)="markAllAsRead()" size="small"/>
+              <p-button label="Leer todas" variant="text" (click)="markAllAsRead()" size="small" />
               }
             </div>
-            <hr style="border: none; border-top: 0.1px solid var(--p-primary-color);">
+            <hr style="border: none; border-top: 0.1px solid var(--p-primary-color)" />
             <div class="notification-content" [class.pe-3]="hasOverflow" #notificationContent>
-              @if(notifications.length > 0){ @for (notification of notifications; track
-              $index) {
-              <div class="dropdown-item d-flex align-items-start p-2" (click)="markAsRead(notification)"
-                style="cursor: pointer;">
+              @if(notifications.length > 0){ @for (notification of notifications; track $index) {
+              <div
+                class="dropdown-item d-flex align-items-start p-2"
+                (click)="markAsRead(notification)"
+                style="cursor: pointer"
+              >
                 <div class="flex-grow-1">
                   @if(!notification.fechaVistaNotificacion){
                   <div class="d-flex justify-content-between align-items-start mb-1">
@@ -146,7 +165,9 @@
                   }
                   <p class="mb-1 mt-0 small">{{ notification.mensaje }}</p>
                   <div class="d-flex justify-content-between align-items-start">
-                    <small style="color: var(--color-text-muted);">{{ notification.fechaNotificacion | date: 'dd MMM yy - HH:mm'}}</small>
+                    <small style="color: var(--color-text-muted)">{{
+                      notification.fechaNotificacion | date : 'dd MMM yy - HH:mm'
+                    }}</small>
                   </div>
                 </div>
               </div>
@@ -157,24 +178,38 @@
           </ng-template>
         </p-popover>
         <div class="toolbar-end d-none d-sm-block">
-          <p-avatar (click)="menu.toggle($event)" [icon]="loggedUser?.urlImagen ? '' : 'pi pi-user'"
-            [image]="loggedUser?.urlImagen ? loggedUser.urlImagen : ''" class="ms-2 me-4 avatar" shape="circle" [size]="loggedUser?.urlImagen ? 'normal' : 'large'" />
+          <p-avatar
+            (click)="menu.toggle($event)"
+            [icon]="loggedUser?.urlImagen ? '' : 'pi pi-user'"
+            [image]="loggedUser?.urlImagen ? loggedUser.urlImagen : ''"
+            class="ms-2 me-4 avatar"
+            shape="circle"
+            [size]="loggedUser?.urlImagen ? 'normal' : 'large'"
+          />
           <p-menu #menu [model]="userMenu" [popup]="true">
             <ng-template #start styleClass="p-2">
               <div class="row align-items-center me-1">
                 <div class="col-auto">
-                  <p-avatar [icon]="loggedUser?.urlImagen ? '' : 'pi pi-user'"
-                    [image]="loggedUser?.urlImagen ? loggedUser.urlImagen : ''" shape="circle" 
-                    [size]="loggedUser?.urlImagen ? 'large' : 'xlarge'"/>
+                  <p-avatar
+                    [icon]="loggedUser?.urlImagen ? '' : 'pi pi-user'"
+                    [image]="loggedUser?.urlImagen ? loggedUser.urlImagen : ''"
+                    shape="circle"
+                    [size]="loggedUser?.urlImagen ? 'large' : 'xlarge'"
+                  />
                 </div>
                 <div class="col-auto p-0">
                   <div class="row-cols-auto">
                     <span class="fs-5 p-0">{{ loggedUser?.alias }}</span>
                   </div>
                   <div class="row-cols-auto mt-1">
-                    @if(loggedUser?.roles?.length > 0){ @for (rol of loggedUser.roles; track $index) {
-                    <p-badge class="text-capitalize mx-1" [value]="rol.nombre.toLowerCase()" severity="secondary"
-                      badgesize="small" />
+                    @if(loggedUser?.roles?.length > 0){ @for (rol of loggedUser.roles; track $index)
+                    {
+                    <p-badge
+                      class="text-capitalize mx-1"
+                      [value]="rol.nombre.toLowerCase()"
+                      severity="secondary"
+                      badgesize="small"
+                    />
                     } } @else {
                     <p-badge value="Organización benéfica" severity="secondary" badgesize="small" />
                     }
@@ -193,12 +228,21 @@
   <p-drawer [(visible)]="visible" [closable]="false" (onHide)="visible = false">
     <ng-template #header>
       <div class="gap-2 d-flex" style="align-items: center">
-        <svg id="logo" version="1.0" xmlns="http://www.w3.org/2000/svg" width="30" height="30"
-          viewBox="0 0 201.000000 219.000000" preserveAspectRatio="xMidYMid meet"
-          [class.rotate-fow]="rotate && isCollapsed" [class.rotate-back]="rotate && !isCollapsed">
+        <svg
+          id="logo"
+          version="1.0"
+          xmlns="http://www.w3.org/2000/svg"
+          width="30"
+          height="30"
+          viewBox="0 0 201.000000 219.000000"
+          preserveAspectRatio="xMidYMid meet"
+          [class.rotate-fow]="rotate && isCollapsed"
+          [class.rotate-back]="rotate && !isCollapsed"
+        >
           <metadata>Created by potrace 1.16, written by Peter Selinger 2001-2019</metadata>
           <g transform="translate(0.000000,219.000000) scale(0.100000,-0.100000)" stroke="none">
-            <path d="M950 2160 c-11 -11 -20 -29 -20 -40 0 -15 -7 -20 -29 -20 -43 0 -71
+            <path
+              d="M950 2160 c-11 -11 -20 -29 -20 -40 0 -15 -7 -20 -29 -20 -43 0 -71
             -28 -78 -78 -5 -36 -9 -42 -30 -42 -13 0 -35 -11 -48 -25 -24 -24 -25 -28 -25
             -185 0 -88 -2 -160 -5 -160 -3 0 -44 23 -92 50 -102 59 -132 62 -165 20 l-23
             -29 -75 44 c-84 49 -129 56 -160 25 -11 -11 -20 -24 -20 -28 0 -4 -16 -8 -36
@@ -280,7 +324,8 @@
             -20 -7 -20 -209 0 -172 -3 -211 -15 -221 -8 -7 -22 -10 -30 -6 -13 5 -15 40
             -15 246 l0 240 -25 0 -25 0 0 -120 c0 -98 -3 -122 -15 -126 -35 -14 -45 14
             -45 130 l0 111 49 32 c85 55 130 133 131 225 0 43 2 47 28 51 15 2 33 2 40 0
-            8 -1 22 -3 33 -3z" />
+            8 -1 22 -3 33 -3z"
+            />
           </g>
         </svg>
         <p class="ms-2 my-0 fs-4" (click)="goHome()">Círculo solidario</p>
@@ -304,32 +349,36 @@
     <ng-template #footer>
       <div class="d-flex justify-content-center gap-5" style="align-items: center">
         <p-button [label]="loggedUser?.alias" (onClick)="goEditProfile()" fluid>
-          <p-avatar [icon]="loggedUser?.urlImagen ? '' : 'pi pi-user fs-6'"
-            [image]="loggedUser?.urlImagen ? loggedUser.urlImagen : ''" class="avatar" shape="circle" />
+          <p-avatar
+            [icon]="loggedUser?.urlImagen ? '' : 'pi pi-user fs-6'"
+            [image]="loggedUser?.urlImagen ? loggedUser.urlImagen : ''"
+            class="avatar"
+            shape="circle"
+          />
         </p-button>
         <p-button label="Cerrar sesión" (click)="logOut()" icon="pi pi-sign-out" fluid />
-        <p-button label="Términos y condiciones" (click)="openTerms()" icon="pi pi-file" variant="text" />
+        <p-button
+          label="Términos y condiciones"
+          (click)="openTerms()"
+          icon="pi pi-file"
+          variant="text"
+        />
       </div>
     </ng-template>
   </p-drawer>
   <div class="main-content" [class.expanded]="isCollapsed">
-    <div class="sidebar d-none d-sm-block" [class.collapsed]="isCollapsed" [class.fully-collapsed]="fullyCollapsed">
-      <!-- <p-panelmenu [model]="items" class="gap-2 p-0" multiple="true" >
-        <ng-template #item let-item >
-          <div class="sidebar-button">
-            <p-button fluid [styleClass]="(fullyCollapsed? '' : 'justify-content-start')" toggle>
-              <i [class.ms-1]="!fullyCollapsed" [class]="item.icon + ' text-inherit p-1'" style="font-size: 1.4rem"></i>
-              <span class="ms-2 my-1 sidebar-text text-start align-middle">
-                {{ item.label }}
-              </span>
-            </p-button>
-          </div>
-        </ng-template>
-      </p-panelmenu> -->
+    <div
+      class="sidebar d-none d-sm-block"
+      [class.collapsed]="isCollapsed"
+      [class.fully-collapsed]="fullyCollapsed"
+    >
       <p-tieredmenu [model]="menu">
         <ng-template #item let-item>
           <div class="sidebar-button">
-            <p-button fluid [styleClass]="fullyCollapsed ? 'justify-content-start' : 'justify-content-start'">
+            <p-button
+              fluid
+              [styleClass]="fullyCollapsed ? 'justify-content-start' : 'justify-content-start'"
+            >
               <i [class]="item.icon + ' text-inherit m-3'" style="font-size: 1.4rem"></i>
               @if(!item.id?.includes('home') || (item.id?.includes('home') && !isCollapsed)){
               <span class="pe-4 sidebar-text text-start align-middle">
@@ -341,57 +390,122 @@
         </ng-template>
       </p-tieredmenu>
       <div class="sidebar-button mt-3">
-        <p-button fluid (click)="openTerms()" [styleClass]="fullyCollapsed ? 'justify-content-start' : 'justify-content-start'">
+        <p-button
+          fluid
+          (click)="openTerms()"
+          [styleClass]="fullyCollapsed ? 'justify-content-start' : 'justify-content-start'"
+        >
           <i class="pi pi-file text-inherit m-3" style="font-size: 1.4rem"></i>
+          @if(!isCollapsed){
           <span class="pe-4 sidebar-text text-start align-middle">Términos y condiciones</span>
+          }
         </p-button>
       </div>
     </div>
     <div class="components-content container-fluid p-0">
       <router-outlet />
-      <p-scrolltop target="parent" [threshold]="100" icon="pi pi-arrow-up"
-        [buttonProps]="{ severity: 'contrast', raised: true, rounded: true }" />
+      <p-scrolltop
+        target="parent"
+        [threshold]="100"
+        icon="pi pi-arrow-up"
+        [buttonProps]="{ severity: 'contrast', raised: true, rounded: true }"
+      />
     </div>
   </div>
-  <p-dialog [(visible)]="showTerms" modal header="Términos y condiciones" [style]="{ width: '60vw' }" [breakpoints]="{ '960px': '75vw', '640px': '95vw' }" (onHide)="closeTerms()">
+  <p-dialog
+    [(visible)]="showTerms"
+    modal
+    header="Términos y condiciones"
+    [style]="{ width: '60vw' }"
+    [breakpoints]="{ '960px': '75vw', '640px': '95vw' }"
+    (onHide)="closeTerms()"
+  >
     <div class="terms-content">
       <h4>Términos y condiciones de Círculo Solidario</h4>
 
-      <p><strong>1. Aceptación de los términos</strong><br>
-      Al utilizar la plataforma Círculo Solidario usted acepta estos Términos y Condiciones en su totalidad. Si no está de acuerdo con alguno de los términos, por favor no utilice nuestros servicios.</p>
+      <p>
+        <strong>1. Aceptación de los términos</strong><br />
+        Al utilizar la plataforma Círculo Solidario usted acepta estos Términos y Condiciones en su
+        totalidad. Si no está de acuerdo con alguno de los términos, por favor no utilice nuestros
+        servicios.
+      </p>
 
-      <p><strong>2. Descripción del servicio</strong><br>
-      Círculo Solidario facilita la publicación, donación e intercambio de productos y la colaboración en proyectos solidarios. La plataforma pone en contacto a usuarios que desean donar o solicitar productos y servicios; no asumimos la condición de vendedor ni comprador en dichas transacciones a menos que se indique expresamente.</p>
+      <p>
+        <strong>2. Descripción del servicio</strong><br />
+        Círculo Solidario facilita la publicación, donación e intercambio de productos y la
+        colaboración en proyectos solidarios. La plataforma pone en contacto a usuarios que desean
+        donar o solicitar productos y servicios; no asumimos la condición de vendedor ni comprador
+        en dichas transacciones a menos que se indique expresamente.
+      </p>
 
-      <p><strong>3. Registro y cuentas</strong><br>
-      Algunas funcionalidades requieren crear una cuenta. El usuario es responsable de mantener la confidencialidad de sus credenciales y de toda actividad realizada a través de su cuenta. Debe proporcionar información veraz y actualizarla cuando sea necesario.</p>
+      <p>
+        <strong>3. Registro y cuentas</strong><br />
+        Algunas funcionalidades requieren crear una cuenta. El usuario es responsable de mantener la
+        confidencialidad de sus credenciales y de toda actividad realizada a través de su cuenta.
+        Debe proporcionar información veraz y actualizarla cuando sea necesario.
+      </p>
 
-      <p><strong>4. Publicaciones y contenido del usuario</strong><br>
-      Los usuarios son responsables del contenido que publiquen (descripciones, fotografías, condiciones de los bienes, etc.). Está prohibido publicar material ilegal, ofensivo, engañoso o que infrinja derechos de terceros. Nos reservamos el derecho de retirar publicaciones que violen estas normas.</p>
+      <p>
+        <strong>4. Publicaciones y contenido del usuario</strong><br />
+        Los usuarios son responsables del contenido que publiquen (descripciones, fotografías,
+        condiciones de los bienes, etc.). Está prohibido publicar material ilegal, ofensivo,
+        engañoso o que infrinja derechos de terceros. Nos reservamos el derecho de retirar
+        publicaciones que violen estas normas.
+      </p>
 
-      <p><strong>5. Donaciones, entregas y responsabilidad</strong><br>
-      Las condiciones de entrega o recogida deben acordarse entre las partes. Círculo Solidario no se responsabiliza por el estado final de los bienes tras la entrega, ni por acuerdos fuera de la plataforma, salvo cuando exista un servicio gestionado directamente por nosotros y se indique lo contrario.</p>
+      <p>
+        <strong>5. Donaciones, entregas y responsabilidad</strong><br />
+        Las condiciones de entrega o recogida deben acordarse entre las partes. Círculo Solidario no
+        se responsabiliza por el estado final de los bienes tras la entrega, ni por acuerdos fuera
+        de la plataforma, salvo cuando exista un servicio gestionado directamente por nosotros y se
+        indique lo contrario.
+      </p>
 
-      <p><strong>6. Pagos y comisiones</strong><br>
-      Si la plataforma gestiona pagos o aplica comisiones, se informará claramente antes de confirmar la operación. En caso contrario, los gastos asociados serán responsabilidad de las partes según lo acordado.</p>
+      <p>
+        <strong>6. Pagos y comisiones</strong><br />
+        Si la plataforma gestiona pagos o aplica comisiones, se informará claramente antes de
+        confirmar la operación. En caso contrario, los gastos asociados serán responsabilidad de las
+        partes según lo acordado.
+      </p>
 
-      <p><strong>7. Propiedad intelectual</strong><br>
-      Todo el contenido original de la plataforma (diseño, logos, textos, código) es propiedad de Círculo Solidario o de sus licenciantes. Queda prohibido su uso no autorizado.</p>
+      <p>
+        <strong>7. Propiedad intelectual</strong><br />
+        Todo el contenido original de la plataforma (diseño, logos, textos, código) es propiedad de
+        Círculo Solidario o de sus licenciantes. Queda prohibido su uso no autorizado.
+      </p>
 
-      <p><strong>8. Tratamiento de datos personales</strong><br>
-      El uso y tratamiento de sus datos personales se realiza conforme a nuestra Política de Privacidad. Al usar la plataforma acepta las prácticas descritas en dicha política.</p>
+      <p>
+        <strong>8. Tratamiento de datos personales</strong><br />
+        El uso y tratamiento de sus datos personales se realiza conforme a nuestra Política de
+        Privacidad. Al usar la plataforma acepta las prácticas descritas en dicha política.
+      </p>
 
-      <p><strong>9. Limitación de responsabilidad</strong><br>
-      En la máxima medida permitida por la ley, Círculo Solidario no será responsable por daños indirectos, lucro cesante, pérdida de datos o cualquier perjuicio derivado del uso de la plataforma o de las interacciones entre usuarios.</p>
+      <p>
+        <strong>9. Limitación de responsabilidad</strong><br />
+        En la máxima medida permitida por la ley, Círculo Solidario no será responsable por daños
+        indirectos, lucro cesante, pérdida de datos o cualquier perjuicio derivado del uso de la
+        plataforma o de las interacciones entre usuarios.
+      </p>
 
-      <p><strong>10. Terminación y suspensión</strong><br>
-      Podemos suspender o cancelar cuentas que incumplan estos términos o por razones operativas. El usuario puede eliminar su cuenta conforme a las opciones disponibles en la plataforma.</p>
+      <p>
+        <strong>10. Terminación y suspensión</strong><br />
+        Podemos suspender o cancelar cuentas que incumplan estos términos o por razones operativas.
+        El usuario puede eliminar su cuenta conforme a las opciones disponibles en la plataforma.
+      </p>
 
-      <p><strong>11. Cambios en los términos</strong><br>
-      Nos reservamos el derecho de modificar estos Términos y Condiciones. Publicaremos las actualizaciones en la plataforma; el uso continuado tras las modificaciones implica aceptación.</p>
+      <p>
+        <strong>11. Cambios en los términos</strong><br />
+        Nos reservamos el derecho de modificar estos Términos y Condiciones. Publicaremos las
+        actualizaciones en la plataforma; el uso continuado tras las modificaciones implica
+        aceptación.
+      </p>
 
-      <p><strong>12. Legislación aplicable y contacto</strong><br>
-      Estos términos se regirán por la legislación aplicable en la jurisdicción donde opera Círculo Solidario. Para dudas o notificaciones utilice los canales de contacto disponibles en el sitio.</p>
+      <p>
+        <strong>12. Legislación aplicable y contacto</strong><br />
+        Estos términos se regirán por la legislación aplicable en la jurisdicción donde opera
+        Círculo Solidario. Para dudas o notificaciones utilice los canales de contacto disponibles
+        en el sitio.
+      </p>
     </div>
     <ng-template pFooter>
       <div class="d-flex justify-content-end">
