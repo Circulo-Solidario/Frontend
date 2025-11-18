@@ -7,13 +7,14 @@ import { MenuItem } from 'primeng/api';
 import { DialogModule } from 'primeng/dialog';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
+import { TooltipModule } from 'primeng/tooltip';
 import * as L from 'leaflet';
 import { Dots } from '../../services/dots';
 import { Toasts } from '../../services/toasts';
 
 @Component({
   selector: 'app-map',
-  imports: [ButtonModule, MenuModule, DialogModule, InputTextModule, FormsModule],
+  imports: [ButtonModule, MenuModule, DialogModule, InputTextModule, FormsModule, TooltipModule],
   templateUrl: './map.html',
   styleUrls: ['./map.css']
 })
@@ -37,6 +38,14 @@ export class Map implements AfterViewInit, OnDestroy {
   private pendingPointLocation?: [number, number];
   isLoadingPoint: boolean = false;
 
+  // Mark as attended dialog properties
+  showMarkAsAttendedDialog: boolean = false;
+  pendingPointId?: number;
+  isMarkingAsAttended: boolean = false;
+
+  // Legend tooltip content
+  legendContent: string = '';
+
   @ViewChild('pickPointMenu') pickPointMenu?: Menu;
   pickPointItems: MenuItem[] = [];
 
@@ -48,6 +57,7 @@ export class Map implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.requestGeolocationPermission();
+    this.initLegendContent();
 
     this.pickPointItems = [
       {
@@ -61,6 +71,10 @@ export class Map implements AfterViewInit, OnDestroy {
         command: () => this.enableSelectOnMap()
       }
     ];
+  }
+
+  private initLegendContent(): void {
+    this.legendContent = `<div class="legend-content"><div class="legend-item"><i class="pi pi-circle-fill legend-icon" style="color: #2ecc71; margin-right: 0.75rem;"></i><span class="legend-text">Mi ubicación</span></div><div class="legend-item"><i class="pi pi-circle-fill legend-icon" style="color: #FFA500; margin-right: 0.75rem;"></i><span class="legend-text">Sin atender</span></div><div class="legend-item"><i class="pi pi-circle-fill legend-icon" style="color: #a9a9a9; margin-right: 0.75rem;"></i><span class="legend-text">Atendidos</span></div><div class="legend-item"><i class="pi pi-circle-fill legend-icon" style="color: #87CEEB; margin-right: 0.75rem;"></i><span class="legend-text">Nuevo punto</span></div></div>`;
   }
 
   private requestGeolocationPermission(): void {
@@ -310,7 +324,7 @@ export class Map implements AfterViewInit, OnDestroy {
   }
 
   private addDotMarker(dot: any): void {
-    const { latitud, longitud, descripcion, estado } = dot;
+    const { id, latitud, longitud, descripcion, estado } = dot;
     
     const iconColor = estado === 'pendiente' ? 'orange' : 'grey';
     const iconUrl = `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${iconColor}.png`;
@@ -324,15 +338,36 @@ export class Map implements AfterViewInit, OnDestroy {
       shadowSize: [41, 41]
     });
 
+    let popupContent = descripcion;
+    if (estado === 'pendiente') {
+      popupContent = `<div class="dot-popup-content">
+        <p>${descripcion}</p>
+        <button class="btn-mark-attended p-button p-button-outlined p-button-secondary" data-dot-id="${id}">
+          <span class="p-button-label">Marcar como atendido</span>
+        </button>
+      </div>`;
+    }
+
     const marker = L.marker([latitud, longitud], { icon: dotIcon })
       .addTo(this.map)
-      .bindPopup(descripcion, {
+      .bindPopup(popupContent, {
         className: 'custom-popup-dot',
         closeButton: false,
         autoClose: true
       });
+    marker.on('popupopen', () => {
+      const btn = document.querySelector(`button[data-dot-id="${id}"]`);
+      if (btn) {
+        btn.addEventListener('click', () => this.openMarkAsAttendedDialog(id));
+      }
+    });
 
     this.dotsMarkers.push(marker);
+  }
+
+  private openMarkAsAttendedDialog(dotId: number): void {
+    this.pendingPointId = dotId;
+    this.showMarkAsAttendedDialog = true;
   }
 
   savePoint(): void {
@@ -397,6 +432,45 @@ export class Map implements AfterViewInit, OnDestroy {
       try { this.selectedMarker.remove(); } catch {}
       this.selectedMarker = null;
     }
+  }
+
+  confirmMarkAsAttended(): void {
+    if (!this.pendingPointId) return;
+
+    this.isMarkingAsAttended = true;
+
+    this.dotsService.updateStateDot(this.pendingPointId, { estado: 'atendido' }).subscribe({
+      next: () => {
+        this.isMarkingAsAttended = false;
+        this.showMarkAsAttendedDialog = false;
+        this.pendingPointId = undefined;
+        
+        this.toasts.showToast({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Se marcó el punto como atendido con éxito'
+        });
+
+        // Reload dots to reflect the change
+        this.dotsMarkers.forEach(m => m.remove());
+        this.dotsMarkers = [];
+        this.loadDots();
+      },
+      error: (err) => {
+        this.isMarkingAsAttended = false;
+        console.error('Error updating point state:', err);
+        this.toasts.showToast({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudo marcar el punto como atendido'
+        });
+      }
+    });
+  }
+
+  cancelMarkAsAttended(): void {
+    this.showMarkAsAttendedDialog = false;
+    this.pendingPointId = undefined;
   }
 
   ngOnDestroy(): void {

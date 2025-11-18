@@ -94,14 +94,6 @@
     cursor: pointer;
 }
 
-.map-controls-left {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    z-index: 700;
-    display: flex;
-}
-
 /* Dialog styling */
 .point-dialog {
     border-radius: var(--p-border-radius-xl);
@@ -123,4 +115,78 @@
     color: var(--p-inputtext-color);
     padding: 0.75rem;
     font-size: 0.95rem;
+}
+
+/* Dot popup button styling */
+.dot-popup-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+.dot-popup-content p {
+    margin: 0;
+    color: inherit;
+    font-size: 0.9rem;
+}
+
+.btn-mark-attended {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    font: inherit;
+}
+
+.btn-mark-attended.p-button {
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+}
+
+/* Legend tooltip styling */
+.map-controls-left {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 700;
+    display: flex;
+}
+
+.left-buttons-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.legend-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 0;
+    margin: 0;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 1rem;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    color: #fff;
+}
+
+.legend-item span:last-child {
+    white-space: nowrap;
+}
+
+.legend-icon {
+    font-size: 0.9rem !important;
+}
+
+.legend-text {
+    color: #fff !important;
+    white-space: nowrap;
 }
