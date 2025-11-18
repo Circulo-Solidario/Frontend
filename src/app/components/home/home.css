@@ -225,6 +225,10 @@
   z-index: 2000 !important;
 }
 
+::ng-deep .p-tieredmenu-submenu{
+    z-index: 2000 !important;
+}
+
 @media (max-width: 575px) {
     .components-content {
         border-left: 0px solid var(--p-content-border-color);

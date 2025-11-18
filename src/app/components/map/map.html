@@ -6,7 +6,6 @@
     </h1>
     <div class="map-wrapper">
       <div id="people-map"></div>
-      <!-- Left controls: pick a point menu -->
       <div class="map-controls-left">
         <p-menu #pickPointMenu [popup]="true" [model]="pickPointItems" [appendTo]="'body'"></p-menu>
         <p-button
@@ -18,7 +17,6 @@
           (onClick)="openPickPointMenu($event)">
         </p-button>
       </div>
-      <!-- Map controls overlay -->
       <div class="map-controls">
         <p-button 
           icon="pi pi-plus" 

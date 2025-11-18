@@ -229,41 +229,41 @@ div.leaflet-container img.leaflet-tile {
 
 .leaflet-marker-pane {
   position: absolute !important;
-  z-index: 1060 !important;
+  z-index: 600 !important;
 }
 
 .leaflet-popup-pane {
   position: absolute !important;
-  z-index: 1070 !important;
+  z-index: 650 !important;
 }
 
 .leaflet-overlay-pane {
   position: absolute !important;
-  z-index: 1040 !important;
+  z-index: 400 !important;
 }
 
 .leaflet-shadow-pane {
   position: absolute !important;
-  z-index: 1050 !important;
+  z-index: 500 !important;
 }
 
 .leaflet-tooltip-pane {
   position: absolute !important;
-  z-index: 1080 !important;
+  z-index: 700 !important;
 }
 
 /* Leaflet controls */
 .leaflet-control {
   position: absolute !important;
-  z-index: 1050 !important;
+  z-index: 650 !important;
 }
 
 .leaflet-attribution-control {
   position: absolute !important;
-  z-index: 1050 !important;
+  z-index: 650 !important;
 }
 
-/* Attribution: bottom-left, dark translucent background, white text */
+/* Leaflet attribution - bottom-left, dark translucent background, white text */
 .leaflet-control-attribution,
 .leaflet-attribution-control {
   position: absolute !important;
@@ -288,4 +288,71 @@ div.leaflet-container img.leaflet-tile {
 .leaflet-attribution-control a:hover {
   color: #ffffff !important;
   opacity: 0.9;
+}
+
+/* Ensure PrimeNG menus appear above map */
+.p-menu-overlay,
+.p-tieredmenu-overlay,
+.p-overlay {
+  z-index: 2000 !important;
+}
+
+/* Custom popup styling for user location marker */
+.custom-popup-user-location {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.custom-popup-user-location .leaflet-popup-content-wrapper {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(20, 20, 20, 0.95) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 0.75rem !important;
+  padding: 0.75rem 1rem !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+.custom-popup-user-location .leaflet-popup-content {
+  color: #ffffff !important;
+  font-size: 0.95rem !important;
+  font-weight: 500 !important;
+  margin: 0 !important;
+  line-height: 1.4;
+  letter-spacing: 0.3px;
+}
+
+.custom-popup-user-location .leaflet-popup-tip {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(20, 20, 20, 0.95) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Custom popup styling for dots markers */
+.custom-popup-dot {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.custom-popup-dot .leaflet-popup-content-wrapper {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(20, 20, 20, 0.95) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 0.75rem !important;
+  padding: 0.75rem 1rem !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+.custom-popup-dot .leaflet-popup-content {
+  color: #ffffff !important;
+  font-size: 0.95rem !important;
+  font-weight: 500 !important;
+  margin: 0 !important;
+  line-height: 1.4;
+  letter-spacing: 0.3px;
+}
+
+.custom-popup-dot .leaflet-popup-tip {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(20, 20, 20, 0.95) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
 }

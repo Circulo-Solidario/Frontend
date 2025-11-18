@@ -5,6 +5,8 @@ import { MenuModule } from 'primeng/menu';
 import { Menu } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
 import * as L from 'leaflet';
+import { Dots } from '../../services/dots';
+import { Toasts } from '../../services/toasts';
 
 @Component({
   selector: 'app-map',
@@ -14,13 +16,16 @@ import * as L from 'leaflet';
 })
 export class Map implements AfterViewInit, OnDestroy {
   private router: Router = inject(Router);
+  private toasts: Toasts = inject(Toasts);
+  private dotsService: Dots = inject(Dots);
   private resizeObserver?: ResizeObserver | null = null;
   map!: L.Map;
-  userLocation: [number, number] = [-34.6037, -58.3816]; // Buenos Aires default
+  userLocation: [number, number] = [-34.6037, -58.3816];
   private userMarker?: L.Marker;
   private userAccuracyCircle?: L.Circle | null = null;
   private geoWatchId?: number;
   private selectedMarker?: L.Marker | null = null;
+  private dotsMarkers: L.Marker[] = [];
 
   @ViewChild('pickPointMenu') pickPointMenu?: Menu;
   pickPointItems: MenuItem[] = [];
@@ -32,10 +37,8 @@ export class Map implements AfterViewInit, OnDestroy {
   };
 
   ngAfterViewInit(): void {
-    // Get user location first, then init map
-    this.getUserLocation();
+    this.requestGeolocationPermission();
 
-    // Setup menu items for picking a point
     this.pickPointItems = [
       {
         label: 'Marcar mi posición',
@@ -48,6 +51,39 @@ export class Map implements AfterViewInit, OnDestroy {
         command: () => this.enableSelectOnMap()
       }
     ];
+  }
+
+  private requestGeolocationPermission(): void {
+    if (!navigator.geolocation) {
+      this.showPermissionError();
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      () => {
+        this.getUserLocation();
+      },
+      (error) => {
+        if (error.code === error.PERMISSION_DENIED) {
+          this.showPermissionError();
+        } else {
+          this.getUserLocation();
+        }
+      },
+      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+    );
+  }
+
+  private showPermissionError(): void {
+    this.router.navigate(['/principal']);
+    
+    setTimeout(() => {
+      this.toasts.showToast({
+        severity: 'warn',
+        summary: 'Permiso y geolocalización requerida',
+        detail: 'Para usar el mapa necesitamos obtener tu ubicación, activa los permisos y la geolocalización en tu dispositivo.',
+      });
+    }, 500);
   }
 
   private getUserLocation(): void {
@@ -64,25 +100,22 @@ export class Map implements AfterViewInit, OnDestroy {
           setTimeout(() => this.initMap(), 50);
         },
         () => {
-          // If geolocation fails, use default and init map anyway
           setTimeout(() => this.initMap(), 50);
         },
         options
       );
 
-      // Start watch to improve accuracy over time and follow movement
       try {
         this.geoWatchId = navigator.geolocation.watchPosition(
           (pos) => {
             const { latitude, longitude, accuracy } = pos.coords;
             this.updateUserPosition(latitude, longitude, accuracy ?? undefined);
           },
-          () => { /* ignore watch errors */ },
+          () => { },
           options
         );
-      } catch (e) { /* ignore */ }
+      } catch (e) { }
     } else {
-      // Geolocation not supported, use default
       setTimeout(() => this.initMap(), 50);
     }
   }
@@ -91,31 +124,28 @@ export class Map implements AfterViewInit, OnDestroy {
     this.map = L.map('people-map', {
       center: this.userLocation,
       zoom: 13,
-      zoomControl: false // Disable default zoom control
+      zoomControl: false
     });
 
-    // Add tile layer with proper attribution
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       maxZoom: 19,
       attribution: '© OpenStreetMap contributors | © Leaflet'
     }).addTo(this.map);
 
-    // Add green marker for user location
     this.addUserMarker();
 
-    // Add custom zoom controls
     L.control.zoom({
       position: 'topright'
     }).addTo(this.map);
 
-    // Force Leaflet to recalculate size
+    this.loadDots();
+
     [200, 500, 1000].forEach(delay =>
       setTimeout(() => {
         try { this.map.invalidateSize(true); } catch (e) {}
       }, delay)
     );
 
-    // Use ResizeObserver to detect when the map wrapper actually gets sized
     try {
       const wrapper = document.getElementById('people-map')?.parentElement;
       if (wrapper && (window as any).ResizeObserver) {
@@ -127,17 +157,14 @@ export class Map implements AfterViewInit, OnDestroy {
         this.resizeObserver?.observe(wrapper as Element);
       }
     } catch (e) {
-      // fallback to window resize
       window.addEventListener('resize', this.resizeListener);
     }
   }
 
-  // UI: open popup menu to choose how to mark a point
   openPickPointMenu(event: Event): void {
     this.pickPointMenu?.toggle(event);
   }
 
-  // Option A: add a fixed marker at current geolocation
   private markCurrentPositionAsPoint(): void {
     this.placeOrMoveSelectedMarker(this.userLocation[0], this.userLocation[1], false);
     if (this.map) {
@@ -145,7 +172,6 @@ export class Map implements AfterViewInit, OnDestroy {
     }
   }
 
-  // Option B: add a draggable marker at current geolocation
   private enableSelectOnMap(): void {
     this.placeOrMoveSelectedMarker(this.userLocation[0], this.userLocation[1], true);
     if (this.map) {
@@ -179,7 +205,6 @@ export class Map implements AfterViewInit, OnDestroy {
       this.userMarker.remove();
     }
 
-    // Create a green icon for the user location
     const greenIcon = L.icon({
       iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
       shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
@@ -191,9 +216,12 @@ export class Map implements AfterViewInit, OnDestroy {
 
     this.userMarker = L.marker(this.userLocation, { icon: greenIcon })
       .addTo(this.map)
-      .bindPopup('Mi ubicación');
+      .bindPopup('Mi ubicación', {
+        className: 'custom-popup-user-location',
+        closeButton: false,
+        autoClose: true
+      });
 
-    // draw/update accuracy circle if we have one already
     if (this.userAccuracyCircle) {
       this.userAccuracyCircle.setLatLng(this.userLocation);
     }
@@ -226,14 +254,11 @@ export class Map implements AfterViewInit, OnDestroy {
   private updateUserPosition(lat: number, lng: number, accuracy?: number): void {
     this.userLocation = [lat, lng];
     if (this.map) {
-      // Update marker
       if (this.userMarker) {
         this.userMarker.setLatLng([lat, lng]);
       } else {
         this.addUserMarker();
       }
-
-      // Update or create accuracy circle
       if (typeof accuracy === 'number' && isFinite(accuracy)) {
         if (!this.userAccuracyCircle) {
           this.userAccuracyCircle = L.circle([lat, lng], {
@@ -251,6 +276,49 @@ export class Map implements AfterViewInit, OnDestroy {
     }
   }
 
+  private loadDots(): void {
+    this.dotsService.getDots().subscribe({
+      next: (dots: any[]) => {
+        dots.forEach(dot => {
+          this.addDotMarker(dot);
+        });
+      },
+      error: (err) => {
+        this.toasts.showToast({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudieron cargar los puntos de las personas que necesitan ayuda'
+        });
+      }
+    });
+  }
+
+  private addDotMarker(dot: any): void {
+    const { latitud, longitud, descripcion, estado } = dot;
+    
+    const iconColor = estado === 'pendiente' ? 'orange' : 'grey';
+    const iconUrl = `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${iconColor}.png`;
+
+    const dotIcon = L.icon({
+      iconUrl,
+      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41]
+    });
+
+    const marker = L.marker([latitud, longitud], { icon: dotIcon })
+      .addTo(this.map)
+      .bindPopup(descripcion, {
+        className: 'custom-popup-dot',
+        closeButton: false,
+        autoClose: true
+      });
+
+    this.dotsMarkers.push(marker);
+  }
+
   ngOnDestroy(): void {
     try {
       if (this.userMarker) {
@@ -264,6 +332,10 @@ export class Map implements AfterViewInit, OnDestroy {
         try { this.selectedMarker.remove(); } catch {}
         this.selectedMarker = null;
       }
+      this.dotsMarkers.forEach(marker => {
+        try { marker.remove(); } catch {}
+      });
+      this.dotsMarkers = [];
       if (this.map) {
         this.map.remove();
       }
@@ -277,7 +349,6 @@ export class Map implements AfterViewInit, OnDestroy {
       }
       window.removeEventListener('resize', this.resizeListener);
     } catch (e) {
-      // nothing to do
     }
   }
 
