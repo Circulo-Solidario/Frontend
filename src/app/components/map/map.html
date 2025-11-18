@@ -1,0 +1,48 @@
+<div class="main-container container-fluid pt-3">
+  <div class="col d-flex flex-column h-100">
+    <h1 class="d-flex my-2 align-items-center mb-4">
+      <i class="pi pi-chevron-left me-3 go-back-buttom" (click)="goBack()"></i>
+      Personas en situación de calle
+    </h1>
+    <div class="map-wrapper">
+      <div id="people-map"></div>
+      <div class="map-controls-left">
+        <p-menu #pickPointMenu [popup]="true" [model]="pickPointItems" [appendTo]="'body'"></p-menu>
+        <p-button
+          icon="pi pi-flag"
+          [rounded]="true"
+          severity="secondary"
+          class="control-btn"
+          title="Marcar un punto"
+          (onClick)="openPickPointMenu($event)">
+        </p-button>
+      </div>
+      <div class="map-controls">
+        <p-button 
+          icon="pi pi-plus" 
+          [rounded]="true" 
+          severity="secondary"
+          (onClick)="zoomIn()"
+          class="control-btn"
+          title="Aumentar zoom">
+        </p-button>
+        <p-button 
+          icon="pi pi-minus" 
+          [rounded]="true" 
+          severity="secondary"
+          (onClick)="zoomOut()"
+          class="control-btn"
+          title="Disminuir zoom">
+        </p-button>
+        <p-button 
+          icon="pi pi-map-marker" 
+          [rounded]="true" 
+          severity="secondary"
+          (onClick)="centerToCurrentLocation()"
+          class="control-btn"
+          title="Centrar en mi ubicación">
+        </p-button>
+      </div>
+    </div>
+  </div>
+</div>
