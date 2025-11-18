@@ -242,3 +242,15 @@
     overflow: auto;
     padding: 1rem;
 }
+
+.faq-item .faq-header {
+    background: var(--p-content-background);
+    border: 1px solid var(--p-content-border-color);
+    border-radius: 6px;
+}
+
+.faq-answer {
+    background: var(--p-form-field-background);
+    border-radius: 6px;
+    margin-top: .5rem;
+}

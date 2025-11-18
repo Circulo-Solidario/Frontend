@@ -19,6 +19,7 @@ import { Drawer } from 'primeng/drawer';
 import { ThemeSwitcher } from '../theme-switcher/theme-switcher';
 import { CommonModule } from '@angular/common';
 import { TieredMenu } from 'primeng/tieredmenu';
+import { AccordionModule } from 'primeng/accordion';
 import { Dialog } from 'primeng/dialog';
 import { Avatar } from 'primeng/avatar';
 import { OverlayBadge } from 'primeng/overlaybadge';
@@ -46,6 +47,7 @@ import { NotificationInter, Notifications } from '../../services/notifications';
     CommonModule,
     TieredMenu,
     Avatar,
+    AccordionModule,
     Dialog,
     OverlayBadge,
     Popover,
@@ -78,6 +80,46 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
   rotate = false;
   visible = false;
   showTerms: boolean = false;
+  showFAQs: boolean = false;
+
+  faqs: { question: string; answer: string }[] = [
+    {
+      question: '¿Qué es Círculo Solidario?',
+      answer:
+        'Círculo Solidario es una plataforma para publicar, ofrecer y solicitar donaciones de productos y proyectos solidarios. Conectamos a donantes con personas y organizaciones que necesitan recursos.',
+    },
+    {
+      question: '¿Cómo creo una publicación para donar un producto?',
+      answer:
+        'En el apartado "Productos" vas a encontrar la opcion "Publicar producto", elige fotos claras, agrega una descripción honesta del producto, y especifica su categoria y estado. Revisa y publica cuando estés listo.',
+    },
+    {
+      question: '¿Cómo solicito un producto?',
+      answer:
+        'Desde la página en el buscador de arriba escribe el producto que necesites y si encuentras resultados podras solicitar un producto. El donante recibirá una notificación y podrá aceptar o rechazar tu solicitud, donde podran mediante un chat coordinar la entrega del producto.',
+    },
+    {
+      question: '¿Puedo publicar proyectos para recibir donaciones?',
+      answer:
+        'Sí eres una organizacion y estas necesitando una donacion monetaria. En "Proyectos solidarios" puedes crear un proyecto con objetivo y detalles de cómo se utilizarán las donaciones; los usuarios podrán donar recursos o colaborar según lo indicado.',
+    },
+    {
+      question: '¿Hay algún costo por usar la plataforma?',
+      answer:
+        'Usar Círculo Solidario para publicar y solicitar productos es gratuito. Si un proyecto solicita donaciones monetarias, los términos y comisiones (si hubiera) quedarán indicados claramente en ese proyecto.',
+    },
+    {
+      question: '¿Cómo puedo contactar al soporte?',
+      answer:
+        'Puedes contactarnos a través del correo 405865@tecnicatura.frc.utn.edu.ar o 113114@tecnicatura.frc.utn.edu.ar. Intentamos responder en un plazo razonable.',
+    },
+    {
+      question: '¿Qué debo hacer si hay un problema con una donación?',
+      answer:
+        'Primero intenta resolverlo directamente con la otra parte por chat. Si no se soluciona, repórtalo al equipo de soporte con detalles y pruebas; nosotros te orientaremos para medir el siguiente paso.',
+    },
+  ];
+  expandedFaqs: boolean[] = [];
   productName: string = '';
   menu: MenuItem[] = [];
   userMenu: MenuItem[] = [];
@@ -111,6 +153,7 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
         },
       },
     ];
+    this.expandedFaqs = this.faqs.map(() => false);
     this.menu = [
       {
         label: 'Productos',
@@ -356,5 +399,24 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
 
   closeTerms(): void {
     this.showTerms = false;
+  }
+
+  openFaqs(): void {
+    this.showFAQs = true;
+    this.visible = false;
+  }
+
+  closeFaqs(): void {
+    this.showFAQs = false;
+  }
+ 
+
+  toggleFaq(index: number): void {
+    this.expandedFaqs[index] = !this.expandedFaqs[index];
+  }
+
+  toggleFaqs(): void {
+    this.showFAQs = !this.showFAQs;
+    if (this.showFAQs) this.visible = false;
   }
 }
