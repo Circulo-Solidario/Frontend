@@ -8,14 +8,26 @@
       <div id="people-map"></div>
       <div class="map-controls-left">
         <p-menu #pickPointMenu [popup]="true" [model]="pickPointItems" [appendTo]="'body'"></p-menu>
-        <p-button
-          icon="pi pi-flag"
-          [rounded]="true"
-          severity="secondary"
-          class="control-btn"
-          title="Marcar un punto"
-          (onClick)="openPickPointMenu($event)">
-        </p-button>
+        <div class="left-buttons-group">
+          <p-button
+            icon="pi pi-flag"
+            [rounded]="true"
+            severity="secondary"
+            class="control-btn"
+            title="Marcar un punto"
+            (onClick)="openPickPointMenu($event)">
+          </p-button>
+          <p-button
+            icon="pi pi-eye"
+            [rounded]="true"
+            severity="secondary"
+            class="control-btn"
+            [pTooltip]="legendContent"
+            tooltipPosition="right"
+            [escape]="false"
+            tooltipStyleClass="legend-tooltip">
+          </p-button>
+        </div>
       </div>
       <div class="map-controls">
         <p-button 
@@ -46,8 +58,6 @@
     </div>
   </div>
 </div>
-
-<!-- Dialog for point description -->
 <p-dialog
   [(visible)]="showPointDialog"
   [header]="'Descripción del punto'"
@@ -87,6 +97,35 @@
       (onClick)="savePoint()"
       [loading]="isLoadingPoint"
       [disabled]="!pointDescription.trim() || isLoadingPoint">
+    </p-button>
+  </ng-template>
+</p-dialog>
+<p-dialog
+  [(visible)]="showMarkAsAttendedDialog"
+  [header]="'Confirmar'"
+  [modal]="true"
+  [closable]="false"
+  [draggable]="false"
+  styleClass="point-dialog"
+  [style]="{ width: '90%', maxWidth: '400px' }">
+  
+  <div class="dialog-content">
+    <p class="mb-0">¿Desea marcar como atendidas las necesidades?</p>
+  </div>
+
+  <ng-template #footer>
+    <p-button
+      label="Cancelar"
+      icon="pi pi-times"
+      (onClick)="cancelMarkAsAttended()"
+      [loading]="isMarkingAsAttended"
+      severity="secondary">
+    </p-button>
+    <p-button
+      label="Aceptar"
+      icon="pi pi-check"
+      (onClick)="confirmMarkAsAttended()"
+      [loading]="isMarkingAsAttended">
     </p-button>
   </ng-template>
 </p-dialog>

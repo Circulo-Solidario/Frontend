@@ -356,3 +356,28 @@ div.leaflet-container img.leaflet-tile {
   border: 1px solid rgba(255, 255, 255, 0.15) !important;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
 }
+
+/* Legend tooltip styling */
+.legend-tooltip {
+  padding: 0.6rem 0.85rem !important;
+  border-radius: var(--p-border-radius-lg) !important;
+  background-color: rgba(0, 0, 0, 0.85) !important;
+  border: none !important;
+}
+
+.legend-tooltip .p-tooltip-text {
+  padding: 0 !important;
+  margin: 0 !important;
+  font-size: 1rem !important;
+  line-height: 1.5 !important;
+  color: #fff !important;
+  background: transparent !important;
+}
+
+.legend-tooltip .p-tooltip-arrow {
+  border-right-color: rgba(0, 0, 0, 0.85) !important;
+}
+
+.legend-tooltip.p-tooltip-right .p-tooltip-arrow {
+  border-right-color: rgba(0, 0, 0, 0.85) !important;
+}
