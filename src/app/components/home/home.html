@@ -357,12 +357,8 @@
           />
         </p-button>
         <p-button label="Cerrar sesión" (click)="logOut()" icon="pi pi-sign-out" fluid />
-        <p-button
-          label="Términos y condiciones"
-          (click)="openTerms()"
-          icon="pi pi-file"
-          variant="text"
-        />
+        <p-button label="Términos y condiciones" (click)="openTerms()" icon="pi pi-file" variant="text" />
+        <p-button label="Preguntas frecuentes" (click)="toggleFaqs()" icon="pi pi-question" variant="text" />
       </div>
     </ng-template>
   </p-drawer>
@@ -399,6 +395,12 @@
           @if(!isCollapsed){
           <span class="pe-4 sidebar-text text-start align-middle">Términos y condiciones</span>
           }
+        </p-button>
+      </div>
+      <div class="sidebar-button mt-3">
+        <p-button fluid (click)="toggleFaqs()" [styleClass]="fullyCollapsed ? 'justify-content-start' : 'justify-content-start'">
+          <i class="pi pi-question text-inherit m-3" style="font-size: 1.4rem"></i>
+          <span class="pe-4 sidebar-text text-start align-middle">Preguntas frecuentes</span>
         </p-button>
       </div>
     </div>
@@ -510,6 +512,28 @@
     <ng-template pFooter>
       <div class="d-flex justify-content-end">
         <p-button label="Cerrar" (click)="closeTerms()" />
+      </div>
+    </ng-template>
+  </p-dialog>
+  <p-dialog [(visible)]="showFAQs" modal header="Preguntas frecuentes" [style]="{ width: '60vw' }" [breakpoints]="{ '960px': '75vw', '640px': '95vw' }" (onHide)="closeFaqs()">
+    <div class="terms-content">
+      <div class="faqs-list">
+        @for (faq of faqs; track $index) {
+        <div class="faq-item mb-3">
+          <div class="faq-header d-flex justify-content-between align-items-center p-2" (click)="toggleFaq($index)" style="cursor: pointer;">
+            <span class="fw-semibold">{{ faq.question }}</span>
+            <i [class]="expandedFaqs[$index] ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"></i>
+          </div>
+          @if(expandedFaqs[$index]){
+          <div class="faq-answer p-3 small">{{ faq.answer }}</div>
+          }
+        </div>
+        }
+      </div>
+    </div>
+    <ng-template pFooter>
+      <div class="d-flex justify-content-end">
+        <p-button label="Cerrar" (click)="closeFaqs()" />
       </div>
     </ng-template>
   </p-dialog>
