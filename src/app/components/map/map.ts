@@ -4,13 +4,16 @@ import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
 import { Menu } from 'primeng/menu';
 import { MenuItem } from 'primeng/api';
+import { DialogModule } from 'primeng/dialog';
+import { InputTextModule } from 'primeng/inputtext';
+import { FormsModule } from '@angular/forms';
 import * as L from 'leaflet';
 import { Dots } from '../../services/dots';
 import { Toasts } from '../../services/toasts';
 
 @Component({
   selector: 'app-map',
-  imports: [ButtonModule, MenuModule],
+  imports: [ButtonModule, MenuModule, DialogModule, InputTextModule, FormsModule],
   templateUrl: './map.html',
   styleUrls: ['./map.css']
 })
@@ -26,6 +29,13 @@ export class Map implements AfterViewInit, OnDestroy {
   private geoWatchId?: number;
   private selectedMarker?: L.Marker | null = null;
   private dotsMarkers: L.Marker[] = [];
+
+  // Dialog properties
+  showPointDialog: boolean = false;
+  pointDescription: string = '';
+  maxDescriptionLength: number = 255;
+  private pendingPointLocation?: [number, number];
+  isLoadingPoint: boolean = false;
 
   @ViewChild('pickPointMenu') pickPointMenu?: Menu;
   pickPointItems: MenuItem[] = [];
@@ -167,6 +177,9 @@ export class Map implements AfterViewInit, OnDestroy {
 
   private markCurrentPositionAsPoint(): void {
     this.placeOrMoveSelectedMarker(this.userLocation[0], this.userLocation[1], false);
+    this.pendingPointLocation = [this.userLocation[0], this.userLocation[1]];
+    this.pointDescription = '';
+    this.showPointDialog = true;
     if (this.map) {
       this.map.setView(this.userLocation, Math.max(this.map.getZoom(), 15));
     }
@@ -176,6 +189,15 @@ export class Map implements AfterViewInit, OnDestroy {
     this.placeOrMoveSelectedMarker(this.userLocation[0], this.userLocation[1], true);
     if (this.map) {
       this.map.setView(this.userLocation, Math.max(this.map.getZoom(), 15));
+    }
+
+    if (this.selectedMarker) {
+      this.selectedMarker.on('click', () => {
+        const latlng = this.selectedMarker!.getLatLng();
+        this.pendingPointLocation = [latlng.lat, latlng.lng];
+        this.pointDescription = '';
+        this.showPointDialog = true;
+      });
     }
   }
 
@@ -240,14 +262,8 @@ export class Map implements AfterViewInit, OnDestroy {
   }
 
   centerToCurrentLocation(): void {
-    if (this.map && navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const lat = position.coords.latitude;
-        const lng = position.coords.longitude;
-        const acc = position.coords.accuracy;
-        this.updateUserPosition(lat, lng, acc ?? undefined);
-        this.map.setView([lat, lng], Math.max(this.map.getZoom(), 15));
-      }, undefined, { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 });
+    if (this.map) {
+      this.map.setView(this.userLocation, Math.max(this.map.getZoom(), 15));
     }
   }
 
@@ -317,6 +333,70 @@ export class Map implements AfterViewInit, OnDestroy {
       });
 
     this.dotsMarkers.push(marker);
+  }
+
+  savePoint(): void {
+    if (!this.pointDescription.trim()) {
+      this.toasts.showToast({
+        severity: 'warn',
+        summary: 'Descripción requerida',
+        detail: 'Por favor ingresa una descripción para el punto'
+      });
+      return;
+    }
+
+    if (!this.pendingPointLocation) {
+      this.toasts.showToast({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'No se pudo determinar la ubicación del punto'
+      });
+      return;
+    }
+
+    this.isLoadingPoint = true;
+
+    const pointData = {
+      latitud: this.pendingPointLocation[0],
+      longitud: this.pendingPointLocation[1],
+      descripcion: this.pointDescription
+    };
+
+    this.dotsService.postDot(pointData).subscribe({
+      next: () => {
+        this.isLoadingPoint = false;
+        this.showPointDialog = false;
+        this.cancelPoint();
+        this.toasts.showToast({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'El punto se generó con éxito'
+        });
+        this.dotsMarkers.forEach(m => m.remove());
+        this.dotsMarkers = [];
+        this.loadDots();
+      },
+      error: (err) => {
+        this.isLoadingPoint = false;
+        console.error('Error saving point:', err);
+        this.toasts.showToast({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudo guardar el punto'
+        });
+      }
+    });
+  }
+
+  cancelPoint(): void {
+    this.showPointDialog = false;
+    this.pointDescription = '';
+    this.pendingPointLocation = undefined;
+    
+    if (this.selectedMarker) {
+      try { this.selectedMarker.remove(); } catch {}
+      this.selectedMarker = null;
+    }
   }
 
   ngOnDestroy(): void {

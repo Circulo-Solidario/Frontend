@@ -46,3 +46,47 @@
     </div>
   </div>
 </div>
+
+<!-- Dialog for point description -->
+<p-dialog
+  [(visible)]="showPointDialog"
+  [header]="'Descripción del punto'"
+  [modal]="true"
+  [closable]="false"
+  [draggable]="false"
+  styleClass="point-dialog"
+  [style]="{ width: '90%', maxWidth: '500px' }">
+  
+  <div class="dialog-content">
+    <label for="description" class="block mb-2">Descripción *</label>
+    <textarea
+      pInputText
+      id="description"
+      [(ngModel)]="pointDescription"
+      rows="5"
+      [maxlength]="maxDescriptionLength"
+      placeholder="Describe la situación o necesidad del punto..."
+      class="w-100"
+      style="resize: none; font-family: inherit;"></textarea>
+    <small class="text-muted d-block mt-2">
+      {{ pointDescription.length }} / {{ maxDescriptionLength }} caracteres
+    </small>
+  </div>
+
+  <ng-template #footer>
+    <p-button
+      label="Cancelar"
+      icon="pi pi-times"
+      (onClick)="cancelPoint()"
+      [loading]="isLoadingPoint"
+      severity="secondary">
+    </p-button>
+    <p-button
+      label="Guardar"
+      icon="pi pi-save"
+      (onClick)="savePoint()"
+      [loading]="isLoadingPoint"
+      [disabled]="!pointDescription.trim() || isLoadingPoint">
+    </p-button>
+  </ng-template>
+</p-dialog>
