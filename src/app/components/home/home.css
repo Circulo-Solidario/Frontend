@@ -34,6 +34,18 @@
 .home-button{
     cursor: pointer;
 }
+
+/* Rotación del chevron */
+.rotate-0 {
+  transform: rotate(0deg);
+  transition: transform 0.3s ease;
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
+}
+
 /* #endregion */
 
 /*#region Toolbar*/
@@ -91,11 +103,22 @@
     min-width: min-content;
     height: 100%;
     display: flex;
-    justify-items: center;
+    flex-direction: column;
+    justify-content: space-between;
     transition: width 0.3s ease;
     background: var(--p-content-background);
     color: var(--p-content-color);
     flex-shrink: 0;
+}
+
+.sidebar-menu-top {
+    flex: 0 0 auto;
+    overflow: visible !important;
+}
+
+.sidebar-footer-buttons {
+    flex: 0 0 auto;
+    margin-bottom: 1rem;
 }
 
 .sidebar-button{
@@ -189,7 +212,7 @@
 }
 
 ::ng-deep .sidebar:not(.collapsed) .sidebar-button p-button{
-    width: 12vw;
+    width: 100%;
     min-width: max-content;
 }
 
@@ -257,4 +280,17 @@
     background: var(--p-form-field-background);
     border-radius: 6px;
     margin-top: .5rem;
+}
+
+/* Clases para rotación del chevron */
+.rotate-90 {
+    transform: rotate(90deg);
+}
+
+.rotate-0 {
+    transform: rotate(0deg);
+}
+
+.rotate-180 {
+    transform: rotate(180deg);
 }

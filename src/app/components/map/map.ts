@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild, inject, OnDestroy } from '@angular/core';
+import { AfterViewInit, Component, ViewChild, inject, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
@@ -18,7 +18,7 @@ import { Toasts } from '../../services/toasts';
   templateUrl: './map.html',
   styleUrls: ['./map.css']
 })
-export class Map implements AfterViewInit, OnDestroy {
+export class Map implements OnInit, AfterViewInit, OnDestroy {
   private router: Router = inject(Router);
   private toasts: Toasts = inject(Toasts);
   private dotsService: Dots = inject(Dots);
@@ -55,10 +55,8 @@ export class Map implements AfterViewInit, OnDestroy {
     }
   };
 
-  ngAfterViewInit(): void {
-    this.requestGeolocationPermission();
+  ngOnInit(): void {
     this.initLegendContent();
-
     this.pickPointItems = [
       {
         label: 'Marcar mi posición',
@@ -71,6 +69,10 @@ export class Map implements AfterViewInit, OnDestroy {
         command: () => this.enableSelectOnMap()
       }
     ];
+  }
+
+  ngAfterViewInit(): void {
+    this.requestGeolocationPermission();
   }
 
   private initLegendContent(): void {
