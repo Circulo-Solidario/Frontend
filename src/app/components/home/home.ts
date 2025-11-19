@@ -83,6 +83,7 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
   visible = false;
   showTerms: boolean = false;
   showFAQs: boolean = false;
+  canSearchProducts: boolean = false;
 
   faqs: { question: string; answer: string }[] = [
     {
@@ -140,6 +141,7 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
       }
       this.getNotificationsHistory();
       this.subscribeNotifications();
+      this.setMenu();
     });
     this.userMenu = [
       {
@@ -155,14 +157,19 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
         },
       },
     ];
-    this.expandedFaqs = this.faqs.map(() => false);
-    this.menu = [
-      {
+    this.expandedFaqs = this.faqs.map(() => false);   
+  }
+
+  setMenu(){
+    // Definir todos los elementos de menú disponibles
+    const allMenuItems = {
+      productos: {
         label: 'Productos',
         icon: 'pi pi-gift',
-        id: 'home1',
+        id: 'homeProducts',
         items: [
           {
+            id: 'subProductsPublish',
             label: 'Publicar producto',
             icon: 'pi pi-plus',
             command: () => {
@@ -171,6 +178,7 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
             },
           },
           {
+            id: 'subProductsMyPosts',
             label: 'Mis publicaciones',
             icon: 'pi pi-list',
             command: () => {
@@ -179,6 +187,7 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
             },
           },
           {
+            id: 'subProductsViewRequests',
             label: 'Ver solicitudes',
             icon: 'pi pi-comments',
             command: () => {
@@ -188,21 +197,22 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
           },
         ],
       },
-      {
+      chats: {
         label: 'Chats',
         icon: 'pi pi-comments',
-        id: 'home2',
+        id: 'homeChats',
         command: () => {
           this.router.navigate(['/principal/chats']);
           this.visible = false;
         },
       },
-      {
+      donaciones: {
         label: 'Donaciones',
         icon: 'pi pi-heart',
-        id: 'home3',
+        id: 'homeDonations',
         items: [
           {
+            id: 'subDonationsSolidarityProjects',
             label: 'Proyectos solidarios',
             icon: 'pi pi-list',
             command: () => {
@@ -211,6 +221,7 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
             },
           },
           {
+            id: 'subDonationsPublishProject',
             label: 'Publicar proyecto',
             icon: 'pi pi-plus',
             command: () => {
@@ -219,6 +230,7 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
             },
           },
           {
+            id: 'subDonationsMyProjects',
             label: 'Mis proyectos publicados',
             icon: 'pi pi-list',
             command: () => {
@@ -228,31 +240,138 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
           }
         ],
       },
-      {
+      personasCalle: {
         label: 'Personas en situación de calle',
         icon: 'pi pi-map',
-        id: 'home4',
+        id: 'homeStreetPeople',
         command: () => {
           this.router.navigate(['/principal/mapa']);
           this.visible = false;
         }
       },
-      {
+      reportes: {
         label: 'Reportes',
         icon: 'pi pi-chart-bar',
-        id: 'home5',
+        id: 'homeReports',
         items: [
           {
+            id: 'subReportsMyStats',
             label: 'Mis estadísticas',
             icon: 'pi pi-chart-scatter',
           },
           {
+            id: 'subReportsGlobalStats',
             label: 'Estadísticas globales',
             icon: 'pi pi-chart-line',
           },
         ],
       }
-    ];
+    };
+
+    const userType = this.loggedUser?.tipoUsuario;
+    const userRoles = this.loggedUser?.roles || [];
+    
+    this.menu = [];
+
+    if (userType === 'ORGANIZACION') {
+      this.canSearchProducts = false;
+      this.menu = [
+        {
+          ...allMenuItems.donaciones,
+          items: [
+            allMenuItems.donaciones.items![0], // Proyectos solidarios
+            allMenuItems.donaciones.items![1], // Publicar proyecto  
+            allMenuItems.donaciones.items![2], // Mis proyectos publicados
+          ]
+        },
+        {...allMenuItems.personasCalle} // Personas en situación de calle
+      ];
+    } else if (userType === 'USUARIO') {
+      // Usuarios con roles específicos
+      const roleIds = userRoles.map((role: any) => role.id);
+      const hasRole = (id: number) => roleIds.includes(id);
+      if(!hasRole(3)){
+        this.canSearchProducts = false;
+      }
+      // DONANTE (id: 2)
+      if (hasRole(2)) {
+        // Productos completo
+        this.menu.push({...allMenuItems.productos});
+        // Chats
+        this.menu.push({...allMenuItems.chats});
+        // Personas en situación de calle
+        this.menu.push({...allMenuItems.personasCalle});
+        // Reportes
+        this.menu.push({...allMenuItems.reportes});
+        // Donaciones solo con Proyectos solidarios
+        this.menu.push({
+          ...allMenuItems.donaciones,
+          items: [allMenuItems.donaciones.items![0]] // Solo Proyectos solidarios
+        });
+      }
+      
+      // DONATARIO (id: 3)
+      if (hasRole(3)) {
+        this.canSearchProducts = true;
+        // Productos solo con Ver solicitudes
+        const productosExiste = this.menu.find(item => item.id === 'homeProducts');
+        if (productosExiste) {
+          // Si ya existe productos (por rol DONANTE), agregar Ver solicitudes si no está
+          if (!productosExiste.items?.find(item => item.id === 'subProductsViewRequests')) {
+            productosExiste.items?.push(allMenuItems.productos.items![2]);
+          }
+        } else {
+          // Si no existe, crear productos solo con Ver solicitudes
+          this.menu.push({
+            ...allMenuItems.productos,
+            items: [allMenuItems.productos.items![2]] // Solo Ver solicitudes
+          });
+        }
+        
+        // Agregar otros menús si no existen
+        if (!this.menu.find(item => item.id === 'homeChats')) {
+          this.menu.push({...allMenuItems.chats});
+        }
+        if (!this.menu.find(item => item.id === 'homeStreetPeople')) {
+          this.menu.push({...allMenuItems.personasCalle});
+        }
+        if (!this.menu.find(item => item.id === 'homeReports')) {
+          this.menu.push({...allMenuItems.reportes});
+        }
+        if (!this.menu.find(item => item.id === 'homeDonations')) {
+          this.menu.push({
+            ...allMenuItems.donaciones,
+            items: [allMenuItems.donaciones.items![0]] // Solo Proyectos solidarios
+          });
+        }
+      }
+      
+      // VOLUNTARIO OBSERVADOR (id: 4)
+      if (hasRole(4)) {
+        // Solo agregar si no existen ya
+        if (!this.menu.find(item => item.id === 'homeStreetPeople')) {
+          this.menu.push({...allMenuItems.personasCalle});
+        }
+        if (!this.menu.find(item => item.id === 'homeReports')) {
+          this.menu.push({...allMenuItems.reportes});
+        }
+        if (!this.menu.find(item => item.id === 'homeDonations')) {
+          this.menu.push({
+            ...allMenuItems.donaciones,
+            items: [allMenuItems.donaciones.items![0]] // Solo Proyectos solidarios
+          });
+        }
+      }
+    } else if (userType === 'ADMIN') {
+      // Admin tiene acceso a todo
+      this.menu = [
+        allMenuItems.productos,
+        allMenuItems.chats,
+        allMenuItems.donaciones,
+        allMenuItems.personasCalle,
+        allMenuItems.reportes
+      ];
+    }
   }
 
   ngOnDestroy() {
@@ -432,7 +551,6 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
     this.showFAQs = false;
   }
  
-
   toggleFaq(index: number): void {
     this.expandedFaqs[index] = !this.expandedFaqs[index];
   }
@@ -448,19 +566,16 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
       const wasExpanded = item.expanded;
       item.expanded = !item.expanded;
       
-      // Cerrar otros menús (comportamiento accordion)
       this.menu.forEach((menuItem: any) => {
         if (menuItem !== item && menuItem.items) {
           menuItem.expanded = false;
         }
       });
       
-      // Si se estaba cerrando y era el último expandido, asegurar que esté cerrado
       if (wasExpanded && !this.menu.some(menuItem => menuItem.expanded && menuItem !== item)) {
         item.expanded = false;
       }
     } else {
-      // Si no tiene subitems, ejecutar el comando
       if (item.command) {
         item.command();
       }
@@ -468,7 +583,6 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onTieredMenuHide(): void {
-    // Cuando el TieredMenu se oculta, resetear todas las propiedades expanded
     this.menu.forEach((menuItem: any) => {
       if (menuItem.items) {
         menuItem.expanded = false;
@@ -478,22 +592,17 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
-    // Solo aplicar la lógica del TieredMenu si no estamos en modo móvil (drawer cerrado)
     if (!this.visible && this.tieredMenu && this.tieredMenu.el) {
       const clickedInsideTieredMenu = this.tieredMenu.el.nativeElement.contains(event.target as Node);
       
       if (!clickedInsideTieredMenu) {
-        // Verificar si hay algún submenú visible para determinar si necesitamos resetear
         const hasVisibleSubmenus = this.menu.some((menuItem: any) => menuItem.expanded);
         
         if (hasVisibleSubmenus) {
-          // Usar setTimeout para permitir que el TieredMenu procese el click primero
           setTimeout(() => {
-            // Verificar si el TieredMenu realmente cerró sus submenús
             const tieredMenuElement = this.tieredMenu.el.nativeElement;
             const visibleSubmenus = tieredMenuElement.querySelectorAll('.p-tieredmenu-submenu[style*="block"], .p-tieredmenu-submenu:not([style*="none"])');
             
-            // Si no hay submenús visibles en el DOM, resetear nuestro estado
             if (visibleSubmenus.length === 0) {
               this.menu.forEach((menuItem: any) => {
                 if (menuItem.items) {

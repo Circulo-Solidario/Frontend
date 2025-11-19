@@ -18,6 +18,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { SelectButton } from 'primeng/selectbutton';
 import { LoginService } from '../../services/login';
+import { PermissionsService } from '../../services/permissions';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/message';
 import { Users } from '../../services/users';
@@ -47,6 +48,7 @@ import { InputMask } from 'primeng/inputmask';
 })
 export class EditProfile {
   private loginService: LoginService = inject(LoginService);
+  private permissionsService: PermissionsService = inject(PermissionsService);
   private userService: Users = inject(Users);
   private imageService: Images = inject(Images);
   private router: Router = inject(Router);
@@ -86,10 +88,19 @@ export class EditProfile {
   }
 
   ngOnInit(): void {
-    this.loginService.getLoggedUser().subscribe((user) => (this.originalData = user));
-    if (!this.originalData) {
-      this.router.navigate(['/login']);
-    }
+    this.loginService.getLoggedUser().subscribe((user) => {
+      this.originalData = user;
+      if (!this.originalData) {
+        this.router.navigate(['/login']);
+        return;
+      }
+      
+      // Validación de permisos para acceder a esta ruta
+      if (!this.permissionsService.canAccessRoute(user, this.router.url)) {
+        this.router.navigate(['/principal']);
+        return;
+      }
+    });
     this.id = this.originalData.id;
     if (this.originalData.urlImagen) {
       this.originalUserImage = this.originalData.urlImagen;

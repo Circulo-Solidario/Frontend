@@ -14,6 +14,7 @@ import { Tag } from 'primeng/tag';
 import { TextareaModule } from 'primeng/textarea';
 import { Toasts } from '../../services/toasts';
 import { LoginService } from '../../services/login';
+import { PermissionsService } from '../../services/permissions';
 import { Users } from '../../services/users';
 import { Proyects } from '../../services/proyects';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -46,6 +47,7 @@ export class OrgProyectList {
   private router: Router = inject(Router);
   private toasts: Toasts = inject(Toasts);
   private loginService: LoginService = inject(LoginService);
+  private permissionsService: PermissionsService = inject(PermissionsService);
   private userService: Users = inject(Users);
   private proyectService: Proyects = inject(Proyects);
   private confirmationService: ConfirmationService = inject(ConfirmationService);
@@ -69,6 +71,13 @@ export class OrgProyectList {
       this.logedUser = user;
       if (user == null) {
         this.router.navigate(['/login']);
+        return;
+      }
+      
+      // Validación de permisos para acceder a esta ruta
+      if (!this.permissionsService.canAccessRoute(user, this.router.url)) {
+        this.router.navigate(['/principal']);
+        return;
       }
     });
     this.getProyects();

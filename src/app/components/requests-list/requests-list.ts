@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ScrollTop } from 'primeng/scrolltop';
 import { LoginService } from '../../services/login';
 import { Router } from '@angular/router';
+import { PermissionsService } from '../../services/permissions';
 import { TabsModule } from 'primeng/tabs';
 import { Requests } from '../../services/requests';
 import { Toasts } from '../../services/toasts';
@@ -34,18 +35,37 @@ export class RequestsList implements OnInit {
   private notificationService: Notifications = inject(Notifications)
   private router: Router = inject(Router);  
   private toasts: Toasts = inject(Toasts);
+  private permissionsService: PermissionsService = inject(PermissionsService);
 
   logedUser: any;
   defaultTab: string = '0';
   myRequests: any[] = [];
   requestOfProducts: any[] = [];
+  canSeeMyRequests: boolean = false;
+  canSeeRequestsOfMyProducts: boolean = false;
 
   ngOnInit(): void {
     this.loginService.getLoggedUser().subscribe((user: any) => {
       this.logedUser = user;
       if (user == null) {
         this.router.navigate(['/login']);
+        return;
       }
+      
+      // Validación de permisos para acceder a esta ruta
+      if (!this.permissionsService.canAccessRoute(user, this.router.url)) {
+        this.router.navigate(['/principal']);
+        return;
+      }
+      
+      if(this.logedUser.roles.some((role: any) => role.id === 3)){
+        this.canSeeMyRequests = true;
+      }
+      if(this.logedUser.roles.some((role: any) => role.id === 2)){
+        this.canSeeRequestsOfMyProducts = true;
+        this.defaultTab = '1';
+      }
+
       this.getMyRequests();
       this.getRequestsOfMyProducts();
     });

@@ -112,6 +112,7 @@
       </span>
     </ng-template>
     <ng-template #center>
+      @if(canSearchProducts){
       <div class="toolbar-center">
         <p-iconfield>
           <p-inputicon class="pi pi-search" />
@@ -125,6 +126,7 @@
           />
         </p-iconfield>
       </div>
+      }
     </ng-template>
     <ng-template #end>
       <div class="d-flex" style="align-items: center">
@@ -379,12 +381,19 @@
       [class.fully-collapsed]="fullyCollapsed"
     >
       <div class="sidebar-menu-top">
-        <p-tieredmenu #tieredMenu [model]="menu" [autoDisplay]="false" (onHide)="onTieredMenuHide()">
+        <p-tieredmenu
+          #tieredMenu
+          [model]="menu"
+          [autoDisplay]="false"
+          (onHide)="onTieredMenuHide()"
+        >
           <ng-template #item let-item>
             <div class="sidebar-button">
               <p-button
                 fluid
-                [styleClass]="fullyCollapsed ? 'justify-content-start' : 'justify-content-start w-100'"
+                [styleClass]="
+                  fullyCollapsed ? 'justify-content-start' : 'justify-content-start w-100'
+                "
                 (click)="toggleMenuItem(item)"
               >
                 <i [class]="item.icon + ' text-inherit m-3'" style="font-size: 1.4rem"></i>

@@ -14,6 +14,7 @@ import { SliderModule } from 'primeng/slider';
 import { ScrollTopModule } from 'primeng/scrolltop';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { LoginService } from '../../services/login';
+import { PermissionsService } from '../../services/permissions';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 
@@ -43,6 +44,7 @@ export class DonorProductList implements OnInit {
   @ViewChild('scrollContainer') scrollContainer!: ElementRef;
   private router: Router = inject(Router);
   private loginService: LoginService = inject(LoginService);
+  private permissionsService: PermissionsService = inject(PermissionsService);
   private productService: Products = inject(Products);
   private toasts: Toasts = inject(Toasts);
   private confirmationService: ConfirmationService = inject(ConfirmationService);
@@ -53,10 +55,19 @@ export class DonorProductList implements OnInit {
   options = ['list', 'grid'];
 
   ngOnInit(): void {
-    this.loginService.getLoggedUser().subscribe((user) => (this.logedUser = user));
-    if (!this.logedUser) {
-      this.router.navigate(['/login']);
-    }
+    this.loginService.getLoggedUser().subscribe((user) => {
+      this.logedUser = user;
+      if (!this.logedUser) {
+        this.router.navigate(['/login']);
+        return;
+      }
+      
+      // Validación de permisos para acceder a esta ruta
+      if (!this.permissionsService.canAccessRoute(user, this.router.url)) {
+        this.router.navigate(['/principal']);
+        return;
+      }
+    });
     this.getProducts();
   }
 

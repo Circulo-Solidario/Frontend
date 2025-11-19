@@ -1,6 +1,7 @@
 import { Component, HostListener, inject, OnInit } from '@angular/core';
 import { LoginService } from '../../services/login';
 import { Router, RouterOutlet } from '@angular/router';
+import { PermissionsService } from '../../services/permissions';
 import { TabsModule } from 'primeng/tabs';
 import { Rooms } from '../../services/rooms';
 import { Toasts } from '../../services/toasts';
@@ -25,12 +26,15 @@ export class ChatList implements OnInit {
   private roomService: Rooms = inject(Rooms);
   private toasts: Toasts = inject(Toasts);
   private router: Router = inject(Router);
+  private permissionsService: PermissionsService = inject(PermissionsService);
   screenWidth: number = window.innerWidth;
   currentRoute: string = '';
   myProductsChats: any[] = [];
   myRequetsChats: any[] = [];
   logedUser: any;
   defaultTab = "0";
+  canSeeMyProductsChats: boolean = false;
+  canSeeMyRequestsChats: boolean = false;
 
   @HostListener('window:resize')
   onResize() {
@@ -43,6 +47,20 @@ export class ChatList implements OnInit {
       if (user == null) {
         this.router.navigate(['/login']);
         return;
+      }
+      
+      // Validación de permisos para acceder a esta ruta
+      if (!this.permissionsService.canAccessRoute(user, this.router.url)) {
+        this.router.navigate(['/principal']);
+        return;
+      }
+
+      if(this.logedUser.roles.some((role: any) => role.id === 3)){
+        this.canSeeMyRequestsChats = true;
+        this.defaultTab = '1';
+      }
+      if(this.logedUser.roles.some((role: any) => role.id === 2)){
+        this.canSeeMyProductsChats = true;        
       }
     });
     this.getRequesterRooms();

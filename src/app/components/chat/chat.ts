@@ -8,6 +8,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { LoginService } from '../../services/login';
+import { PermissionsService } from '../../services/permissions';
 import { Router } from '@angular/router';
 import { Messages } from '../../services/messages';
 import { Toasts } from '../../services/toasts';
@@ -38,6 +39,7 @@ import { ConfirmationService } from 'primeng/api';
 export class Chat implements OnInit, OnDestroy, AfterViewChecked {
   @ViewChild('messagesContainer') private messagesContainer!: ElementRef;
   private loginService: LoginService = inject(LoginService);
+  private permissionsService: PermissionsService = inject(PermissionsService);
   private messagesService: Messages = inject(Messages);
   private roomService: Rooms = inject(Rooms);
   private confirmationService: ConfirmationService = inject(ConfirmationService);
@@ -76,6 +78,12 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
       this.logedUser = user;
       if (user == null) {
         this.router.navigate(['/login']);
+        return;
+      }
+      
+      // Validación de permisos para acceder a esta ruta
+      if (!this.permissionsService.canAccessRoute(user, this.router.url)) {
+        this.router.navigate(['/principal']);
         return;
       }
     });

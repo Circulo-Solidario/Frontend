@@ -21,6 +21,7 @@ import { Products } from '../../services/products';
 import { Images } from '../../services/images';
 import { ImagePost } from '../../models/images';
 import { LoginService } from '../../services/login';
+import { PermissionsService } from '../../services/permissions';
 import { Geolocation } from '../../services/geolocation';
 
 @Component({
@@ -45,6 +46,7 @@ export class CreateProduct implements OnInit {
   private router: Router = inject(Router);
   private categoriesService: Categories = inject(Categories);
   private loginService: LoginService = inject(LoginService);
+  private permissionsService: PermissionsService = inject(PermissionsService);
   private productService: Products = inject(Products);
   private imageService: Images = inject(Images);
   private toasts: Toasts = inject(Toasts);
@@ -66,10 +68,19 @@ export class CreateProduct implements OnInit {
   }
 
   ngOnInit() {
-    this.loginService.getLoggedUser().subscribe((user) => (this.loggedUser = user));
-    if (!this.loggedUser) {
-      this.router.navigate(['/login']);
-    }
+    this.loginService.getLoggedUser().subscribe((user) => {
+      this.loggedUser = user;
+      if (!this.loggedUser) {
+        this.router.navigate(['/login']);
+        return;
+      }
+      
+      // Validación de permisos para acceder a esta ruta
+      if (!this.permissionsService.canAccessRoute(user, this.router.url)) {
+        this.router.navigate(['/principal']);
+        return;
+      }
+    });
     this.categoriesService.getCategories().subscribe({
       next: (categoriesList: any) => {
         this.categories = categoriesList;
