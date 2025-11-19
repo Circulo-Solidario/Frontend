@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  HostListener,
   inject,
   OnDestroy,
   OnInit,
@@ -61,6 +62,7 @@ import { NotificationInter, Notifications } from '../../services/notifications';
 })
 export class Home implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild('op') op!: Popover;
+  @ViewChild('tieredMenu') tieredMenu!: TieredMenu;
   @ViewChild('notificationContent') set notificationContentRef(
     el: ElementRef<HTMLDivElement> | undefined
   ) {
@@ -258,6 +260,9 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
       this.notificationsSubscription.unsubscribe();
     }
     this.notificationService.disconnect();
+    if (this.resizeObserver) {
+      this.resizeObserver.disconnect();
+    }
   }
 
   initResizeObserver() {
@@ -435,5 +440,70 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
   toggleFaqs(): void {
     this.showFAQs = !this.showFAQs;
     if (this.showFAQs) this.visible = false;
+  }
+
+  toggleMenuItem(item: any): void {
+    if (item.items && item.items.length > 0) {
+      // Toggle del item actual
+      const wasExpanded = item.expanded;
+      item.expanded = !item.expanded;
+      
+      // Cerrar otros menús (comportamiento accordion)
+      this.menu.forEach((menuItem: any) => {
+        if (menuItem !== item && menuItem.items) {
+          menuItem.expanded = false;
+        }
+      });
+      
+      // Si se estaba cerrando y era el último expandido, asegurar que esté cerrado
+      if (wasExpanded && !this.menu.some(menuItem => menuItem.expanded && menuItem !== item)) {
+        item.expanded = false;
+      }
+    } else {
+      // Si no tiene subitems, ejecutar el comando
+      if (item.command) {
+        item.command();
+      }
+    }
+  }
+
+  onTieredMenuHide(): void {
+    // Cuando el TieredMenu se oculta, resetear todas las propiedades expanded
+    this.menu.forEach((menuItem: any) => {
+      if (menuItem.items) {
+        menuItem.expanded = false;
+      }
+    });
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    // Si el click no fue dentro del TieredMenu, resetear los chevrons
+    if (this.tieredMenu && this.tieredMenu.el) {
+      const clickedInsideTieredMenu = this.tieredMenu.el.nativeElement.contains(event.target as Node);
+      
+      if (!clickedInsideTieredMenu) {
+        // Verificar si hay algún submenú visible para determinar si necesitamos resetear
+        const hasVisibleSubmenus = this.menu.some((menuItem: any) => menuItem.expanded);
+        
+        if (hasVisibleSubmenus) {
+          // Usar setTimeout para permitir que el TieredMenu procese el click primero
+          setTimeout(() => {
+            // Verificar si el TieredMenu realmente cerró sus submenús
+            const tieredMenuElement = this.tieredMenu.el.nativeElement;
+            const visibleSubmenus = tieredMenuElement.querySelectorAll('.p-tieredmenu-submenu[style*="block"], .p-tieredmenu-submenu:not([style*="none"])');
+            
+            // Si no hay submenús visibles en el DOM, resetear nuestro estado
+            if (visibleSubmenus.length === 0) {
+              this.menu.forEach((menuItem: any) => {
+                if (menuItem.items) {
+                  menuItem.expanded = false;
+                }
+              });
+            }
+          }, 50);
+        }
+      }
+    }
   }
 }

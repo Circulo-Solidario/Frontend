@@ -379,7 +379,7 @@
       [class.fully-collapsed]="fullyCollapsed"
     >
       <div class="sidebar-menu-top">
-        <p-tieredmenu [model]="menu">
+        <p-tieredmenu #tieredMenu [model]="menu" [autoDisplay]="false" (onHide)="onTieredMenuHide()">
           <ng-template #item let-item>
             <div class="sidebar-button">
               <p-button

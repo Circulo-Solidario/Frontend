@@ -34,6 +34,18 @@
 .home-button{
     cursor: pointer;
 }
+
+/* Rotación del chevron */
+.rotate-0 {
+  transform: rotate(0deg);
+  transition: transform 0.3s ease;
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
+}
+
 /* #endregion */
 
 /*#region Toolbar*/
@@ -281,13 +293,4 @@
 
 .rotate-180 {
     transform: rotate(180deg);
-}
-
-/* Estilos para hover del botón del sidebar */
-::ng-deep .sidebar-button:hover .pi-chevron-right {
-    transform: rotate(180deg) !important;
-}
-
-::ng-deep .sidebar-button .pi-chevron-right {
-    transition: transform 0.3s ease;
 }
