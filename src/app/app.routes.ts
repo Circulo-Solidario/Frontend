@@ -65,6 +65,14 @@ export const routes: Routes = [
       {
         path: 'mapa',
         loadComponent: () => import('./components/map/map').then((m) => m.Map)
+      },
+      {
+        path: 'mis-proyectos',
+        loadComponent: () => import('./components/org-proyect-list/org-proyect-list').then((m) => m.OrgProyectList)
+      },
+      {
+        path: 'editar-proyecto',
+        loadComponent: () => import('./components/edit-proyect/edit-proyect').then((m) => m.EditProyect)
       }
     ]
   },

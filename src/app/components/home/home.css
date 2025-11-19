@@ -91,11 +91,21 @@
     min-width: min-content;
     height: 100%;
     display: flex;
-    justify-items: center;
+    flex-direction: column;
+    justify-content: space-between;
     transition: width 0.3s ease;
     background: var(--p-content-background);
     color: var(--p-content-color);
     flex-shrink: 0;
+}
+
+.sidebar-menu-top {
+    flex: 0 0 auto;
+}
+
+.sidebar-footer-buttons {
+    flex: 0 0 auto;
+    margin-bottom: 1rem;
 }
 
 .sidebar-button{

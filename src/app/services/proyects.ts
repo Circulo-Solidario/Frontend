@@ -15,6 +15,14 @@ export class Proyects {
     return this.http.post(`${this.apiPath}`, proyect);
   }
 
+  setIdProyect(id: any){
+    this.idProyect = id;
+  }
+
+  getIdProyect(){
+    return this.idProyect;
+  }
+
   getProyects(orgId: number | null, state: string | null, name: string | null): Observable<any>{
     let filters = {}
     if(orgId){
@@ -51,5 +59,13 @@ export class Proyects {
       "recaudado": amount
     }
     return this.http.patch(`${this.apiPath}/${id}/actualizar-recaudado`, founding);
+  }
+
+  deleteProyect(id: any): Observable<any>{
+    return this.http.delete(`${this.apiPath}/${id}`);
+  }
+
+  editProyect(id: any, proyect: any): Observable<any>{
+    return this.http.put(`${this.apiPath}/${id}`, proyect);
   }
 }

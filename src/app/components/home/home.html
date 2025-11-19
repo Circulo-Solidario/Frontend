@@ -368,40 +368,47 @@
       [class.collapsed]="isCollapsed"
       [class.fully-collapsed]="fullyCollapsed"
     >
-      <p-tieredmenu [model]="menu">
-        <ng-template #item let-item>
-          <div class="sidebar-button">
-            <p-button
-              fluid
-              [styleClass]="fullyCollapsed ? 'justify-content-start' : 'justify-content-start'"
-            >
-              <i [class]="item.icon + ' text-inherit m-3'" style="font-size: 1.4rem"></i>
-              @if(!item.id?.includes('home') || (item.id?.includes('home') && !isCollapsed)){
-              <span class="pe-4 sidebar-text text-start align-middle">
-                {{ item.label }}
-              </span>
-              }
-            </p-button>
-          </div>
-        </ng-template>
-      </p-tieredmenu>
-      <div class="sidebar-button mt-3">
-        <p-button
-          fluid
-          (click)="openTerms()"
-          [styleClass]="fullyCollapsed ? 'justify-content-start' : 'justify-content-start'"
-        >
-          <i class="pi pi-file text-inherit m-3" style="font-size: 1.4rem"></i>
-          @if(!isCollapsed){
-          <span class="pe-4 sidebar-text text-start align-middle">Términos y condiciones</span>
-          }
-        </p-button>
+      <div class="sidebar-menu-top">
+        <p-tieredmenu [model]="menu">
+          <ng-template #item let-item>
+            <div class="sidebar-button">
+              <p-button
+                fluid
+                [styleClass]="fullyCollapsed ? 'justify-content-start' : 'justify-content-start'"
+              >
+                <i [class]="item.icon + ' text-inherit m-3'" style="font-size: 1.4rem"></i>
+                @if(!item.id?.includes('home') || (item.id?.includes('home') && !isCollapsed)){
+                <span class="pe-4 sidebar-text text-start align-middle">
+                  {{ item.label }}
+                </span>
+                }
+              </p-button>
+            </div>
+          </ng-template>
+        </p-tieredmenu>
       </div>
-      <div class="sidebar-button mt-3">
-        <p-button fluid (click)="toggleFaqs()" [styleClass]="fullyCollapsed ? 'justify-content-start' : 'justify-content-start'">
-          <i class="pi pi-question text-inherit m-3" style="font-size: 1.4rem"></i>
-          <span class="pe-4 sidebar-text text-start align-middle">Preguntas frecuentes</span>
-        </p-button>
+      
+      <div class="sidebar-footer-buttons">
+        <div class="sidebar-button">
+          <p-button
+            fluid
+            (click)="openTerms()"
+            [styleClass]="fullyCollapsed ? 'justify-content-start' : 'justify-content-start'"
+          >
+            <i class="pi pi-file text-inherit m-3" style="font-size: 1.4rem"></i>
+            @if(!isCollapsed){
+            <span class="pe-4 sidebar-text text-start align-middle">Términos y condiciones</span>
+            }
+          </p-button>
+        </div>
+        <div class="sidebar-button mt-3">
+          <p-button fluid (click)="toggleFaqs()" [styleClass]="fullyCollapsed ? 'justify-content-start' : 'justify-content-start'">
+            <i class="pi pi-question text-inherit m-3" style="font-size: 1.4rem"></i>
+            @if(!isCollapsed){
+            <span class="pe-4 sidebar-text text-start align-middle">Preguntas frecuentes</span>
+            }
+          </p-button>
+        </div>
       </div>
     </div>
     <div class="components-content container-fluid p-0">
