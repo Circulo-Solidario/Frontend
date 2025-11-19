@@ -478,8 +478,8 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
-    // Si el click no fue dentro del TieredMenu, resetear los chevrons
-    if (this.tieredMenu && this.tieredMenu.el) {
+    // Solo aplicar la lógica del TieredMenu si no estamos en modo móvil (drawer cerrado)
+    if (!this.visible && this.tieredMenu && this.tieredMenu.el) {
       const clickedInsideTieredMenu = this.tieredMenu.el.nativeElement.contains(event.target as Node);
       
       if (!clickedInsideTieredMenu) {
