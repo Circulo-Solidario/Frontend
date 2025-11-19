@@ -101,6 +101,7 @@
 
 .sidebar-menu-top {
     flex: 0 0 auto;
+    overflow: visible !important;
 }
 
 .sidebar-footer-buttons {
@@ -199,7 +200,7 @@
 }
 
 ::ng-deep .sidebar:not(.collapsed) .sidebar-button p-button{
-    width: 12vw;
+    width: 100%;
     min-width: max-content;
 }
 
@@ -267,4 +268,26 @@
     background: var(--p-form-field-background);
     border-radius: 6px;
     margin-top: .5rem;
+}
+
+/* Clases para rotación del chevron */
+.rotate-90 {
+    transform: rotate(90deg);
+}
+
+.rotate-0 {
+    transform: rotate(0deg);
+}
+
+.rotate-180 {
+    transform: rotate(180deg);
+}
+
+/* Estilos para hover del botón del sidebar */
+::ng-deep .sidebar-button:hover .pi-chevron-right {
+    transform: rotate(180deg) !important;
+}
+
+::ng-deep .sidebar-button .pi-chevron-right {
+    transition: transform 0.3s ease;
 }
