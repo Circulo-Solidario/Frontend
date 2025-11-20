@@ -55,6 +55,14 @@ export class Users {
   }
 
   downloadDocument(idOrg: any, idDoc: any): Observable<Blob>{
-    return this.httpCliente.get(`${environment.apiUrl}${this.apiPath}/${idOrg}/documentos/${idDoc}`, { responseType: 'blob' });
+    return this.httpCliente.get(`${environment.apiUrl}${this.apiPath}/${idOrg}/documentos/${idDoc}/descargar`, { responseType: 'blob' });
+  }
+
+  getDocumentsFromUser(idOrg: any): Observable<any>{
+    return this.httpCliente.get(`${environment.apiUrl}${this.apiPath}/${idOrg}/documentos`);
+  }
+
+  deleteDocument(idOrg: any, idDoc: any): Observable<any>{
+    return this.httpCliente.delete(`${environment.apiUrl}${this.apiPath}/${idOrg}/documentos/${idDoc}`);
   }
 }

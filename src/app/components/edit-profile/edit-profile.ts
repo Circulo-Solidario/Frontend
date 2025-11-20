@@ -27,6 +27,7 @@ import { ImagePost } from '../../models/images';
 import { Images } from '../../services/images';
 import { Toasts } from '../../services/toasts';
 import { InputMask } from 'primeng/inputmask';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-edit-profile',
@@ -116,7 +117,6 @@ export class EditProfile {
       alias: this.originalData.alias ?? '',
       fechaNacimiento:
         this.originalData.fechaNacimiento?.replaceAll('-', '/') ?? '',
-      // contrasena: this.originalData.contrasena ?? ''
     });
     if (this.originalData.tipoUsuario != 'ORGANIZACION') {
       this.isOrganization = false;
@@ -130,15 +130,24 @@ export class EditProfile {
         )
       );
     } else {
-      // Mock de documento para organizaciones
-      // En la siguiente fase esto vendrá del backend
-      this.documentoActual = {
-        id: 1,
-        nombre: 'documento_organizacion.pdf',
-        fechaSubida: new Date().toLocaleDateString(),
-        validado: this.originalData.validado || false
-      };
-    }    
+      // Cargar documentos de la organización desde el endpoint
+      this.userService.getDocumentsFromUser(this.id).subscribe({
+        next: (documentos: any[]) => {
+          if (documentos && documentos.length > 0) {
+            this.documentoActual = documentos[0];
+          }
+          // Si el array está vacío, documentoActual permanece null y se mostrará solo el upload
+        },
+        error: (error) => {
+          console.error('Error al cargar documentos:', error);
+          this.toastService.showToast({
+            severity: 'error',
+            summary: 'Error al cargar documentos',
+            detail: 'No se pudieron cargar los documentos de la organización',
+          });
+        }
+      });
+    }
   }
 
   goHome() {
@@ -179,12 +188,41 @@ export class EditProfile {
         };
       }
 
-      // Agregar documento nuevo si existe y la organización no está validada
+      // Manejar documento nuevo para organizaciones no validadas
+      let documentoUploadedSuccessfully = false;
       if (this.isOrganization && this.documentoNuevo && !this.originalData.validado) {
-        editedUser = {
-          ...editedUser,
-          documento: this.documentoNuevo
-        };
+        try {
+          // Primero: subir el nuevo documento
+          await firstValueFrom(this.userService.postDocumentes(this.id, this.documentoNuevo));
+          documentoUploadedSuccessfully = true;
+          
+          // Segundo: si se subió exitosamente, eliminar el documento anterior
+          if (this.documentoActual && this.documentoActual.id) {
+            try {
+              await firstValueFrom(this.userService.deleteDocument(this.id, this.documentoActual.id));
+            } catch (deleteError) {
+              console.error('Error al eliminar documento anterior:', deleteError);
+              this.toastService.showToast({
+                severity: 'warn',
+                summary: 'Advertencia',
+                detail: 'Se subió el nuevo documento pero no se pudo eliminar el anterior',
+              });
+            }
+          }
+          this.toastService.showToast({
+            severity: 'success',
+            summary: 'Documento subido!',
+            detail: 'El nuevo documento se subió correctamente',
+          });
+        } catch (uploadError) {
+          console.error('Error al subir documento:', uploadError);
+          this.toastService.showToast({
+            severity: 'error',
+            summary: 'Error al subir documento',
+            detail: 'No se pudo subir el nuevo documento',
+          });
+          return;
+        }
       }
 
       this.userService.editUser(this.id, editedUser).subscribe({
@@ -293,16 +331,26 @@ export class EditProfile {
       return;
     }
 
-    // Mock: En la siguiente fase conectarás con el endpoint real
-    const mockBlob = new Blob(['Contenido mock del PDF'], { type: 'application/pdf' });
-    const url = window.URL.createObjectURL(mockBlob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = this.documentoActual.nombre || 'documento.pdf';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
+    this.userService.downloadDocument(this.id, this.documentoActual.id).subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = this.documentoActual.nombre || 'documento.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      },
+      error: (error) => {
+        console.error('Error al descargar documento:', error);
+        this.toastService.showToast({
+          severity: 'error',
+          summary: 'Error al descargar',
+          detail: 'No se pudo descargar el documento',
+        });
+      }
+    });
   }
 
   viewDocument() {
@@ -315,11 +363,21 @@ export class EditProfile {
       return;
     }
 
-    // Mock: En la siguiente fase conectarás con el endpoint real
-    const mockBlob = new Blob(['Contenido mock del PDF'], { type: 'application/pdf' });
-    const url = window.URL.createObjectURL(mockBlob);
-    window.open(url, '_blank');
-    setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+    this.userService.downloadDocument(this.id, this.documentoActual.id).subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+      },
+      error: (error) => {
+        console.error('Error al visualizar documento:', error);
+        this.toastService.showToast({
+          severity: 'error',
+          summary: 'Error al visualizar',
+          detail: 'No se pudo visualizar el documento',
+        });
+      }
+    });
   }
 
   passwordStrengthValidator(): ValidatorFn {
