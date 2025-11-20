@@ -18,6 +18,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { SelectButton } from 'primeng/selectbutton';
 import { FileUploadModule } from 'primeng/fileupload';
+import { Tag } from 'primeng/tag';
 import { LoginService } from '../../services/login';
 import { PermissionsService } from '../../services/permissions';
 import { Router } from '@angular/router';
@@ -45,6 +46,7 @@ import { firstValueFrom } from 'rxjs';
     SelectButton,
     Message,
     FileUploadModule,
+    Tag,
   ],
   templateUrl: './edit-profile.html',
   styleUrl: './edit-profile.css',
