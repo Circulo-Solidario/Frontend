@@ -270,10 +270,11 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
 
     const userType = this.loggedUser?.tipoUsuario;
     const userRoles = this.loggedUser?.roles || [];
+    const valid = this.loggedUser?.validado;
     
     this.menu = [];
 
-    if (userType === 'ORGANIZACION') {
+    if (userType === 'ORGANIZACION' && valid) {
       this.canSearchProducts = false;
       this.menu = [
         {

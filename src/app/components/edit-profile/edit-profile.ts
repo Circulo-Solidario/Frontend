@@ -17,6 +17,7 @@ import { InputText } from 'primeng/inputtext';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { SelectButton } from 'primeng/selectbutton';
+import { FileUploadModule } from 'primeng/fileupload';
 import { LoginService } from '../../services/login';
 import { PermissionsService } from '../../services/permissions';
 import { Router } from '@angular/router';
@@ -42,6 +43,7 @@ import { InputMask } from 'primeng/inputmask';
     InputGroupAddonModule,
     SelectButton,
     Message,
+    FileUploadModule,
   ],
   templateUrl: './edit-profile.html',
   styleUrl: './edit-profile.css',
@@ -68,6 +70,9 @@ export class EditProfile {
   originalUserImage: string = '';
   userImage: string = '';
   changedImage: File | null = null;
+  documentoActual: any = null;
+  documentoNuevo: File | null = null;
+  uploadedPdfFiles: any = [];
 
   constructor() {
     this.editUserForm = new FormGroup({
@@ -124,6 +129,15 @@ export class EditProfile {
           [Validators.required]
         )
       );
+    } else {
+      // Mock de documento para organizaciones
+      // En la siguiente fase esto vendrá del backend
+      this.documentoActual = {
+        id: 1,
+        nombre: 'documento_organizacion.pdf',
+        fechaSubida: new Date().toLocaleDateString(),
+        validado: this.originalData.validado || false
+      };
     }    
   }
 
@@ -162,6 +176,14 @@ export class EditProfile {
         editedUser = {
           ...editedUser,
           urlImagen: this.originalData.urlImagen,
+        };
+      }
+
+      // Agregar documento nuevo si existe y la organización no está validada
+      if (this.isOrganization && this.documentoNuevo && !this.originalData.validado) {
+        editedUser = {
+          ...editedUser,
+          documento: this.documentoNuevo
         };
       }
 
@@ -219,6 +241,10 @@ export class EditProfile {
       this.userImage = this.originalData.urlImagen;
       this.changedImage = null;
     }
+    if (this.isOrganization) {
+      this.uploadedPdfFiles = [];
+      this.documentoNuevo = null;
+    }
     this.editUserForm.markAsPristine();
   }
 
@@ -238,6 +264,62 @@ export class EditProfile {
         detail: 'Formatos admitidos: jpg, png o jpeg',
       });
     }
+  }
+
+  // Métodos para manejar documentos PDF
+  setPdfFile(fileSelected: any) {
+    if (this.uploadedPdfFiles.length == 0) {
+      this.uploadedPdfFiles.push(fileSelected.files[0]);
+    } else {
+      this.uploadedPdfFiles[0] = fileSelected.files[0];
+    }
+    this.documentoNuevo = fileSelected.files[0];
+  }
+
+  clearPdfFile() {
+    if (this.uploadedPdfFiles.length > 0) {
+      this.uploadedPdfFiles.pop();
+    }
+    this.documentoNuevo = null;
+  }
+
+  downloadDocument() {
+    if (!this.documentoActual) {
+      this.toastService.showToast({
+        severity: 'warn',
+        summary: 'Sin documento',
+        detail: 'No hay documento disponible para descargar',
+      });
+      return;
+    }
+
+    // Mock: En la siguiente fase conectarás con el endpoint real
+    const mockBlob = new Blob(['Contenido mock del PDF'], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(mockBlob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = this.documentoActual.nombre || 'documento.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  }
+
+  viewDocument() {
+    if (!this.documentoActual) {
+      this.toastService.showToast({
+        severity: 'warn',
+        summary: 'Sin documento',
+        detail: 'No hay documento disponible para visualizar',
+      });
+      return;
+    }
+
+    // Mock: En la siguiente fase conectarás con el endpoint real
+    const mockBlob = new Blob(['Contenido mock del PDF'], { type: 'application/pdf' });
+    const url = window.URL.createObjectURL(mockBlob);
+    window.open(url, '_blank');
+    setTimeout(() => window.URL.revokeObjectURL(url), 1000);
   }
 
   passwordStrengthValidator(): ValidatorFn {

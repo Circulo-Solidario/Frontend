@@ -30,11 +30,11 @@ export class Users {
     return this.httpCliente.put(`${environment.apiUrl}${this.apiPath}/${id}`, user); 
   }
 
-  getFilteredUsers(active: any, userType: any): Observable<any>{
+  getFilteredUsers(valid: any, userType: any): Observable<any>{
     let filters: any;
-    if(active){
+    if(valid){
       filters = {
-        activo: active
+        valid: valid
       }
     }
     if(userType){
@@ -46,5 +46,15 @@ export class Users {
     return this.httpCliente.get(`${environment.apiUrl}${this.apiPath}/filtrar`, {
       params: filters
     })
+  }
+
+  postDocumentes(id: any, document: File): Observable<any>{
+    const formData = new FormData();
+    formData.append('archivo', document);    
+    return this.httpCliente.post(`${environment.apiUrl}${this.apiPath}/${id}/documentos`, formData);
+  }
+
+  downloadDocument(idOrg: any, idDoc: any): Observable<Blob>{
+    return this.httpCliente.get(`${environment.apiUrl}${this.apiPath}/${idOrg}/documentos/${idDoc}`, { responseType: 'blob' });
   }
 }

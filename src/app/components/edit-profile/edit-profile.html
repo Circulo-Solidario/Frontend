@@ -142,6 +142,117 @@
             </div>
           </div>
           }
+          @if(isOrganization){
+          <div class="col-12 col-sm-12 col-md-6 mb-4">
+            <label>Documentos de respaldo (PDF)</label>
+            <div class="mt-3">
+              @if(documentoActual && !originalData?.validado){
+                <div class="card mb-3 p-3">
+                  <div class="d-flex align-items-center justify-content-between mb-2">
+                    <div class="d-flex align-items-center">
+                      <i class="pi pi-file-pdf me-2" style="font-size: 1.5rem; color: #e74c3c;"></i>
+                      <div>
+                        <p class="m-0"><strong>{{ documentoActual.nombre }}</strong></p>
+                        <small class="text-secondary">{{ documentoActual.fechaSubida }}</small>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="d-flex gap-2">
+                    <p-button icon="pi pi-download" [rounded]="true" [outlined]="true" 
+                      (onClick)="downloadDocument()" severity="info" />
+                    <p-button icon="pi pi-eye" [rounded]="true" [outlined]="true" 
+                      (onClick)="viewDocument()" />
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="mb-2">Cambiar documento</label>
+                  <p-fileupload
+                    name="pdfDocuments"
+                    styleClass="w-100"
+                    [multiple]="false"
+                    accept=".pdf,application/pdf"
+                    maxFileSize="52428800"
+                    mode="advanced"
+                    (onSelect)="setPdfFile($event)"
+                    (onClear)="clearPdfFile()"
+                    [files]="uploadedPdfFiles"
+                  >
+                    <ng-template #empty>
+                      <div class="row justify-content-md-center">
+                        <div class="col-md-auto">Arrastra un PDF para reemplazar</div>
+                      </div>
+                    </ng-template>
+                    <ng-template #file>
+                      @if(uploadedPdfFiles.length == 0){
+                      <div class="row justify-content-md-center">
+                        <div class="col-md-auto">Arrastra un PDF para reemplazar</div>
+                      </div>
+                      } @for (file of uploadedPdfFiles; track $index) {
+                      <div class="row justify-content-md-center align-items-center">
+                        <div class="col-md-auto">
+                          <i class="pi pi-file-pdf" style="font-size: 3rem; color: #e74c3c;"></i>
+                        </div>
+                        <div class="col">
+                          <div class="row">
+                            <strong>{{ file.name }}</strong>
+                          </div>
+                          <div class="row">{{ (file.size / 1024 / 1024).toFixed(2) }} MB</div>
+                        </div>
+                      </div>
+                      }
+                    </ng-template>
+                    <ng-template
+                      #header
+                      let-files
+                      let-chooseCallback="chooseCallback"
+                      let-clearCallback="clearCallback"
+                    >
+                      <div class="justify-between items-center">
+                        <div class="flex">
+                          <p-button
+                            class="me-2"
+                            (onClick)="chooseCallback($event, chooseCallback)"
+                            icon="pi pi-file-pdf"
+                            [rounded]="true"
+                            [outlined]="true"
+                          />
+                          <p-button
+                            (onClick)="clearCallback()"
+                            icon="pi pi-times"
+                            [rounded]="true"
+                            [outlined]="true"
+                            severity="danger"
+                            [disabled]="!files || files.length === 0"
+                          />
+                        </div>
+                      </div>
+                    </ng-template>
+                  </p-fileupload>
+                </div>
+              }
+              @if(documentoActual && originalData?.validado){
+                <div class="card mb-3 p-3 bg-light">
+                  <div class="d-flex align-items-center justify-content-between mb-2">
+                    <div class="d-flex align-items-center">
+                      <i class="pi pi-file-pdf me-2" style="font-size: 1.5rem; color: #e74c3c;"></i>
+                      <div>
+                        <p class="m-0"><strong>{{ documentoActual.nombre }}</strong></p>
+                        <small class="text-secondary">{{ documentoActual.fechaSubida }}</small>
+                      </div>
+                    </div>
+                    <span class="badge bg-success">Validado</span>
+                  </div>
+                  <div class="d-flex gap-2">
+                    <p-button icon="pi pi-download" [rounded]="true" [outlined]="true" 
+                      (onClick)="downloadDocument()" severity="info" label="Descargar" />
+                    <p-button icon="pi pi-eye" [rounded]="true" [outlined]="true" 
+                      (onClick)="viewDocument()" label="Ver" />
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+          }
         </div>
         <!-- @if(!isOrganization){
         <div class="row w-100">
