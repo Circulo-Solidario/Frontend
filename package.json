@@ -36,6 +36,7 @@
     "leaflet": "^1.9.4",
     "primeicons": "^7.0.0",
     "primeng": "^20.1.2",
+    "chart.js": "^3.9.1",
     "pusher-js": "^8.4.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
