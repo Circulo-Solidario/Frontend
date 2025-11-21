@@ -21,7 +21,7 @@ import { ThemeSwitcher } from '../theme-switcher/theme-switcher';
 import { CommonModule } from '@angular/common';
 import { TieredMenu } from 'primeng/tieredmenu';
 import { AccordionModule } from 'primeng/accordion';
-import { Dialog } from 'primeng/dialog';
+import { Dialog, DialogModule } from 'primeng/dialog';
 import { Avatar } from 'primeng/avatar';
 import { OverlayBadge } from 'primeng/overlaybadge';
 import { Popover } from 'primeng/popover';
@@ -51,7 +51,7 @@ import { Toasts } from '../../services/toasts';
     TieredMenu,
     Avatar,
     AccordionModule,
-    Dialog,
+    DialogModule,
     OverlayBadge,
     Popover,
     Menu,
@@ -150,21 +150,24 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
       this.getNotificationsHistory();
       this.subscribeNotifications();
       this.setMenu();
+      this.checkOrganizationValidationStatus();
     });
-    this.userMenu = [
-      {
+    this.userMenu = [];
+    // No mostrar 'Perfil' para administradores
+    if (this.loggedUser?.tipoUsuario !== 'ADMINISTRADOR') {
+      this.userMenu.push({
         label: 'Perfil',
         icon: 'pi pi-user',
         routerLink: '/principal/editar-perfil',
+      });
+    }
+    this.userMenu.push({
+      label: 'Cerrar sesión',
+      icon: 'pi pi-sign-out',
+      command: () => {
+        this.logOut();
       },
-      {
-        label: 'Cerrar sesión',
-        icon: 'pi pi-sign-out',
-        command: () => {
-          this.logOut();
-        },
-      },
-    ];
+    });
     this.expandedFaqs = this.faqs.map(() => false);   
   }
 
@@ -383,11 +386,6 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
     } else if (userType === 'ADMINISTRADOR') {
       // Admin tiene acceso a todo
       this.menu = [
-        allMenuItems.productos,
-        allMenuItems.chats,
-        allMenuItems.donaciones,
-        allMenuItems.personasCalle,
-        allMenuItems.reportes,
         allMenuItems.panelAdmin
       ];
     }
@@ -607,6 +605,68 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
         menuItem.expanded = false;
       }
     });
+  }
+
+  checkOrganizationValidationStatus(): void {
+    // Solo mostrar diálogo si es organización y tiene estado definido
+    if (this.loggedUser?.tipoUsuario !== 'ORGANIZACION' || !this.loggedUser?.estado) {
+      return;
+    }
+
+    const estado = this.loggedUser.estado;
+
+    if (estado === 'RECHAZADO') {
+      this.validationDialogType = 'RECHAZADO';
+      this.validationDialogTitle = 'Solicitud Rechazada';
+      this.validationDialogMessage = 'Se rechazó la validación de tu organización, por favor actualiza los documentos desde tu perfil para iniciar una nueva solicitud';
+      this.validationDialogVisible = true;
+    } else if (estado === 'PENDIENTE') {
+      this.validationDialogType = 'PENDIENTE';
+      this.validationDialogTitle = 'Solicitud Pendiente';
+      this.validationDialogMessage = 'Tu solicitud está pendiente, por el momento no tendrás acceso a ninguna funcionalidad hasta que validemos tu organización';
+      this.validationDialogVisible = true;
+    } else if (estado === 'VALIDADO') {
+      this.validationDialogType = 'VALIDADO';
+      this.validationDialogTitle = 'Bienvenido';
+      this.validationDialogMessage = 'Hemos validado tu organización, bienvenido a Círculo Solidario';
+      this.validationDialogVisible = true;
+    }
+  }
+
+  async onValidationDialogAccept(): Promise<void> {
+    if (!this.validationDialogType) {
+      return;
+    }
+
+    try {
+      let newEstado = '';
+
+      if (this.validationDialogType === 'RECHAZADO') {
+        newEstado = 'RECHAZADO_VISTO';
+      } else if (this.validationDialogType === 'VALIDADO') {
+        newEstado = 'VALIDADO_VISTO';
+      }
+
+      if (newEstado) {
+        // Llamar al endpoint para cambiar el estado
+        await firstValueFrom(this.userService.validateUser(this.loggedUser.id, newEstado));
+        
+        // Actualizar el usuario en memoria
+        this.loggedUser.estado = newEstado;
+        
+        // Guardar en caché del servicio de login
+        this.loginService.setLoggedUser(this.loggedUser);
+      }
+
+      this.validationDialogVisible = false;
+    } catch (error) {
+      console.error('Error al actualizar el estado:', error);
+      this.toastService.showToast({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'No se pudo actualizar el estado'
+      });
+    }
   }
 
   @HostListener('document:click', ['$event'])

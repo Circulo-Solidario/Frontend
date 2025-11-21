@@ -37,8 +37,10 @@ export class PermissionsService {
     '/principal/editar-proyecto': { userTypes: ['ORGANIZACION'], roles: [], orgAccess: true },
     
     // Rutas públicas (accesibles para todos los usuarios logueados)
-    '/principal': { userTypes: ['USUARIO', 'ORGANIZACION', 'ADMIN'], roles: [], public: true },
-    '/principal/editar-perfil': { userTypes: ['USUARIO', 'ORGANIZACION', 'ADMIN'], roles: [], public: true }
+    '/principal': { userTypes: ['USUARIO', 'ORGANIZACION', 'ADMINISTRADOR'], roles: [], public: true },
+    '/principal/editar-perfil': { userTypes: ['USUARIO', 'ORGANIZACION'], roles: []},
+
+    '/principal/validar-organizaciones': { userTypes: ['ADMINISTRADOR'], roles: [], public: true }
   };
 
   /**

@@ -63,11 +63,11 @@ export class InvalidUsersList {
         return;
       }
 
-      // Validación de permisos para acceder a esta ruta
-      // if (!this.permissionsService.canAccessRoute(user, this.router.url)) {
-      //   this.router.navigate(['/principal']);
-      //   return;
-      // }
+      //Validación de permisos para acceder a esta ruta
+      if (!this.permissionsService.canAccessRoute(user, this.router.url)) {
+        this.router.navigate(['/principal']);
+        return;
+      }
 
       this.getInvalidOrganizations();
     });
