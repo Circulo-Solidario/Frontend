@@ -78,6 +78,10 @@ export class Login implements OnInit {
 
   async googleLogin() {
     const user = await this.loginGoogleService.loginWithGoogle();
+    // Si el usuario cancela el login, user será null
+    if (!user) {
+      return;
+    }
     try {
       const loggedUser = await this.userService.getUserInfo(user.email);
       if(!loggedUser){
@@ -101,8 +105,6 @@ export class Login implements OnInit {
             imageUrl: user.photoURL
           }
         });
-      }else{
-        this.toastService.showToast({ severity: 'error', summary: 'Error', detail: 'Intente nuevamente' });
       }
     }
   }

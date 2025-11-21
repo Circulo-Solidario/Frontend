@@ -12,7 +12,11 @@ export class GoogleAuth {
     try {
       const result = await signInWithPopup(this.auth, provider);
       return result.user;
-    } catch (err) {
+    } catch (err: any) {
+      // Si el usuario cancela, retornar null sin mostrar error
+      if (err.code === 'auth/cancelled-popup-request' || err.code === 'auth/popup-closed-by-user') {
+        return null;
+      }
       console.error('Error en login:', err);
       return null;
     }
