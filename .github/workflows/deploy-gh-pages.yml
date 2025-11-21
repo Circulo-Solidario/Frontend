@@ -37,9 +37,6 @@ jobs:
       - name: Build (GitHub Pages)
         run: npm run build:gh
 
-      - name: Add 404.html for SPA routing
-        run: cp dist/frontend/index.html dist/frontend/404.html
-
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
