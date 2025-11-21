@@ -97,7 +97,7 @@ export class InvalidUsersList {
     return org.documentos && org.documentos.length > 0 ? org.documentos[0] : null;
   }
 
-  getEstadoSeverity(estado: string): 'info' | 'warning' | 'danger' | 'success' | 'secondary' {
+  getEstadoSeverity(estado: string): 'info' | 'warn' | 'danger' | 'success' | 'secondary' {
     switch (estado) {
       case 'PENDIENTE':
         return 'info';
