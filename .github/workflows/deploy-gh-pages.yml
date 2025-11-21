@@ -38,7 +38,11 @@ jobs:
         run: npm run build:gh
 
       - name: Create 404.html for SPA routing
-        run: cp dist/frontend/index.html dist/frontend/404.html
+        run: |
+          find dist -name "index.html" -type f | while read file; do
+            dir=$(dirname "$file")
+            cp "$file" "$dir/404.html"
+          done
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
