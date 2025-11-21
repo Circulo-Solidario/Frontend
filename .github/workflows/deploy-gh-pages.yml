@@ -45,13 +45,13 @@ jobs:
           done
 
       - name: Debug - List publish directory contents
-        run: ls -la dist/frontend/
+        run: ls -la dist/frontend/browser/
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh-pages
-          publish_dir: dist/frontend
+          publish_dir: dist/frontend/browser
           force_orphan: true
           enable_jekyll: false
