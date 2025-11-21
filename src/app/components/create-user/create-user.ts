@@ -1,4 +1,3 @@
-import 'primeicons/primeicons.css';
 import { Component, inject, OnInit } from '@angular/core';
 import { Location } from '@angular/common';
 import {
