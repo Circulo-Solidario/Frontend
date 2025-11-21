@@ -1,0 +1,87 @@
+@media (max-width: 575px) {
+    .main-container {
+        padding-top: 2vh !important;
+    }
+
+    ::ng-deep .p-panel-content {
+        padding: 0 0 0 0 !important;
+    }
+}
+
+#main {
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+#no-data-logo {
+    fill: var(--p-dataview-content-color);
+    width: max-content;
+    height: max-content;
+}
+
+.go-back-buttom {
+    cursor: pointer;
+}
+
+::ng-deep .p-dataview-header {
+    background-color: transparent;
+    border-radius: 0.5rem 0.5rem 0 0;
+}
+
+::ng-deep .p-dataview-content {
+    background-color: transparent;
+    padding: 1rem;
+    border-radius: 0 0 0.5rem 0.5rem;
+    max-height: 100%;
+}
+
+::ng-deep .p-panel-header {
+    background-color: transparent;
+    padding: 0;
+}
+
+::ng-deep .p-panel-content {
+    padding: 1rem 0 0 0;
+}
+
+::ng-deep p-panel {
+    background-color: transparent;
+    border: none;
+}
+
+.image {
+    height: 8vw !important;
+    width: 8vw !important;
+    min-width: 100px !important;
+    min-height: 100px !important;
+    object-fit: cover;
+}
+
+.card-image {
+    height: 12vw !important;
+    width: 12vw !important;
+    min-width: 100px !important;
+    min-height: 100px !important;
+    object-fit: cover;
+}
+
+.list {
+    border-color: var(--p-content-border-color) !important;
+}
+
+.main-container {
+    padding: 4vh;
+    height: max-content;
+}
+
+.document-card {
+    width: 100%;
+}
+
+::ng-deep .document-card .p-card-body {
+    padding: 0.5rem;
+}
+
+::ng-deep .document-card .p-card-content {
+    padding: 0.5rem 0;
+}

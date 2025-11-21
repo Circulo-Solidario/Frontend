@@ -352,9 +352,9 @@
         <div class="row w-100 justify-content-end">
           <div class="col-auto mt-4">
             <p-button class="me-4" label="Cancelar" severity="secondary" (onClick)="cancel()"
-              [disabled]="editUserForm.pristine && !changedImage" />
+              [disabled]="editUserForm.pristine && !changedImage && !documentoNuevo" />
             <p-button label="Guardar" (onClick)="onSubmit()"
-              [disabled]="(editUserForm.pristine && !changedImage) || editUserForm.invalid" />
+              [disabled]="(editUserForm.pristine && !changedImage && !documentoNuevo) || (!isOrganization && editUserForm.invalid)" />
           </div>
         </div>
       </div>

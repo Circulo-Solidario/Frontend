@@ -30,8 +30,10 @@ import { LoginService } from '../../services/login';
 import { Badge } from 'primeng/badge';
 import { ScrollTopModule } from 'primeng/scrolltop';
 import { FormsModule } from '@angular/forms';
-import { Subscription } from 'rxjs';
+import { Subscription, firstValueFrom } from 'rxjs';
 import { NotificationInter, Notifications } from '../../services/notifications';
+import { Users } from '../../services/users';
+import { Toasts } from '../../services/toasts';
 
 @Component({
   selector: 'app-home',
@@ -74,6 +76,8 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
   private loginService: LoginService = inject(LoginService);
   private router: Router = inject(Router);
   private notificationService: Notifications = inject(Notifications);
+  private userService: Users = inject(Users);
+  private toastService: Toasts = inject(Toasts);
   private notificationsSubscription?: Subscription;
   private resizeObserver!: ResizeObserver;
   loggedUser: any;
@@ -84,6 +88,10 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
   showTerms: boolean = false;
   showFAQs: boolean = false;
   canSearchProducts: boolean = false;
+  validationDialogVisible: boolean = false;
+  validationDialogTitle: string = '';
+  validationDialogMessage: string = '';
+  validationDialogType: 'RECHAZADO' | 'PENDIENTE' | 'VALIDADO' | null = null;
 
   faqs: { question: string; answer: string }[] = [
     {
@@ -265,6 +273,15 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
             icon: 'pi pi-chart-line',
           },
         ],
+      },
+      panelAdmin: {
+        label: 'Organizaciones a validar',
+        icon: 'pi pi-shield',
+        id: 'homeAdminOrgPanel',
+        command: () => {
+          this.router.navigate(['/principal/validar-organizaciones']);
+          this.visible = false;
+        }
       }
     };
 
@@ -363,14 +380,15 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
           });
         }
       }
-    } else if (userType === 'ADMIN') {
+    } else if (userType === 'ADMINISTRADOR') {
       // Admin tiene acceso a todo
       this.menu = [
         allMenuItems.productos,
         allMenuItems.chats,
         allMenuItems.donaciones,
         allMenuItems.personasCalle,
-        allMenuItems.reportes
+        allMenuItems.reportes,
+        allMenuItems.panelAdmin
       ];
     }
   }

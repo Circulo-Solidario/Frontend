@@ -32,9 +32,9 @@ export class Users {
 
   getFilteredUsers(valid: any, userType: any): Observable<any>{
     let filters: any;
-    if(valid){
+    if(valid != null){
       filters = {
-        valid: valid
+        validado: valid
       }
     }
     if(userType){
@@ -64,5 +64,9 @@ export class Users {
 
   deleteDocument(idOrg: any, idDoc: any): Observable<any>{
     return this.httpCliente.delete(`${environment.apiUrl}${this.apiPath}/${idOrg}/documentos/${idDoc}`);
+  }
+
+  validateUser(id:any, state: any): Observable<any>{
+    return this.httpCliente.patch(`${environment.apiUrl}${this.apiPath}/${id}/validar`, { estado: state });
   }
 }

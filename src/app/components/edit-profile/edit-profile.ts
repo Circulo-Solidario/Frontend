@@ -114,6 +114,8 @@ export class EditProfile {
       this.originalUserImage = this.originalData.urlImagen;
       this.userImage = this.originalData.urlImagen;
     }
+    console.log(this.originalData.fechaNacimiento?.replaceAll('-', '/') ?? '');
+    
     this.editUserForm.setValue({
       nombreApellido: this.originalData.nombreApellido ?? '',
       alias: this.originalData.alias ?? '',
@@ -157,7 +159,64 @@ export class EditProfile {
   }
 
   async onSubmit() {
-    if (this.editUserForm.valid) {
+    if (this.editUserForm.valid || (this.isOrganization && this.documentoNuevo && !this.editUserForm.valid)) {
+      // Caso 1: Solo cambio de documento para organizaciones
+      const soloDocumento = this.isOrganization && this.documentoNuevo && this.editUserForm.pristine && !this.changedImage;
+      
+      if (soloDocumento) {
+        // Solo procesar documentos
+        try {
+          await firstValueFrom(this.userService.postDocumentes(this.id, this.documentoNuevo!));
+          
+          if (this.documentoActual && this.documentoActual.id) {
+            try {
+              await firstValueFrom(this.userService.deleteDocument(this.id, this.documentoActual.id));
+            } catch (deleteError) {
+              console.error('Error al eliminar documento anterior:', deleteError);
+              this.toastService.showToast({
+                severity: 'warn',
+                summary: 'Advertencia',
+                detail: 'Se subió el nuevo documento pero no se pudo eliminar el anterior',
+              });
+            }
+          }
+          
+          this.toastService.showToast({
+            severity: 'success',
+            summary: 'Documento actualizado!',
+            detail: 'El documento se actualizó correctamente',
+          });
+          
+          this.uploadedPdfFiles = [];
+          this.documentoNuevo = null;
+          this.editUserForm.markAsPristine();
+          this.loginService.getLoggedUser().subscribe((user) => {
+            this.originalData = user;
+            if (this.originalData.tipoUsuario == 'ORGANIZACION') {
+              this.userService.getDocumentsFromUser(this.id).subscribe({
+                next: (documentos: any[]) => {
+                  if (documentos && documentos.length > 0) {
+                    this.documentoActual = documentos[0];
+                  }
+                },
+                error: (error) => {
+                  console.error('Error al cargar documentos:', error);
+                }
+              });
+            }
+          });
+        } catch (uploadError) {
+          console.error('Error al subir documento:', uploadError);
+          this.toastService.showToast({
+            severity: 'error',
+            summary: 'Error al subir documento',
+            detail: 'No se pudo subir el nuevo documento',
+          });
+        }
+        return;
+      }
+      
+      // Caso 2: Cambios en otros campos (con o sin documento nuevo)
       let editedUser = {
         ...this.editUserForm.value
       };
@@ -191,12 +250,10 @@ export class EditProfile {
       }
 
       // Manejar documento nuevo para organizaciones no validadas
-      let documentoUploadedSuccessfully = false;
       if (this.isOrganization && this.documentoNuevo && !this.originalData.validado) {
         try {
           // Primero: subir el nuevo documento
-          await firstValueFrom(this.userService.postDocumentes(this.id, this.documentoNuevo));
-          documentoUploadedSuccessfully = true;
+          await firstValueFrom(this.userService.postDocumentes(this.id, this.documentoNuevo!));
           
           // Segundo: si se subió exitosamente, eliminar el documento anterior
           if (this.documentoActual && this.documentoActual.id) {
@@ -314,6 +371,7 @@ export class EditProfile {
       this.uploadedPdfFiles[0] = fileSelected.files[0];
     }
     this.documentoNuevo = fileSelected.files[0];
+    this.editUserForm.markAsDirty();
   }
 
   clearPdfFile() {

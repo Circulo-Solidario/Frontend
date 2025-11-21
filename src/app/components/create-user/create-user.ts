@@ -74,6 +74,7 @@ export class CreateUser implements OnInit {
     { label: 'Donatario', value: 3 },
     { label: 'Observador', value: 4 },
   ];
+  today: Date = new Date();
   activeStep: number = 1;
   typeSelected: number = 1;
   uploadedFiles: any = [];
