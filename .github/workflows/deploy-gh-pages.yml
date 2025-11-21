@@ -44,6 +44,9 @@ jobs:
             cp "$file" "$dir/404.html"
           done
 
+      - name: Debug - List publish directory contents
+        run: ls -la dist/frontend/
+
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
