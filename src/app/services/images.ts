@@ -8,7 +8,7 @@ import { environment } from '../environments/environment';
   providedIn: 'root'
 })
 export class Images {
-  private readonly imageUrl: string = '/api-imgbb/1/upload';
+  private readonly imageUrl: string = 'https://api.imgbb.com/1/upload';
   private readonly httpClient: HttpClient;
 
   constructor(httpClient: HttpClient){   
