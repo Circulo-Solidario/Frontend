@@ -2,6 +2,7 @@ import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { Proyects } from '../../services/proyects';
 import { Toasts } from '../../services/toasts';
 import { LoginService } from '../../services/login';
+import { PermissionsService } from '../../services/permissions';
 import { Router } from '@angular/router';
 import { CardModule } from 'primeng/card';
 import { CommonModule } from '@angular/common';
@@ -38,6 +39,7 @@ export class CreateProyect implements OnInit {
   @ViewChild(FileUpload) fileUpload!: FileUpload;
   private proyectService: Proyects = inject(Proyects);
   private loginService: LoginService = inject(LoginService);
+  private permissionsService: PermissionsService = inject(PermissionsService);
   private imageService: Images = inject(Images);
   private toasts: Toasts = inject(Toasts);
   private router: Router = inject(Router);
@@ -57,10 +59,19 @@ export class CreateProyect implements OnInit {
   }
 
   ngOnInit(): void {
-    this.loginService.getLoggedUser().subscribe((user) => (this.logedUser = user));
-    if (!this.logedUser) {
-      this.router.navigate(['/login']);
-    }
+    this.loginService.getLoggedUser().subscribe((user) => {
+      this.logedUser = user;
+      if (!this.logedUser) {
+        this.router.navigate(['/login']);
+        return;
+      }
+      
+      // Validación de permisos para acceder a esta ruta
+      if (!this.permissionsService.canAccessRoute(user, this.router.url)) {
+        this.router.navigate(['/principal']);
+        return;
+      }
+    });
   }
 
   setImage(fileSelected: FileSelectEvent) {

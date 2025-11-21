@@ -17,7 +17,10 @@ import { InputText } from 'primeng/inputtext';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { SelectButton } from 'primeng/selectbutton';
+import { FileUploadModule } from 'primeng/fileupload';
+import { Tag } from 'primeng/tag';
 import { LoginService } from '../../services/login';
+import { PermissionsService } from '../../services/permissions';
 import { Router } from '@angular/router';
 import { Message } from 'primeng/message';
 import { Users } from '../../services/users';
@@ -25,6 +28,7 @@ import { ImagePost } from '../../models/images';
 import { Images } from '../../services/images';
 import { Toasts } from '../../services/toasts';
 import { InputMask } from 'primeng/inputmask';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-edit-profile',
@@ -41,12 +45,15 @@ import { InputMask } from 'primeng/inputmask';
     InputGroupAddonModule,
     SelectButton,
     Message,
+    FileUploadModule,
+    Tag,
   ],
   templateUrl: './edit-profile.html',
   styleUrl: './edit-profile.css',
 })
 export class EditProfile {
   private loginService: LoginService = inject(LoginService);
+  private permissionsService: PermissionsService = inject(PermissionsService);
   private userService: Users = inject(Users);
   private imageService: Images = inject(Images);
   private router: Router = inject(Router);
@@ -66,6 +73,9 @@ export class EditProfile {
   originalUserImage: string = '';
   userImage: string = '';
   changedImage: File | null = null;
+  documentoActual: any = null;
+  documentoNuevo: File | null = null;
+  uploadedPdfFiles: any = [];
 
   constructor() {
     this.editUserForm = new FormGroup({
@@ -86,21 +96,31 @@ export class EditProfile {
   }
 
   ngOnInit(): void {
-    this.loginService.getLoggedUser().subscribe((user) => (this.originalData = user));
-    if (!this.originalData) {
-      this.router.navigate(['/login']);
-    }
+    this.loginService.getLoggedUser().subscribe((user) => {
+      this.originalData = user;
+      if (!this.originalData) {
+        this.router.navigate(['/login']);
+        return;
+      }
+      
+      // Validación de permisos para acceder a esta ruta
+      if (!this.permissionsService.canAccessRoute(user, this.router.url)) {
+        this.router.navigate(['/principal']);
+        return;
+      }
+    });
     this.id = this.originalData.id;
     if (this.originalData.urlImagen) {
       this.originalUserImage = this.originalData.urlImagen;
       this.userImage = this.originalData.urlImagen;
     }
+    console.log(this.originalData.fechaNacimiento?.replaceAll('-', '/') ?? '');
+    
     this.editUserForm.setValue({
       nombreApellido: this.originalData.nombreApellido ?? '',
       alias: this.originalData.alias ?? '',
       fechaNacimiento:
         this.originalData.fechaNacimiento?.replaceAll('-', '/') ?? '',
-      // contrasena: this.originalData.contrasena ?? ''
     });
     if (this.originalData.tipoUsuario != 'ORGANIZACION') {
       this.isOrganization = false;
@@ -113,7 +133,25 @@ export class EditProfile {
           [Validators.required]
         )
       );
-    }    
+    } else {
+      // Cargar documentos de la organización desde el endpoint
+      this.userService.getDocumentsFromUser(this.id).subscribe({
+        next: (documentos: any[]) => {
+          if (documentos && documentos.length > 0) {
+            this.documentoActual = documentos[0];
+          }
+          // Si el array está vacío, documentoActual permanece null y se mostrará solo el upload
+        },
+        error: (error) => {
+          console.error('Error al cargar documentos:', error);
+          this.toastService.showToast({
+            severity: 'error',
+            summary: 'Error al cargar documentos',
+            detail: 'No se pudieron cargar los documentos de la organización',
+          });
+        }
+      });
+    }
   }
 
   goHome() {
@@ -121,7 +159,64 @@ export class EditProfile {
   }
 
   async onSubmit() {
-    if (this.editUserForm.valid) {
+    if (this.editUserForm.valid || (this.isOrganization && this.documentoNuevo && !this.editUserForm.valid)) {
+      // Caso 1: Solo cambio de documento para organizaciones
+      const soloDocumento = this.isOrganization && this.documentoNuevo && this.editUserForm.pristine && !this.changedImage;
+      
+      if (soloDocumento) {
+        // Solo procesar documentos
+        try {
+          await firstValueFrom(this.userService.postDocumentes(this.id, this.documentoNuevo!));
+          
+          if (this.documentoActual && this.documentoActual.id) {
+            try {
+              await firstValueFrom(this.userService.deleteDocument(this.id, this.documentoActual.id));
+            } catch (deleteError) {
+              console.error('Error al eliminar documento anterior:', deleteError);
+              this.toastService.showToast({
+                severity: 'warn',
+                summary: 'Advertencia',
+                detail: 'Se subió el nuevo documento pero no se pudo eliminar el anterior',
+              });
+            }
+          }
+          
+          this.toastService.showToast({
+            severity: 'success',
+            summary: 'Documento actualizado!',
+            detail: 'El documento se actualizó correctamente',
+          });
+          
+          this.uploadedPdfFiles = [];
+          this.documentoNuevo = null;
+          this.editUserForm.markAsPristine();
+          this.loginService.getLoggedUser().subscribe((user) => {
+            this.originalData = user;
+            if (this.originalData.tipoUsuario == 'ORGANIZACION') {
+              this.userService.getDocumentsFromUser(this.id).subscribe({
+                next: (documentos: any[]) => {
+                  if (documentos && documentos.length > 0) {
+                    this.documentoActual = documentos[0];
+                  }
+                },
+                error: (error) => {
+                  console.error('Error al cargar documentos:', error);
+                }
+              });
+            }
+          });
+        } catch (uploadError) {
+          console.error('Error al subir documento:', uploadError);
+          this.toastService.showToast({
+            severity: 'error',
+            summary: 'Error al subir documento',
+            detail: 'No se pudo subir el nuevo documento',
+          });
+        }
+        return;
+      }
+      
+      // Caso 2: Cambios en otros campos (con o sin documento nuevo)
       let editedUser = {
         ...this.editUserForm.value
       };
@@ -152,6 +247,41 @@ export class EditProfile {
           ...editedUser,
           urlImagen: this.originalData.urlImagen,
         };
+      }
+
+      // Manejar documento nuevo para organizaciones no validadas
+      if (this.isOrganization && this.documentoNuevo && !this.originalData.validado) {
+        try {
+          // Primero: subir el nuevo documento
+          await firstValueFrom(this.userService.postDocumentes(this.id, this.documentoNuevo!));
+          
+          // Segundo: si se subió exitosamente, eliminar el documento anterior
+          if (this.documentoActual && this.documentoActual.id) {
+            try {
+              await firstValueFrom(this.userService.deleteDocument(this.id, this.documentoActual.id));
+            } catch (deleteError) {
+              console.error('Error al eliminar documento anterior:', deleteError);
+              this.toastService.showToast({
+                severity: 'warn',
+                summary: 'Advertencia',
+                detail: 'Se subió el nuevo documento pero no se pudo eliminar el anterior',
+              });
+            }
+          }
+          this.toastService.showToast({
+            severity: 'success',
+            summary: 'Documento subido!',
+            detail: 'El nuevo documento se subió correctamente',
+          });
+        } catch (uploadError) {
+          console.error('Error al subir documento:', uploadError);
+          this.toastService.showToast({
+            severity: 'error',
+            summary: 'Error al subir documento',
+            detail: 'No se pudo subir el nuevo documento',
+          });
+          return;
+        }
       }
 
       this.userService.editUser(this.id, editedUser).subscribe({
@@ -208,6 +338,10 @@ export class EditProfile {
       this.userImage = this.originalData.urlImagen;
       this.changedImage = null;
     }
+    if (this.isOrganization) {
+      this.uploadedPdfFiles = [];
+      this.documentoNuevo = null;
+    }
     this.editUserForm.markAsPristine();
   }
 
@@ -227,6 +361,83 @@ export class EditProfile {
         detail: 'Formatos admitidos: jpg, png o jpeg',
       });
     }
+  }
+
+  // Métodos para manejar documentos PDF
+  setPdfFile(fileSelected: any) {
+    if (this.uploadedPdfFiles.length == 0) {
+      this.uploadedPdfFiles.push(fileSelected.files[0]);
+    } else {
+      this.uploadedPdfFiles[0] = fileSelected.files[0];
+    }
+    this.documentoNuevo = fileSelected.files[0];
+    this.editUserForm.markAsDirty();
+  }
+
+  clearPdfFile() {
+    if (this.uploadedPdfFiles.length > 0) {
+      this.uploadedPdfFiles.pop();
+    }
+    this.documentoNuevo = null;
+  }
+
+  downloadDocument() {
+    if (!this.documentoActual) {
+      this.toastService.showToast({
+        severity: 'warn',
+        summary: 'Sin documento',
+        detail: 'No hay documento disponible para descargar',
+      });
+      return;
+    }
+
+    this.userService.downloadDocument(this.id, this.documentoActual.id).subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = this.documentoActual.nombre || 'documento.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+      },
+      error: (error) => {
+        console.error('Error al descargar documento:', error);
+        this.toastService.showToast({
+          severity: 'error',
+          summary: 'Error al descargar',
+          detail: 'No se pudo descargar el documento',
+        });
+      }
+    });
+  }
+
+  viewDocument() {
+    if (!this.documentoActual) {
+      this.toastService.showToast({
+        severity: 'warn',
+        summary: 'Sin documento',
+        detail: 'No hay documento disponible para visualizar',
+      });
+      return;
+    }
+
+    this.userService.downloadDocument(this.id, this.documentoActual.id).subscribe({
+      next: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        window.open(url, '_blank');
+        setTimeout(() => window.URL.revokeObjectURL(url), 1000);
+      },
+      error: (error) => {
+        console.error('Error al visualizar documento:', error);
+        this.toastService.showToast({
+          severity: 'error',
+          summary: 'Error al visualizar',
+          detail: 'No se pudo visualizar el documento',
+        });
+      }
+    });
   }
 
   passwordStrengthValidator(): ValidatorFn {

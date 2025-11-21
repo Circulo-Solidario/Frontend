@@ -13,6 +13,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { Proyects } from '../../services/proyects';
 import { Images } from '../../services/images';
 import { LoginService } from '../../services/login';
+import { PermissionsService } from '../../services/permissions';
 import { Toasts } from '../../services/toasts';
 import { ImagePost } from '../../models/images';
 
@@ -40,6 +41,7 @@ export class EditProyect implements OnInit {
   private proyectService: Proyects = inject(Proyects);
   private imageService: Images = inject(Images);
   private loginService: LoginService = inject(LoginService);
+  private permissionsService: PermissionsService = inject(PermissionsService);
   private toasts: Toasts = inject(Toasts);
   private location: Location = inject(Location);
   
@@ -67,11 +69,19 @@ export class EditProyect implements OnInit {
     this.minDate = new Date();
     this.minDate.setDate(this.minDate.getDate() + 1);
     
-    this.loginService.getLoggedUser().subscribe((user) => (this.loggedUser = user));
-    if (!this.loggedUser) {
-      this.router.navigate(['/login']);
-      return;
-    }
+    this.loginService.getLoggedUser().subscribe((user) => {
+      this.loggedUser = user;
+      if (!this.loggedUser) {
+        this.router.navigate(['/login']);
+        return;
+      }
+      
+      // Validación de permisos para acceder a esta ruta
+      if (!this.permissionsService.canAccessRoute(user, this.router.url)) {
+        this.router.navigate(['/principal']);
+        return;
+      }
+    });
 
     this.id = this.proyectService.getIdProyect();
     if (!this.id) {

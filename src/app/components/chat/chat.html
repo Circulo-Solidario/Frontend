@@ -39,12 +39,12 @@
           </div>
           }
         </div>
-        <div class="row w-100 mt-2" style="height: 20%">
+        <div class="row w-100 mt-2" style="height: 20%; margin-bottom: 0.5rem;">
           <div class="col p-0">
             <textarea placeholder="Escribe un mensaje..." maxlength="255" pTextarea fluid [(ngModel)]="message"
               (keydown.enter)="sendMessage()" style="min-height: 100%; max-height: 100%; resize: none" [disabled]="chat.estado != 'PENDIENTE'"></textarea>
           </div>
-          <div class="col-auto d-inline-grid justify-content-center align-content-between align-items-center p-2">
+          <div class="col-auto d-inline-grid justify-content-center align-content-between align-items-center p-2 gap-1">
             <p-button icon="pi pi-send" variant="outlined" raised="true" [rounded]="true" (click)="sendMessage()"
               [disabled]="!message.trim()" />
             <p-button icon="pi pi-times" variant="outlined" severity="danger" raised="true" [rounded]="true"

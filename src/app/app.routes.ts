@@ -73,6 +73,10 @@ export const routes: Routes = [
       {
         path: 'editar-proyecto',
         loadComponent: () => import('./components/edit-proyect/edit-proyect').then((m) => m.EditProyect)
+      },
+      {
+        path: 'validar-organizaciones',
+        loadComponent: () => import('./components/invalid-users-list/invalid-users-list').then((m) => m.InvalidUsersList)
       }
     ]
   },

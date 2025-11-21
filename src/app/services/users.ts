@@ -30,11 +30,11 @@ export class Users {
     return this.httpCliente.put(`${environment.apiUrl}${this.apiPath}/${id}`, user); 
   }
 
-  getFilteredUsers(active: any, userType: any): Observable<any>{
+  getFilteredUsers(valid: any, userType: any): Observable<any>{
     let filters: any;
-    if(active){
+    if(valid != null){
       filters = {
-        activo: active
+        validado: valid
       }
     }
     if(userType){
@@ -46,5 +46,27 @@ export class Users {
     return this.httpCliente.get(`${environment.apiUrl}${this.apiPath}/filtrar`, {
       params: filters
     })
+  }
+
+  postDocumentes(id: any, document: File): Observable<any>{
+    const formData = new FormData();
+    formData.append('archivo', document);    
+    return this.httpCliente.post(`${environment.apiUrl}${this.apiPath}/${id}/documentos`, formData);
+  }
+
+  downloadDocument(idOrg: any, idDoc: any): Observable<Blob>{
+    return this.httpCliente.get(`${environment.apiUrl}${this.apiPath}/${idOrg}/documentos/${idDoc}/descargar`, { responseType: 'blob' });
+  }
+
+  getDocumentsFromUser(idOrg: any): Observable<any>{
+    return this.httpCliente.get(`${environment.apiUrl}${this.apiPath}/${idOrg}/documentos`);
+  }
+
+  deleteDocument(idOrg: any, idDoc: any): Observable<any>{
+    return this.httpCliente.delete(`${environment.apiUrl}${this.apiPath}/${idOrg}/documentos/${idDoc}`);
+  }
+
+  validateUser(id:any, state: any): Observable<any>{
+    return this.httpCliente.patch(`${environment.apiUrl}${this.apiPath}/${id}/validar`, { estado: state });
   }
 }

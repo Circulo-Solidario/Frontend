@@ -112,6 +112,7 @@
       </span>
     </ng-template>
     <ng-template #center>
+      @if(canSearchProducts){
       <div class="toolbar-center">
         <p-iconfield>
           <p-inputicon class="pi pi-search" />
@@ -125,9 +126,11 @@
           />
         </p-iconfield>
       </div>
+      }
     </ng-template>
     <ng-template #end>
       <div class="d-flex" style="align-items: center">
+        @if(loggedUser?.tipoUsuario !== 'ADMINISTRADOR'){
         <div class="position-relative me-4">
           @if(unreadCount > 0){
           <p-overlaybadge [value]="unreadCount">
@@ -177,6 +180,7 @@
             </div>
           </ng-template>
         </p-popover>
+        } <!-- Cierre del @if de ADMINISTRADOR en notificaciones -->
         <div class="toolbar-end d-none d-sm-block">
           <p-avatar
             (click)="menu.toggle($event)"
@@ -379,12 +383,19 @@
       [class.fully-collapsed]="fullyCollapsed"
     >
       <div class="sidebar-menu-top">
-        <p-tieredmenu #tieredMenu [model]="menu" [autoDisplay]="false" (onHide)="onTieredMenuHide()">
+        <p-tieredmenu
+          #tieredMenu
+          [model]="menu"
+          [autoDisplay]="false"
+          (onHide)="onTieredMenuHide()"
+        >
           <ng-template #item let-item>
             <div class="sidebar-button">
               <p-button
                 fluid
-                [styleClass]="fullyCollapsed ? 'justify-content-start' : 'justify-content-start w-100'"
+                [styleClass]="
+                  fullyCollapsed ? 'justify-content-start' : 'justify-content-start w-100'
+                "
                 (click)="toggleMenuItem(item)"
               >
                 <i [class]="item.icon + ' text-inherit m-3'" style="font-size: 1.4rem"></i>
@@ -541,11 +552,9 @@
         en el sitio.
       </p>
     </div>
-    <ng-template pFooter>
-      <div class="d-flex justify-content-end">
-        <p-button label="Cerrar" (click)="closeTerms()" />
-      </div>
-    </ng-template>
+    <div class="d-flex justify-content-end mt-3">
+      <p-button label="Cerrar" (click)="closeTerms()" />
+    </div>
   </p-dialog>
   <p-dialog
     [(visible)]="showFAQs"
@@ -574,10 +583,24 @@
         }
       </div>
     </div>
-    <ng-template pFooter>
-      <div class="d-flex justify-content-end">
-        <p-button label="Cerrar" (click)="closeFaqs()" />
-      </div>
-    </ng-template>
+    <div class="d-flex justify-content-end mt-3">
+      <p-button label="Cerrar" (click)="closeFaqs()" />
+    </div>
+  </p-dialog>
+
+  <!-- Diálogo de validación de organización -->
+  <p-dialog
+    [(visible)]="validationDialogVisible"
+    modal
+    [header]="validationDialogTitle"
+    [style]="{ width: '50vw' }"
+    [breakpoints]="{ '960px': '75vw', '640px': '95vw' }"
+    [closable]="false"
+    [closeOnEscape]="false"
+  >
+    <p class="text-center mb-4">{{ validationDialogMessage }}</p>
+    <div class="d-flex justify-content-center">
+      <p-button label="Aceptar" (click)="onValidationDialogAccept()" />
+    </div>
   </p-dialog>
 </div>

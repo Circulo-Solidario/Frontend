@@ -8,6 +8,7 @@ import { Avatar } from 'primeng/avatar';
 import { Badge } from 'primeng/badge';
 import { Tag } from 'primeng/tag';
 import { LoginService } from '../../services/login';
+import { PermissionsService } from '../../services/permissions';
 import { Requests } from '../../services/requests';
 import { Notifications, TipoNotificaciones } from '../../services/notifications';
 import { ConfirmDialog } from 'primeng/confirmdialog';
@@ -28,6 +29,7 @@ export class ProductDetail implements OnInit {
   private productService: Products = inject(Products);
   private toasts: Toasts = inject(Toasts);
   private loginService: LoginService = inject(LoginService);
+  private permissionsService: PermissionsService = inject(PermissionsService);
   private requestService: Requests = inject(Requests);
   private notificationService: Notifications = inject(Notifications);
   private confirmationService: ConfirmationService = inject(ConfirmationService);
@@ -43,6 +45,12 @@ export class ProductDetail implements OnInit {
       this.logedUser = user;
       if (user == null) {
         this.router.navigate(['/login']);
+        return;
+      }
+      
+      // Validación de permisos para acceder a esta ruta
+      if (!this.permissionsService.canAccessRoute(user, this.router.url)) {
+        this.router.navigate(['/principal']);
         return;
       }
     });

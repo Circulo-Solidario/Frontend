@@ -53,10 +53,12 @@ export class CreateProfile implements OnInit {
     { label: 'Donatario', value: 3 },
     { label: 'Observador', value: 4 },
   ];
+  today: Date = new Date();
   charityForm: FormGroup;
   userForm: FormGroup;
   typeSelected: number = 1;
   uploadedFiles: any = [];
+  uploadedPdfFiles: any = [];  // Para archivos PDF de organizaciones
   postUser: boolean = false;
   image: any;
   imageUrl: string = '';
@@ -123,6 +125,20 @@ export class CreateProfile implements OnInit {
       this.uploadedFiles.pop();
     }
     this.imageUrl = '';
+  }
+
+  setPdfFile(fileSelected: FileSelectEvent) {
+    if (this.uploadedPdfFiles.length == 0) {
+      this.uploadedPdfFiles.push(fileSelected.files[0]);
+    } else {
+      this.uploadedPdfFiles[0] = fileSelected.files[0];
+    }
+  }
+
+  clearPdfFile() {
+    if (this.uploadedPdfFiles.length > 0) {
+      this.uploadedPdfFiles.pop();
+    }
   }
 
   changeType(type: number) {
@@ -202,14 +218,24 @@ export class CreateProfile implements OnInit {
     }
 
     try {
-      await this.userService.registerUser(account);
+      const response = await this.userService.registerUser(account);
       this.toastService.showToast({ severity: 'success', summary: 'Perfil creado!', detail: 'Perfil creado correctamente' });
       if (errorSavingImage) {
         this.toastService.showToast({ severity: 'warn', summary: 'Error al guardar imagen', detail: 'Puedes cargar nuevamente la imagen desde la edición del perfil' });
       }
+      if (this.typeSelected == 2 && this.uploadedPdfFiles.length > 0) {
+        this.userService.postDocumentes(response.id, this.uploadedPdfFiles[0]).subscribe({
+          next: () => {
+            this.toastService.showToast({ severity: 'success', summary: 'Documentos subidos!', detail: 'Documentos subidos correctamente' });
+          },
+          error: () => {
+            this.toastService.showToast({ severity: 'warn', summary: 'Error al subir documentos', detail: 'No pudimos subir los documentos, puedes intentar nuevamente desde la edición del perfil' });
+          }
+        });
+      }
+      this.postUser = false;
       const userInfo = await this.userService.getUserInfo(this.user.email)
       this.loginService.setLoggedUser(userInfo);
-      this.postUser = false;
       timer(500).subscribe(
         () => {
           this.router.navigateByUrl("/principal");

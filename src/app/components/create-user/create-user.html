@@ -252,6 +252,7 @@
                             <label for="fechaNacimiento">Fecha de nacimiento</label>
                             <p-datepicker
                               class="mt-1"
+                              [maxDate]="today"
                               id="fechaNacimiento"
                               formControlName="fechaNacimiento"
                               fluid
@@ -415,6 +416,7 @@
                             <label for="fechaNacimiento">Fecha de fundación</label>
                             <p-datepicker
                               class="mt-1"
+                              [maxDate]="today"
                               id="fechaNacimiento"
                               formControlName="fechaNacimiento"
                               fluid
@@ -426,7 +428,7 @@
                               placeholder="Selecciona la fecha de fundación"
                             />
                           </div>
-                          <div>
+                          <div class="mb-4">
                             <label for="userImage">Logo</label>
                             <p-fileupload
                               name="userImage"
@@ -498,6 +500,72 @@
                               </ng-template>
                             </p-fileupload>
                           </div>
+                          <div>
+                            <label for="pdfDocuments">Documentos de respaldo (PDF)<span style="color: red;">&ensp;*</span></label>
+                            <p-fileupload
+                              name="pdfDocuments"
+                              id="pdfDocuments"
+                              styleClass="mt-1 w-100"
+                              [multiple]="false"
+                              accept=".pdf,application/pdf"
+                              maxFileSize="52428800"
+                              mode="advanced"
+                              (onSelect)="setPdfFile($event)"
+                              (onClear)="clearPdfFile()"
+                              [files]="uploadedPdfFiles"
+                            >
+                              <ng-template #empty>
+                                <div class="row justify-content-md-center">
+                                  <div class="col-md-auto">Arrastra un archivo PDF para subirlo (máx. 50MB)</div>
+                                </div>
+                              </ng-template>
+                              <ng-template #file>
+                                @if(uploadedPdfFiles.length == 0){
+                                <div class="row justify-content-md-center">
+                                  <div class="col-md-auto">Arrastra un archivo PDF para subirlo (máx. 50MB)</div>
+                                </div>
+                                } @for (file of uploadedPdfFiles; track $index) {
+                                <div class="row justify-content-md-center align-items-center">
+                                  <div class="col-md-auto">
+                                    <i class="pi pi-file-pdf" style="font-size: 3rem; color: #e74c3c;"></i>
+                                  </div>
+                                  <div class="col">
+                                    <div class="row">
+                                      <strong>{{ file.name }}</strong>
+                                    </div>
+                                    <div class="row">{{ (file.size / 1024 / 1024).toFixed(2) }} MB</div>
+                                  </div>
+                                </div>
+                                }
+                              </ng-template>
+                              <ng-template
+                                #header
+                                let-files
+                                let-chooseCallback="chooseCallback"
+                                let-clearCallback="clearCallback"
+                              >
+                                <div class="justify-between items-center">
+                                  <div class="flex">
+                                    <p-button
+                                      class="me-2"
+                                      (onClick)="chooseCallback($event, chooseCallback)"
+                                      icon="pi pi-file-pdf"
+                                      [rounded]="true"
+                                      [outlined]="true"
+                                    />
+                                    <p-button
+                                      (onClick)="clearCallback()"
+                                      icon="pi pi-times"
+                                      [rounded]="true"
+                                      [outlined]="true"
+                                      severity="danger"
+                                      [disabled]="!files || files.length === 0"
+                                    />
+                                  </div>
+                                </div>
+                              </ng-template>
+                            </p-fileupload>
+                          </div>
                         </form>
                       </div>
                     </p-tabpanel>
@@ -519,7 +587,7 @@
                       (onClick)="onSubmit()"
                       [disabled]="
                         (typeSelected == 1 && userForm.invalid) ||
-                        (typeSelected == 2 && charityForm.invalid) ||
+                        (typeSelected == 2 && (charityForm.invalid || !uploadedPdfFiles.length)) ||
                         postUser
                       "
                     >

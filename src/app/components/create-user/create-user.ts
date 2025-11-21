@@ -74,9 +74,11 @@ export class CreateUser implements OnInit {
     { label: 'Donatario', value: 3 },
     { label: 'Observador', value: 4 },
   ];
+  today: Date = new Date();
   activeStep: number = 1;
   typeSelected: number = 1;
   uploadedFiles: any = [];
+  uploadedPdfFiles: any = [];  // Para archivos PDF de organizaciones
   postUser: boolean = false;
   image: any;
   imageUrl: string = '';
@@ -145,6 +147,20 @@ export class CreateUser implements OnInit {
   clearImage() {
     if (this.uploadedFiles.length > 0) {
       this.uploadedFiles.pop();
+    }
+  }
+
+  setPdfFile(fileSelected: FileSelectEvent) {
+    if (this.uploadedPdfFiles.length == 0) {
+      this.uploadedPdfFiles.push(fileSelected.files[0]);
+    } else {
+      this.uploadedPdfFiles[0] = fileSelected.files[0];
+    }
+  }
+
+  clearPdfFile() {
+    if (this.uploadedPdfFiles.length > 0) {
+      this.uploadedPdfFiles.pop();
     }
   }
 
@@ -226,17 +242,27 @@ export class CreateUser implements OnInit {
     }
 
     try {
-      await this.userService.registerUser(account);
+      const response = await this.userService.registerUser(account);
       this.toastService.showToast({ severity: 'success', summary: 'Usuario creado!', detail: 'Usuario creado correctamente' });
       if (errorSavingImage) {
         this.toastService.showToast({ severity: 'warn', summary: 'Error al guardar imagen', detail: 'Puedes cargar nuevamente la imagen desde la edición del perfil' });
       }
       this.postUser = false;
+      if (this.typeSelected == 2 && this.uploadedPdfFiles.length > 0) {
+        this.userService.postDocumentes(response.id, this.uploadedPdfFiles[0]).subscribe({
+          next: () => {
+            this.toastService.showToast({ severity: 'success', summary: 'Documentos subidos!', detail: 'Documentos subidos correctamente' });
+          },
+          error: () => {
+            this.toastService.showToast({ severity: 'warn', summary: 'Error al subir documentos', detail: 'No pudimos subir los documentos, puedes intentar nuevamente desde la edición del perfil' });
+          }
+        });
+      }
       timer(500).subscribe(
         () => {
           this.router.navigateByUrl("/login");
         }
-      )
+      );
     } catch (error) {
       this.toastService.showToast({ severity: 'error', summary: 'Error al crear usuario', detail: 'Por favor intente nuevamente...' });
       this.postUser = false;

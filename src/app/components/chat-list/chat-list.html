@@ -12,10 +12,13 @@
         }@else{
         <p-tabs [value]="defaultTab">
           <p-tablist>
+            @if(canSeeMyProductsChats){
             <p-tab value="0">Mis productos</p-tab>
-            <p-tab value="1">Mis solicitudes</p-tab>
+            }@if(canSeeMyRequestsChats){
+            <p-tab value="1">Mis solicitudes</p-tab>}
           </p-tablist>
           <p-tabpanels>
+            @if(canSeeMyProductsChats){
             <p-tabpanel value="0">
               <p-dataview #dv [value]="myRequetsChats" class="my-requests">
                 <ng-template #list>
@@ -65,7 +68,8 @@
                   </div>
                 </ng-template>
               </p-dataview>
-            </p-tabpanel>
+            </p-tabpanel>}
+            @if(canSeeMyRequestsChats){
             <p-tabpanel value="1">
               <p-dataview #dv [value]="myProductsChats" class="my-requests">
                 <ng-template #list>
@@ -115,7 +119,7 @@
                   </div>
                 </ng-template>
               </p-dataview>
-            </p-tabpanel>
+            </p-tabpanel>}
           </p-tabpanels>
         </p-tabs>
         }
