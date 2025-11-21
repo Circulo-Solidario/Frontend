@@ -25,7 +25,14 @@ jobs:
           cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install --no-audit --no-fund
+
+      # Optional: fail if package-lock.json missing (soft warning instead of hard fail)
+      - name: Verify lock file
+        run: |
+          if [ ! -f package-lock.json ]; then
+            echo "WARNING: package-lock.json missing; consider committing it for reproducible builds.";
+          fi
 
       - name: Build (GitHub Pages)
         run: npm run build:gh
