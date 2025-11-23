@@ -52,6 +52,7 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
   userChat: any;
   message: string = '';
   messages: any[] = [];
+  delivered: boolean = false;
 
   private subscribeToMessages(): void {
     if (this.messageSubscription) {
@@ -163,8 +164,8 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
     this.confirmationService.confirm({
       header: 'Finalizar chat',
       message: 'Por favor confirma como deseas finalizar el chat.',
-      accept: (delivered: boolean) => {
-        if (delivered) {
+      accept: () =>{
+        if (this.delivered) {
           this.roomService.closeChat(this.chat.id, true).subscribe({
             next: () => {
               this.toasts.showToast({
@@ -174,6 +175,7 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
               });
               this.location.back();
               this.chat.estado = 'ENTREGADO';
+              this.roomService.reloadRooms();
             },
             error: () => {
               this.toasts.showToast({
@@ -193,6 +195,7 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
               });
               this.location.back();
               this.chat.estado = 'RECHAZADO';
+              this.roomService.reloadRooms();
             },
             error: () => {
               this.toasts.showToast({
@@ -204,7 +207,7 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
           });
         }
       },
-      reject: () => {},
+      reject: () => {}
     });
   }
 }

@@ -55,20 +55,27 @@ export class ChatList implements OnInit {
         return;
       }
 
-      if(this.logedUser.roles.some((role: any) => role.id === 3)){
-        this.canSeeMyRequestsChats = true;
-        this.defaultTab = '1';
-      }
       if(this.logedUser.roles.some((role: any) => role.id === 2)){
         this.canSeeMyProductsChats = true;        
       }
+
+      if(this.logedUser.roles.some((role: any) => role.id === 3)){
+        this.canSeeMyRequestsChats = true;
+        this.defaultTab = this.canSeeMyProductsChats ? '0' : '1';
+      }
+      
     });
+
     this.getRequesterRooms();
     this.getDonorRooms();
     this.router.events.subscribe(() => {
       this.currentRoute = this.router.url;
     });
     this.currentRoute = this.router.url;
+    this.roomService.reloadRooms$.subscribe(() => {
+      this.getRequesterRooms();
+      this.getDonorRooms();
+    });
   }
 
   getRequesterRooms() {
