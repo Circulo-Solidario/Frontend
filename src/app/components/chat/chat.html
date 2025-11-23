@@ -46,7 +46,7 @@
           </div>
           <div class="col-auto d-inline-grid justify-content-center align-content-between align-items-center p-2 gap-1">
             <p-button icon="pi pi-send" variant="outlined" raised="true" [rounded]="true" (click)="sendMessage()"
-              [disabled]="!message.trim()" />
+              [disabled]="!message.trim() || chat.estado != 'PENDIENTE'" />
             <p-button icon="pi pi-times" variant="outlined" severity="danger" raised="true" [rounded]="true"
               (click)="openCloseChatDialog()" 
               [disabled]="chat.estado != 'PENDIENTE'"/>
@@ -73,8 +73,8 @@
 
         <!-- Botones -->
         <div class="d-flex justify-content-center align-items-center gap-2 mt-4">
-          <p-button label="Entregado" fluid (click)="onAccept(true)"/>
-          <p-button label="Rechazado" fluid severity="warn" (click)="onAccept(false)"/>
+          <p-button label="Entregado" fluid (click)="delivered = true; onAccept()"/>
+          <p-button label="Rechazado" fluid severity="warn" (click)="delivered = false; onAccept()"/>
           <p-button label="Cancelar" fluid outlined="true"  (click)="onReject()"/>
         </div>
       </div>

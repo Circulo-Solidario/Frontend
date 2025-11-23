@@ -21,4 +21,8 @@ export class Dots {
   updateStateDot(id: any, state: any): Observable<any>{
     return this.httpClient.put(`${this.apiPath}/${id}/estado`, state);
   }
+
+  deleteDot(id: any): Observable<any>{
+    return this.httpClient.delete(`${this.apiPath}/${id}`);
+  }
 }

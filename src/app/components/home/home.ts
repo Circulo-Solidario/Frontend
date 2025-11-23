@@ -345,7 +345,6 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
         // Chats
         this.menu.push({...allMenuItems.chats});
         // Personas en situación de calle
-        this.menu.push({...allMenuItems.personasCalle});
         // Reportes
         this.menu.push({...allMenuItems.reportes});
         // Donaciones solo con Proyectos solidarios
@@ -376,9 +375,6 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
         // Agregar otros menús si no existen
         if (!this.menu.find(item => item.id === 'homeChats')) {
           this.menu.push({...allMenuItems.chats});
-        }
-        if (!this.menu.find(item => item.id === 'homeStreetPeople')) {
-          this.menu.push({...allMenuItems.personasCalle});
         }
         if (!this.menu.find(item => item.id === 'homeReports')) {
           this.menu.push({...allMenuItems.reportes});
@@ -412,6 +408,8 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
       this.menu = [
         allMenuItems.panelAdmin
       ];
+      allMenuItems.personasCalle.label = 'Supervisar puntos en el mapa';
+      this.menu.push(allMenuItems.personasCalle);
     }
   }
 
@@ -419,7 +417,11 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
     if (this.notificationsSubscription) {
       this.notificationsSubscription.unsubscribe();
     }
-    this.notificationService.disconnect();
+    try {
+      this.notificationService.disconnect();
+    } catch (e) {
+      // Ignorar errores de desconexión
+    }
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
     }

@@ -10,6 +10,15 @@ export class Rooms {
   private readonly httpClient: HttpClient = inject(HttpClient);
   private readonly apiPath = '/salas';
   private chatSubject = new BehaviorSubject<any>(null);
+  private reloadRoomsSubject = new BehaviorSubject<boolean>(false);
+
+  get reloadRooms$(): Observable<boolean>{
+    return this.reloadRoomsSubject.asObservable();
+  }
+
+  reloadRooms() {
+    this.reloadRoomsSubject.next(true);
+  }
 
   get chat$(): Observable<any>{
     return this.chatSubject.asObservable();

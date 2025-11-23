@@ -59,12 +59,12 @@
               class="tag"
               icon="pi pi-check"
               [severity]="getSeverity(proyectData?.estado)"
-              [value]="proyectData?.estado"
+              [value]="proyectData?.estado.replaceAll('_', ' ')"
               [rounded]="true"
             />
             <p-inputgroup>
-              <p-inputnumber class="mt-1" [min]="0" fluid [(ngModel)]="amount" inputId="currency-ars" mode="currency" currency="ARS" locale="es-AR" placeholder="$ 100,00"/>
-              <p-button label="Donar" [disabled]="amount <= 0" (onClick)="donate()" />
+              <p-inputnumber [disabled]="!'ACTIVO'.includes(proyectData?.estado)" class="mt-1" [min]="0" fluid [(ngModel)]="amount" inputId="currency-ars" mode="currency" currency="ARS" locale="es-AR" placeholder="$ 100,00"/>
+              <p-button label="Donar" [disabled]="amount <= 0 || !'ACTIVO'.includes(proyectData?.estado)" (onClick)="donate()" />
             </p-inputgroup>
           </div>
         </div>

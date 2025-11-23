@@ -43,6 +43,7 @@ export class CreateProyect implements OnInit {
   private imageService: Images = inject(Images);
   private toasts: Toasts = inject(Toasts);
   private router: Router = inject(Router);
+  today: Date = new Date();
   setUploading: boolean = false;
   proyectForm: FormGroup;
   imagen: File | null = null;

@@ -25,7 +25,7 @@ export class PermissionsService {
     '/principal/chats/mensajes': { userTypes: ['USUARIO'], roles: [this.DONANTE, this.DONATARIO] },
     
     // Personas en situación de calle
-    '/principal/mapa': { userTypes: ['USUARIO', 'ORGANIZACION'], roles: [this.DONANTE, this.DONATARIO, this.VOLUNTARIO_OBSERVADOR], orgAccess: true },
+    '/principal/mapa': { userTypes: ['USUARIO', 'ORGANIZACION', 'ADMINISTRADOR'], roles: [this.VOLUNTARIO_OBSERVADOR], orgAccess: true, adminAccess: true },
     
     // Proyectos solidarios - Usuarios
     '/principal/proyectos': { userTypes: ['USUARIO', 'ORGANIZACION'], roles: [this.DONANTE, this.DONATARIO, this.VOLUNTARIO_OBSERVADOR], orgAccess: true },
@@ -66,7 +66,9 @@ export class PermissionsService {
     if (!permission.userTypes.includes(user.tipoUsuario)) return false;
 
     // Si es organización y la ruta permite organizaciones, permitir acceso
-    if (user.tipo === 'ORGANIZACION' && permission.orgAccess) return true;
+    if (user.tipoUsuario === 'ORGANIZACION' && permission.orgAccess) return true;
+
+    if (user.tipoUsuario === 'ADMINISTRADOR' && permission.adminAccess) return true;
 
     // Si no requiere roles específicos (ej: rutas de organización), permitir acceso
     if (permission.roles.length === 0) return true;

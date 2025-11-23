@@ -63,7 +63,7 @@ export class RequestsList implements OnInit {
       }
       if(this.logedUser.roles.some((role: any) => role.id === 2)){
         this.canSeeRequestsOfMyProducts = true;
-        this.defaultTab = '1';
+        this.defaultTab =  this.canSeeMyRequests ? '0' : '1';
       }
 
       this.getMyRequests();

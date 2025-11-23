@@ -9,6 +9,7 @@
       <div class="map-controls-left">
         <p-menu #pickPointMenu [popup]="true" [model]="pickPointItems" [appendTo]="'body'"></p-menu>
         <div class="left-buttons-group">
+          @if(logedUser?.tipoUsuario != 'ADMINISTRADOR'){
           <p-button
             icon="pi pi-flag"
             [rounded]="true"
@@ -17,6 +18,7 @@
             title="Marcar un punto"
             (onClick)="openPickPointMenu($event)">
           </p-button>
+          }
           <p-button
             icon="pi pi-eye"
             [rounded]="true"
@@ -126,6 +128,36 @@
       icon="pi pi-check"
       (onClick)="confirmMarkAsAttended()"
       [loading]="isMarkingAsAttended">
+    </p-button>
+  </ng-template>
+</p-dialog>
+<p-dialog
+  [(visible)]="showDeletePointDialog"
+  [header]="'Confirmar eliminación'"
+  [modal]="true"
+  [closable]="false"
+  [draggable]="false"
+  styleClass="point-dialog"
+  [style]="{ width: '90%', maxWidth: '400px' }">
+  
+  <div class="dialog-content">
+    <p class="mb-0">¿Está seguro de que desea eliminar este punto?</p>
+  </div>
+
+  <ng-template #footer>
+    <p-button
+      label="Cancelar"
+      icon="pi pi-times"
+      (onClick)="cancelDeletePoint()"
+      [loading]="isDeletingPoint"
+      severity="secondary">
+    </p-button>
+    <p-button
+      label="Eliminar"
+      icon="pi pi-trash"
+      (onClick)="confirmDeletePoint()"
+      [loading]="isDeletingPoint"
+      severity="danger">
     </p-button>
   </ng-template>
 </p-dialog>
