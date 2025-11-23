@@ -1,6 +1,6 @@
 export const environment = {
     production: false,
-    apiUrl: 'http://localhost:8080/api',
+    apiUrl: 'https://backend-production-a303.up.railway.app/api',
     imageKey: '8401d442af01af004be358cc69325230',
     firebaseConfig: {
         apiKey: "AIzaSyDyEQrGpRzEHjjD3mLEeFjNND7m22RXeqE",
