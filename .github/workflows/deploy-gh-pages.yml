@@ -1,0 +1,57 @@
+name: Deploy Angular to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      # Optional: fail if package-lock.json missing (soft warning instead of hard fail)
+      - name: Verify lock file
+        run: |
+          if [ ! -f package-lock.json ]; then
+            echo "WARNING: package-lock.json missing; consider committing it for reproducible builds.";
+          fi
+
+      - name: Build (GitHub Pages)
+        run: npm run build:gh
+
+      - name: Create 404.html for SPA routing
+        run: |
+          find dist -name "index.html" -type f | while read file; do
+            dir=$(dirname "$file")
+            cp "$file" "$dir/404.html"
+          done
+
+      - name: Debug - List publish directory contents
+        run: ls -la dist/frontend/browser/
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
+          publish_dir: dist/frontend/browser
+          force_orphan: true
+          enable_jekyll: false

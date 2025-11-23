@@ -1,0 +1,367 @@
+/*#region Animaciones de rotación y logo*/
+@keyframes rotateFow {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(-360deg);
+    }
+}
+
+@keyframes rotateBack {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.rotate-fow {
+    animation: rotateFow 1s ease-in-out;
+}
+
+.rotate-back {
+    animation: rotateBack 1s ease-in-out;
+}
+
+#logo {
+    fill: var(--p-primary-color);
+}
+
+.home-button{
+    cursor: pointer;
+}
+
+/* Rotación del chevron */
+.rotate-0 {
+  transform: rotate(0deg);
+  transition: transform 0.3s ease;
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
+}
+
+/* #endregion */
+
+/*#region Toolbar*/
+.toolbar-center {
+    width: 45vw;
+}
+
+.toolbar-end {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.header-toolbar,
+.toolbar-end {
+  overflow: visible !important;
+}
+
+.notification-content{
+    max-height: 25vh;
+    overflow: auto;
+}
+/*#endregion*/
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.main-content {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+    height: calc(100vh - 55px);
+    background-color: var(--p-content-background);
+}
+
+.avatar{
+    cursor: pointer;
+}
+
+.components-content {
+    flex: 1;
+    overflow-y: auto;
+    height: 100%;
+}
+
+
+/*#region Sidebar desplegado*/
+.sidebar {
+    width: max-content;
+    padding: 1rem;
+    min-width: min-content;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: width 0.3s ease;
+    background: var(--p-content-background);
+    color: var(--p-content-color);
+    flex-shrink: 0;
+}
+
+.sidebar-menu-top {
+    flex: 0 0 auto;
+    overflow: visible !important;
+}
+
+.sidebar-footer-buttons {
+    flex: 0 0 auto;
+    margin-bottom: 1rem;
+}
+
+.sidebar-button{
+    display: flex;
+}
+
+.sidebar-text {
+    transition:
+        opacity 0.3s ease,
+        width 0.3s ease,
+        margin 0.3s ease,
+        display 0.3s ease;
+    white-space: nowrap;
+    overflow: hidden;
+}
+.sidebar:not(.collapsed) .sidebar-text {
+    opacity: 1;
+    padding-right: 6rem;
+    overflow: hidden;
+    transition:
+        opacity 0.3s ease 0.1s,
+        width 0.3s ease 0.1s;
+}
+/*#endregion*/
+
+/*#region Sidebar colapsada*/
+.sidebar.collapsed {
+    width: max-content;
+    padding: 1rem 0;
+    min-width: 40px;
+    color: transparent;
+    transition: width 0.3s ease;
+}
+
+.sidebar.collapsed .p-button {
+    transition: opacity 0.2s ease;
+}
+/*#endregion*/
+
+/*#region No tocar*/
+.components-content {
+    border-left: 1px solid var(--p-content-border-color);
+    border-top: 1px solid var(--p-content-border-color);
+    border-top-left-radius: 0.5rem;
+    background-color: var(--p-form-field-background);
+}
+
+::ng-deep .p-panelmenu-panel {
+    border-color: var(--p-content-background);
+}
+
+::ng-deep .sidebar p-tieredmenu{
+    display: flex;
+    width: min-content;
+}
+
+::ng-deep .sidebar p-tieredmenusub{
+    display: flex;
+}
+
+::ng-deep .sidebar .p-tieredmenu {
+    border-color: var(--p-content-background);
+    min-width: max-content;
+}
+
+::ng-deep .sidebar .ng-trigger{
+    display: flex;
+}
+
+::ng-deep .header-toolbar .ng-trigger{
+    display: flex;
+}
+
+::ng-deep .header-toolbar .p-menu-start{
+    padding: .75rem;
+}
+
+::ng-deep .sidebar .p-tieredmenu-root-list{
+    gap: 1rem;
+    max-width: max-content;
+}
+
+::ng-deep p-toolbar.header-toolbar {
+    border-radius: 0;
+    border-color: var(--p-content-background);
+}
+
+::ng-deep .sidebar-button p-button{
+    width: 100%;
+    padding-right: 0;
+}
+
+::ng-deep .sidebar:not(.collapsed) .sidebar-button p-button{
+    width: 100%;
+    min-width: max-content;
+}
+
+::ng-deep .header-toolbar .p-menu-overlay{
+    display: block;
+    justify-content: center;
+    min-width: max-content;
+}
+
+::ng-deep .header-toolbar .p-ripple.p-button {
+    padding: 0 !important;
+    background-color: transparent;
+    border: 0;
+    color: var(--p-text-color);
+}
+
+::ng-deep .sidebar .p-ripple.p-button {
+    padding: 0 !important;
+    background-color: transparent;
+    border: 0;
+    color: var(--p-text-color);
+}
+
+::ng-deep .p-drawer-footer .p-ripple.p-button {
+    padding: 0 !important;
+    background-color: transparent;
+    border: 0;
+    color: var(--p-text-color);
+}
+
+::ng-deep .p-popover {
+  position: fixed !important;
+  z-index: 2000 !important;
+}
+
+::ng-deep .p-tieredmenu-submenu{
+    z-index: 2000 !important;
+}
+
+@media (max-width: 575px) {
+    .components-content {
+        border-left: 0px solid var(--p-content-border-color);
+        border-top: 1px solid var(--p-content-border-color);
+        border-top-left-radius: 0;
+        background-color: var(--p-form-field-background);
+    }
+    .toolbar-end{
+        display: none !important;
+    }
+}
+
+.terms-content{
+    max-height: 60vh;
+    overflow: auto;
+    padding: 1rem;
+}
+
+.faq-item .faq-header {
+    background: var(--p-content-background);
+    border: 1px solid var(--p-content-border-color);
+    border-radius: 6px;
+}
+
+.faq-answer {
+    background: var(--p-form-field-background);
+    border-radius: 6px;
+    margin-top: .5rem;
+}
+
+/* Clases para rotación del chevron */
+.rotate-90 {
+    transform: rotate(90deg);
+}
+
+.rotate-0 {
+    transform: rotate(0deg);
+}
+
+.rotate-180 {
+    transform: rotate(180deg);
+}
+
+/* Groups and stats cards styling */
+.groups-container {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.group-card {
+    background: var(--p-form-field-background);
+    border: 1px solid var(--p-content-border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.group-card h4 {
+    margin: 0 0 .5rem 0;
+    font-size: 1.05rem;
+}
+
+.stats-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+/* Remove individual item cards; items are shown as rows inside the group */
+.stat-card {
+    background: transparent;
+    padding: 0.25rem 0;
+    min-width: 220px;
+    max-width: 420px;
+    border-radius: 0;
+    border: none;
+    box-shadow: none;
+}
+
+.stat-card h5 {
+    margin: 0;
+    font-size: 0.95rem;
+}
+
+.stat-card h2 {
+    font-size: 1.2rem;
+    margin: 0;
+}
+
+.group-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.group-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+}
+
+.group-item:last-child { border-bottom: none; }
+
+.group-item-label h5 { font-weight: 600; font-size: 0.95rem; margin: 0; }
+.group-item-value h2 { font-size: 1.25rem; margin: 0; }
+
+@media (max-width: 767px) {
+    .stat-card { min-width: 140px; flex: 1 1 45%; }
+    .group-card { padding: .75rem; }
+}

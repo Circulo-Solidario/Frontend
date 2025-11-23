@@ -1,0 +1,644 @@
+<div class="main-container">
+  <p-toolbar class="header-toolbar">
+    <ng-template #start>
+      <p-button (click)="toggleSidebar()" styleClass="p-button-text d-none d-sm-block p-0 ms-3">
+        <svg
+          id="logo"
+          class="d-none d-sm-block"
+          version="1.0"
+          xmlns="http://www.w3.org/2000/svg"
+          width="30"
+          height="30"
+          viewBox="0 0 201.000000 219.000000"
+          preserveAspectRatio="xMidYMid meet"
+          [class.rotate-fow]="rotate && isCollapsed"
+          [class.rotate-back]="rotate && !isCollapsed"
+        >
+          <metadata>Created by potrace 1.16, written by Peter Selinger 2001-2019</metadata>
+          <g transform="translate(0.000000,219.000000) scale(0.100000,-0.100000)" stroke="none">
+            <path
+              d="M950 2160 c-11 -11 -20 -29 -20 -40 0 -15 -7 -20 -29 -20 -43 0 -71
+            -28 -78 -78 -5 -36 -9 -42 -30 -42 -13 0 -35 -11 -48 -25 -24 -24 -25 -28 -25
+            -185 0 -88 -2 -160 -5 -160 -3 0 -44 23 -92 50 -102 59 -132 62 -165 20 l-23
+            -29 -75 44 c-84 49 -129 56 -160 25 -11 -11 -20 -24 -20 -28 0 -4 -16 -8 -36
+            -8 -66 0 -95 -65 -53 -118 16 -20 19 -30 10 -39 -23 -23 -13 -74 20 -101 17
+            -14 34 -26 39 -26 5 0 2 -12 -6 -27 -32 -63 -16 -82 153 -178 68 -38 123 -71
+            123 -74 0 -4 -40 -30 -89 -58 -100 -59 -121 -89 -95 -138 8 -16 13 -29 12 -30
+            -2 -1 -34 -19 -72 -40 -39 -22 -78 -47 -88 -57 -20 -20 -24 -78 -7 -95 8 -8 7
+            -17 -5 -34 -23 -33 -20 -66 10 -96 19 -19 32 -24 57 -20 25 3 37 -1 58 -24 31
+            -34 62 -36 105 -10 l32 19 11 -24 c9 -21 46 -44 69 -44 4 0 70 36 147 80 l140
+            80 5 -110 c6 -124 18 -150 70 -150 l30 0 0 -94 c0 -108 16 -141 75 -152 19 -3
+            35 -12 35 -20 0 -19 40 -44 70 -44 36 0 70 27 70 56 0 21 5 24 34 24 43 0 76
+            38 76 86 0 29 3 34 24 34 13 0 35 9 50 21 l26 20 0 165 c0 90 2 164 4 164 3 0
+            42 -22 88 -50 105 -63 143 -66 179 -13 l15 22 74 -44 c84 -49 129 -56 160 -25
+            11 11 20 24 20 28 0 5 13 7 29 4 22 -3 36 2 55 21 32 32 33 65 5 101 -16 20
+            -19 30 -10 39 6 6 11 26 11 44 0 27 -7 38 -39 61 -35 25 -37 30 -25 47 21 28
+            17 63 -8 88 -13 12 -78 54 -145 92 -68 38 -123 71 -123 74 0 3 40 29 88 56
+            101 58 122 87 99 135 -17 34 -21 31 79 88 40 23 74 49 78 58 9 25 7 69 -4 80
+            -8 8 -6 20 6 40 23 41 12 79 -28 100 -23 12 -36 13 -53 6 -19 -9 -24 -7 -34
+            14 -18 40 -58 49 -108 25 -34 -16 -43 -18 -43 -7 0 18 -47 56 -69 56 -9 0 -78
+            -36 -154 -80 -76 -44 -140 -80 -143 -80 -2 0 -4 50 -4 110 0 124 -12 150 -70
+            150 l-30 0 0 94 c0 79 -3 97 -21 120 -15 19 -30 26 -55 26 -24 0 -34 5 -34 15
+            0 25 -38 55 -70 55 -17 0 -39 -9 -50 -20z m68 -32 c9 -9 12 -79 12 -255 0
+            -236 1 -243 20 -243 19 0 20 7 20 209 0 172 3 211 15 221 8 7 22 10 30 6 13
+            -5 15 -40 15 -246 l0 -240 25 0 25 0 0 119 c0 101 3 120 16 125 35 14 44 -12
+            44 -129 l0 -112 -49 -30 c-78 -49 -131 -141 -131 -229 0 -39 -2 -43 -30 -49
+            -17 -4 -43 -4 -59 0 -27 6 -29 10 -33 63 -5 69 -40 143 -88 185 -34 30 -35 30
+            -38 9 -2 -13 9 -38 27 -61 45 -56 80 -171 53 -171 -20 0 -83 65 -104 107 -22
+            45 -23 62 -26 261 -2 118 -1 225 2 238 5 17 13 24 31 24 l25 0 0 -150 0 -150
+            25 0 25 0 0 209 c0 184 2 210 16 215 40 15 44 -7 44 -220 0 -197 1 -204 20
+            -204 19 0 20 7 20 243 0 233 4 267 30 267 3 0 11 -5 18 -12z m588 -423 c9 -23
+            -6 -36 -130 -105 -64 -36 -116 -70 -116 -75 -1 -39 28 -29 191 66 93 55 178
+            99 188 99 24 0 36 -30 19 -46 -7 -6 -83 -51 -168 -100 -182 -103 -188 -107
+            -171 -128 10 -12 42 3 219 105 114 65 214 119 223 119 22 0 31 -24 16 -43 -7
+            -8 -46 -34 -87 -57 -188 -107 -330 -193 -330 -199 0 -4 5 -12 11 -18 8 -8 63
+            19 195 94 180 104 214 115 214 75 0 -14 -52 -49 -205 -137 -113 -65 -205 -123
+            -205 -131 0 -29 26 -23 121 31 100 57 129 63 129 26 0 -13 -28 -35 -97 -76
+            -92 -53 -100 -56 -128 -45 -85 34 -105 39 -160 39 -44 1 -75 -6 -115 -25 l-54
+            -25 -18 23 c-9 13 -22 35 -27 49 -8 24 -5 29 34 57 69 48 125 140 125 204 0
+            35 -42 -2 -58 -52 -14 -42 -90 -130 -112 -130 -33 0 10 126 60 175 43 42 383
+            244 413 244 10 1 20 -6 23 -14z m-1144 -121 c110 -63 207 -113 214 -110 30 12
+            9 33 -84 86 -72 41 -98 61 -100 78 -6 39 22 34 126 -25 l102 -57 0 -41 c0 -75
+            27 -142 78 -194 26 -26 58 -54 71 -62 l25 -16 -28 -47 c-15 -26 -31 -46 -34
+            -44 -54 29 -99 42 -154 46 -66 4 -138 -11 -138 -29 0 -11 5 -12 110 -13 79 -2
+            140 -18 140 -37 0 -19 -92 -42 -148 -37 -50 5 -81 19 -255 119 -166 94 -197
+            116 -195 133 2 12 11 22 20 24 9 2 70 -28 135 -67 106 -62 119 -68 131 -53 6
+            9 9 19 5 23 -5 4 -84 52 -178 106 -94 55 -171 106 -173 115 -2 9 5 21 15 26
+            14 8 55 -12 193 -93 152 -89 177 -101 187 -87 7 8 10 18 8 22 -2 4 -97 60
+            -210 125 -176 101 -205 121 -205 141 0 16 6 24 18 24 9 0 111 -54 227 -120
+            169 -96 211 -117 218 -105 4 9 5 19 2 25 -3 5 -82 52 -175 106 -93 53 -174
+            102 -181 110 -9 11 -9 18 1 29 7 8 17 15 22 15 5 0 99 -52 210 -116z m618
+            -380 c6 -15 20 -40 31 -55 l20 -29 -21 -30 c-11 -16 -25 -42 -30 -57 -10 -27
+            -13 -28 -80 -28 -67 0 -70 1 -80 28 -5 15 -18 41 -29 56 l-21 29 33 55 32 56
+            68 1 c64 0 68 -1 77 -26z m331 -56 c42 -14 391 -216 401 -231 10 -17 -2 -37
+            -23 -37 -11 0 -71 30 -135 66 -93 54 -117 64 -129 54 -8 -7 -12 -16 -10 -21 3
+            -4 82 -52 176 -105 94 -54 173 -104 176 -112 3 -7 -1 -20 -10 -29 -14 -14 -32
+            -5 -190 86 -97 55 -180 101 -185 101 -6 0 -12 -7 -16 -15 -6 -17 -18 -9 224
+            -150 102 -59 188 -112 192 -118 10 -16 -2 -37 -23 -37 -10 0 -112 54 -226 120
+            -201 116 -208 120 -218 98 -6 -14 -6 -23 0 -25 42 -15 360 -211 360 -222 0 -8
+            -7 -18 -16 -24 -13 -8 -58 14 -217 106 -111 64 -205 117 -210 117 -9 0 -26
+            -30 -20 -35 2 -1 47 -28 101 -59 71 -42 97 -63 97 -77 0 -37 -28 -31 -128 27
+            l-100 58 -5 63 c-7 94 -56 176 -134 224 -28 18 -31 23 -22 47 5 15 18 37 29
+            50 l18 22 34 -20 c53 -31 133 -43 196 -28 94 21 77 52 -23 42 -57 -6 -123 5
+            -155 25 -18 12 -11 19 37 36 48 18 110 19 154 3z m-887 -77 c77 -46 196 -47
+            273 -1 19 11 36 20 38 20 6 0 42 -64 49 -86 5 -17 0 -24 -24 -34 -57 -24 -121
+            -115 -135 -193 -7 -37 -7 -37 17 -27 17 8 28 25 36 56 12 44 88 134 113 134
+            19 0 2 -88 -26 -136 -30 -51 -57 -70 -269 -193 -160 -92 -201 -106 -201 -66 0
+            15 31 37 122 90 67 38 122 76 123 83 1 32 -40 17 -194 -72 -91 -53 -175 -96
+            -186 -96 -14 0 -20 7 -20 23 0 19 29 39 175 122 96 55 174 106 175 113 1 32
+            -42 15 -228 -92 -111 -64 -210 -116 -222 -116 -14 0 -20 6 -20 23 0 18 34 42
+            207 142 114 66 209 126 211 132 11 36 -40 16 -202 -76 -96 -56 -182 -101 -191
+            -101 -26 0 -31 31 -7 50 12 10 105 66 207 125 102 59 185 113 185 120 0 30
+            -24 24 -116 -30 -97 -58 -129 -65 -129 -30 0 14 26 36 95 77 52 32 99 58 104
+            58 5 0 23 -8 40 -19z m517 -111 c16 0 19 -7 19 -43 0 -69 28 -134 78 -186 43
+            -43 46 -44 50 -23 2 14 -8 37 -27 61 -47 59 -80 171 -51 171 20 0 80 -63 102
+            -108 22 -44 23 -60 26 -278 3 -199 1 -232 -12 -243 -9 -7 -23 -11 -31 -7 -12
+            4 -15 31 -15 156 0 151 0 151 -22 148 -23 -3 -23 -4 -26 -211 -2 -181 -5 -209
+            -19 -214 -36 -14 -43 21 -43 229 0 191 -1 198 -20 198 -19 0 -20 -7 -20 -249
+            0 -221 -2 -250 -16 -255 -41 -16 -44 5 -44 260 0 237 -1 244 -20 244 -19 0
+            -20 -7 -20 -209 0 -172 -3 -211 -15 -221 -8 -7 -22 -10 -30 -6 -13 5 -15 40
+            -15 246 l0 240 -25 0 -25 0 0 -120 c0 -98 -3 -122 -15 -126 -35 -14 -45 14
+            -45 130 l0 111 49 32 c85 55 130 133 131 225 0 43 2 47 28 51 15 2 33 2 40 0
+            8 -1 22 -3 33 -3z"
+            />
+          </g>
+        </svg>
+      </p-button>
+      <p-button (click)="visible = true" styleClass="p-button-text d-sm-none">
+        <i class="pi pi-bars"></i>
+      </p-button>
+      <span class="ms-2 fs-5 d-none d-sm-block home-button" (click)="goHome()">
+        Círculo solidario
+      </span>
+    </ng-template>
+    <ng-template #center>
+      @if(canSearchProducts){
+      <div class="toolbar-center">
+        <p-iconfield>
+          <p-inputicon class="pi pi-search" />
+          <input
+            [(ngModel)]="productName"
+            type="text"
+            pInputText
+            placeholder="Busca los productos que necesites..."
+            fluid
+            (keypress)="searchProduct($event)"
+          />
+        </p-iconfield>
+      </div>
+      }
+    </ng-template>
+    <ng-template #end>
+      <div class="d-flex" style="align-items: center">
+        @if(loggedUser?.tipoUsuario !== 'ADMINISTRADOR'){
+        <div class="position-relative me-4">
+          @if(unreadCount > 0){
+          <p-overlaybadge [value]="unreadCount">
+            <p-button (click)="popover.toggle($event)">
+              <i class="pi pi-bell" style="font-size: 1.5rem"></i>
+            </p-button>
+          </p-overlaybadge>
+          }@else {
+          <p-button (click)="popover.toggle($event)">
+            <i class="pi pi-bell" style="font-size: 1.5rem"></i>
+          </p-button>
+          }
+        </div>
+        <p-popover #popover>
+          <ng-template #content>
+            <div class="d-flex justify-content-between align-items-center m-0 p-2">
+              <h4 class="m-0">Notificaciones</h4>
+              @if(unreadCount > 0){
+              <p-button label="Leer todas" variant="text" (click)="markAllAsRead()" size="small" />
+              }
+            </div>
+            <hr style="border: none; border-top: 0.1px solid var(--p-primary-color)" />
+            <div class="notification-content" [class.pe-3]="hasOverflow" #notificationContent>
+              @if(notifications.length > 0){ @for (notification of notifications; track $index) {
+              <div
+                class="dropdown-item d-flex align-items-start p-2"
+                (click)="markAsRead(notification)"
+                style="cursor: pointer"
+              >
+                <div class="flex-grow-1">
+                  @if(!notification.fechaVistaNotificacion){
+                  <div class="d-flex justify-content-between align-items-start mb-1">
+                    <small style="color: var(--p-primary-color)">Nueva!</small>
+                  </div>
+                  }
+                  <p class="mb-1 mt-0 small">{{ notification.mensaje }}</p>
+                  <div class="d-flex justify-content-between align-items-start">
+                    <small style="color: var(--color-text-muted)">{{
+                      notification.fechaNotificacion | date : 'dd MMM yy - HH:mm'
+                    }}</small>
+                  </div>
+                </div>
+              </div>
+              } }@else {
+              <p class="m-0">No tiene notificaciones</p>
+              }
+            </div>
+          </ng-template>
+        </p-popover>
+        } <!-- Cierre del @if de ADMINISTRADOR en notificaciones -->
+        <div class="toolbar-end d-none d-sm-block">
+          <p-avatar
+            (click)="menu.toggle($event)"
+            [icon]="loggedUser?.urlImagen ? '' : 'pi pi-user'"
+            [image]="loggedUser?.urlImagen ? loggedUser.urlImagen : ''"
+            class="ms-2 me-4 avatar"
+            shape="circle"
+            [size]="loggedUser?.urlImagen ? 'normal' : 'large'"
+          />
+          <p-menu #menu [model]="userMenu" [popup]="true">
+            <ng-template #start styleClass="p-2">
+              <div class="row align-items-center me-1">
+                <div class="col-auto">
+                  <p-avatar
+                    [icon]="loggedUser?.urlImagen ? '' : 'pi pi-user'"
+                    [image]="loggedUser?.urlImagen ? loggedUser.urlImagen : ''"
+                    shape="circle"
+                    [size]="loggedUser?.urlImagen ? 'large' : 'xlarge'"
+                  />
+                </div>
+                <div class="col-auto p-0">
+                  <div class="row-cols-auto">
+                    <span class="fs-5 p-0">{{ loggedUser?.alias }}</span>
+                  </div>
+                  <div class="row-cols-auto mt-1">
+                    @if(loggedUser?.roles?.length > 0){ @for (rol of loggedUser.roles; track $index)
+                    {
+                    <p-badge
+                      class="text-capitalize mx-1"
+                      [value]="rol.nombre.toLowerCase()"
+                      severity="secondary"
+                      badgesize="small"
+                    />
+                    } } @else {
+                    <p-badge value="Organización benéfica" severity="secondary" badgesize="small" />
+                    }
+                  </div>
+                </div>
+              </div>
+            </ng-template>
+          </p-menu>
+          <div>
+            <app-theme-switcher />
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </p-toolbar>
+  <p-drawer [(visible)]="visible" [closable]="false" (onHide)="visible = false">
+    <ng-template #header>
+      <div class="gap-2 d-flex" style="align-items: center">
+        <svg
+          id="logo"
+          version="1.0"
+          xmlns="http://www.w3.org/2000/svg"
+          width="30"
+          height="30"
+          viewBox="0 0 201.000000 219.000000"
+          preserveAspectRatio="xMidYMid meet"
+          [class.rotate-fow]="rotate && isCollapsed"
+          [class.rotate-back]="rotate && !isCollapsed"
+        >
+          <metadata>Created by potrace 1.16, written by Peter Selinger 2001-2019</metadata>
+          <g transform="translate(0.000000,219.000000) scale(0.100000,-0.100000)" stroke="none">
+            <path
+              d="M950 2160 c-11 -11 -20 -29 -20 -40 0 -15 -7 -20 -29 -20 -43 0 -71
+            -28 -78 -78 -5 -36 -9 -42 -30 -42 -13 0 -35 -11 -48 -25 -24 -24 -25 -28 -25
+            -185 0 -88 -2 -160 -5 -160 -3 0 -44 23 -92 50 -102 59 -132 62 -165 20 l-23
+            -29 -75 44 c-84 49 -129 56 -160 25 -11 -11 -20 -24 -20 -28 0 -4 -16 -8 -36
+            -8 -66 0 -95 -65 -53 -118 16 -20 19 -30 10 -39 -23 -23 -13 -74 20 -101 17
+            -14 34 -26 39 -26 5 0 2 -12 -6 -27 -32 -63 -16 -82 153 -178 68 -38 123 -71
+            123 -74 0 -4 -40 -30 -89 -58 -100 -59 -121 -89 -95 -138 8 -16 13 -29 12 -30
+            -2 -1 -34 -19 -72 -40 -39 -22 -78 -47 -88 -57 -20 -20 -24 -78 -7 -95 8 -8 7
+            -17 -5 -34 -23 -33 -20 -66 10 -96 19 -19 32 -24 57 -20 25 3 37 -1 58 -24 31
+            -34 62 -36 105 -10 l32 19 11 -24 c9 -21 46 -44 69 -44 4 0 70 36 147 80 l140
+            80 5 -110 c6 -124 18 -150 70 -150 l30 0 0 -94 c0 -108 16 -141 75 -152 19 -3
+            35 -12 35 -20 0 -19 40 -44 70 -44 36 0 70 27 70 56 0 21 5 24 34 24 43 0 76
+            38 76 86 0 29 3 34 24 34 13 0 35 9 50 21 l26 20 0 165 c0 90 2 164 4 164 3 0
+            42 -22 88 -50 105 -63 143 -66 179 -13 l15 22 74 -44 c84 -49 129 -56 160 -25
+            11 11 20 24 20 28 0 5 13 7 29 4 22 -3 36 2 55 21 32 32 33 65 5 101 -16 20
+            -19 30 -10 39 6 6 11 26 11 44 0 27 -7 38 -39 61 -35 25 -37 30 -25 47 21 28
+            17 63 -8 88 -13 12 -78 54 -145 92 -68 38 -123 71 -123 74 0 3 40 29 88 56
+            101 58 122 87 99 135 -17 34 -21 31 79 88 40 23 74 49 78 58 9 25 7 69 -4 80
+            -8 8 -6 20 6 40 23 41 12 79 -28 100 -23 12 -36 13 -53 6 -19 -9 -24 -7 -34
+            14 -18 40 -58 49 -108 25 -34 -16 -43 -18 -43 -7 0 18 -47 56 -69 56 -9 0 -78
+            -36 -154 -80 -76 -44 -140 -80 -143 -80 -2 0 -4 50 -4 110 0 124 -12 150 -70
+            150 l-30 0 0 94 c0 79 -3 97 -21 120 -15 19 -30 26 -55 26 -24 0 -34 5 -34 15
+            0 25 -38 55 -70 55 -17 0 -39 -9 -50 -20z m68 -32 c9 -9 12 -79 12 -255 0
+            -236 1 -243 20 -243 19 0 20 7 20 209 0 172 3 211 15 221 8 7 22 10 30 6 13
+            -5 15 -40 15 -246 l0 -240 25 0 25 0 0 119 c0 101 3 120 16 125 35 14 44 -12
+            44 -129 l0 -112 -49 -30 c-78 -49 -131 -141 -131 -229 0 -39 -2 -43 -30 -49
+            -17 -4 -43 -4 -59 0 -27 6 -29 10 -33 63 -5 69 -40 143 -88 185 -34 30 -35 30
+            -38 9 -2 -13 9 -38 27 -61 45 -56 80 -171 53 -171 -20 0 -83 65 -104 107 -22
+            45 -23 62 -26 261 -2 118 -1 225 2 238 5 17 13 24 31 24 l25 0 0 -150 0 -150
+            25 0 25 0 0 209 c0 184 2 210 16 215 40 15 44 -7 44 -220 0 -197 1 -204 20
+            -204 19 0 20 7 20 243 0 233 4 267 30 267 3 0 11 -5 18 -12z m588 -423 c9 -23
+            -6 -36 -130 -105 -64 -36 -116 -70 -116 -75 -1 -39 28 -29 191 66 93 55 178
+            99 188 99 24 0 36 -30 19 -46 -7 -6 -83 -51 -168 -100 -182 -103 -188 -107
+            -171 -128 10 -12 42 3 219 105 114 65 214 119 223 119 22 0 31 -24 16 -43 -7
+            -8 -46 -34 -87 -57 -188 -107 -330 -193 -330 -199 0 -4 5 -12 11 -18 8 -8 63
+            19 195 94 180 104 214 115 214 75 0 -14 -52 -49 -205 -137 -113 -65 -205 -123
+            -205 -131 0 -29 26 -23 121 31 100 57 129 63 129 26 0 -13 -28 -35 -97 -76
+            -92 -53 -100 -56 -128 -45 -85 34 -105 39 -160 39 -44 1 -75 -6 -115 -25 l-54
+            -25 -18 23 c-9 13 -22 35 -27 49 -8 24 -5 29 34 57 69 48 125 140 125 204 0
+            35 -42 -2 -58 -52 -14 -42 -90 -130 -112 -130 -33 0 10 126 60 175 43 42 383
+            244 413 244 10 1 20 -6 23 -14z m-1144 -121 c110 -63 207 -113 214 -110 30 12
+            9 33 -84 86 -72 41 -98 61 -100 78 -6 39 22 34 126 -25 l102 -57 0 -41 c0 -75
+            27 -142 78 -194 26 -26 58 -54 71 -62 l25 -16 -28 -47 c-15 -26 -31 -46 -34
+            -44 -54 29 -99 42 -154 46 -66 4 -138 -11 -138 -29 0 -11 5 -12 110 -13 79 -2
+            140 -18 140 -37 0 -19 -92 -42 -148 -37 -50 5 -81 19 -255 119 -166 94 -197
+            116 -195 133 2 12 11 22 20 24 9 2 70 -28 135 -67 106 -62 119 -68 131 -53 6
+            9 9 19 5 23 -5 4 -84 52 -178 106 -94 55 -171 106 -173 115 -2 9 5 21 15 26
+            14 8 55 -12 193 -93 152 -89 177 -101 187 -87 7 8 10 18 8 22 -2 4 -97 60
+            -210 125 -176 101 -205 121 -205 141 0 16 6 24 18 24 9 0 111 -54 227 -120
+            169 -96 211 -117 218 -105 4 9 5 19 2 25 -3 5 -82 52 -175 106 -93 53 -174
+            102 -181 110 -9 11 -9 18 1 29 7 8 17 15 22 15 5 0 99 -52 210 -116z m618
+            -380 c6 -15 20 -40 31 -55 l20 -29 -21 -30 c-11 -16 -25 -42 -30 -57 -10 -27
+            -13 -28 -80 -28 -67 0 -70 1 -80 28 -5 15 -18 41 -29 56 l-21 29 33 55 32 56
+            68 1 c64 0 68 -1 77 -26z m331 -56 c42 -14 391 -216 401 -231 10 -17 -2 -37
+            -23 -37 -11 0 -71 30 -135 66 -93 54 -117 64 -129 54 -8 -7 -12 -16 -10 -21 3
+            -4 82 -52 176 -105 94 -54 173 -104 176 -112 3 -7 -1 -20 -10 -29 -14 -14 -32
+            -5 -190 86 -97 55 -180 101 -185 101 -6 0 -12 -7 -16 -15 -6 -17 -18 -9 224
+            -150 102 -59 188 -112 192 -118 10 -16 -2 -37 -23 -37 -10 0 -112 54 -226 120
+            -201 116 -208 120 -218 98 -6 -14 -6 -23 0 -25 42 -15 360 -211 360 -222 0 -8
+            -7 -18 -16 -24 -13 -8 -58 14 -217 106 -111 64 -205 117 -210 117 -9 0 -26
+            -30 -20 -35 2 -1 47 -28 101 -59 71 -42 97 -63 97 -77 0 -37 -28 -31 -128 27
+            l-100 58 -5 63 c-7 94 -56 176 -134 224 -28 18 -31 23 -22 47 5 15 18 37 29
+            50 l18 22 34 -20 c53 -31 133 -43 196 -28 94 21 77 52 -23 42 -57 -6 -123 5
+            -155 25 -18 12 -11 19 37 36 48 18 110 19 154 3z m-887 -77 c77 -46 196 -47
+            273 -1 19 11 36 20 38 20 6 0 42 -64 49 -86 5 -17 0 -24 -24 -34 -57 -24 -121
+            -115 -135 -193 -7 -37 -7 -37 17 -27 17 8 28 25 36 56 12 44 88 134 113 134
+            19 0 2 -88 -26 -136 -30 -51 -57 -70 -269 -193 -160 -92 -201 -106 -201 -66 0
+            15 31 37 122 90 67 38 122 76 123 83 1 32 -40 17 -194 -72 -91 -53 -175 -96
+            -186 -96 -14 0 -20 7 -20 23 0 19 29 39 175 122 96 55 174 106 175 113 1 32
+            -42 15 -228 -92 -111 -64 -210 -116 -222 -116 -14 0 -20 6 -20 23 0 18 34 42
+            207 142 114 66 209 126 211 132 11 36 -40 16 -202 -76 -96 -56 -182 -101 -191
+            -101 -26 0 -31 31 -7 50 12 10 105 66 207 125 102 59 185 113 185 120 0 30
+            -24 24 -116 -30 -97 -58 -129 -65 -129 -30 0 14 26 36 95 77 52 32 99 58 104
+            58 5 0 23 -8 40 -19z m517 -111 c16 0 19 -7 19 -43 0 -69 28 -134 78 -186 43
+            -43 46 -44 50 -23 2 14 -8 37 -27 61 -47 59 -80 171 -51 171 20 0 80 -63 102
+            -108 22 -44 23 -60 26 -278 3 -199 1 -232 -12 -243 -9 -7 -23 -11 -31 -7 -12
+            4 -15 31 -15 156 0 151 0 151 -22 148 -23 -3 -23 -4 -26 -211 -2 -181 -5 -209
+            -19 -214 -36 -14 -43 21 -43 229 0 191 -1 198 -20 198 -19 0 -20 -7 -20 -249
+            0 -221 -2 -250 -16 -255 -41 -16 -44 5 -44 260 0 237 -1 244 -20 244 -19 0
+            -20 -7 -20 -209 0 -172 -3 -211 -15 -221 -8 -7 -22 -10 -30 -6 -13 5 -15 40
+            -15 246 l0 240 -25 0 -25 0 0 -120 c0 -98 -3 -122 -15 -126 -35 -14 -45 14
+            -45 130 l0 111 49 32 c85 55 130 133 131 225 0 43 2 47 28 51 15 2 33 2 40 0
+            8 -1 22 -3 33 -3z"
+            />
+          </g>
+        </svg>
+        <p class="ms-2 my-0 fs-4" (click)="goHome()">Círculo solidario</p>
+        <div class="ms-2">
+          <app-theme-switcher />
+        </div>
+      </div>
+    </ng-template>
+    <p-panelmenu [model]="menu" class="gap-2 d-flex justify-content-end">
+      <ng-template #item let-item>
+        <div class="py-2 sidebar-button flex items-center">
+          <a class="items-center">
+            <i [class]="item.icon + ' text-inherit'" style="font-size: 1.2rem"></i>
+            <span class="ms-2 sidebar-text">
+              {{ item.label }}
+            </span>
+          </a>
+        </div>
+      </ng-template>
+    </p-panelmenu>
+    <ng-template #footer>
+      <div class="d-flex justify-content-center gap-5" style="align-items: center">
+        <p-button [label]="loggedUser?.alias" (onClick)="goEditProfile()" fluid>
+          <p-avatar
+            [icon]="loggedUser?.urlImagen ? '' : 'pi pi-user fs-6'"
+            [image]="loggedUser?.urlImagen ? loggedUser.urlImagen : ''"
+            class="avatar"
+            shape="circle"
+          />
+        </p-button>
+        <p-button label="Cerrar sesión" (click)="logOut()" icon="pi pi-sign-out" fluid />
+        <p-button
+          label="Términos y condiciones"
+          (click)="openTerms()"
+          icon="pi pi-file"
+          variant="text"
+        />
+        <p-button
+          label="Preguntas frecuentes"
+          (click)="toggleFaqs()"
+          icon="pi pi-question"
+          variant="text"
+        />
+      </div>
+    </ng-template>
+  </p-drawer>
+  <div class="main-content" [class.expanded]="isCollapsed">
+    <div
+      class="sidebar d-none d-sm-inline-flex justify-content-between"
+      [class.collapsed]="isCollapsed"
+      [class.fully-collapsed]="fullyCollapsed"
+    >
+      <div class="sidebar-menu-top">
+        <p-tieredmenu
+          #tieredMenu
+          [model]="menu"
+          [autoDisplay]="false"
+          (onHide)="onTieredMenuHide()"
+        >
+          <ng-template #item let-item>
+            <div class="sidebar-button">
+              <p-button
+                fluid
+                [styleClass]="
+                  fullyCollapsed ? 'justify-content-start' : 'justify-content-start w-100'
+                "
+                (click)="toggleMenuItem(item)"
+              >
+                <i [class]="item.icon + ' text-inherit m-3'" style="font-size: 1.4rem"></i>
+                @if(!item.id?.includes('home') || (item.id?.includes('home') && !isCollapsed)){
+                <span class="pe-4 sidebar-text text-start align-middle">
+                  {{ item.label }}
+                </span>
+                @if(item.items){
+                <i
+                  class="pi pi-chevron-right ms-auto me-3"
+                  [ngClass]="{ 'rotate-180': item.expanded, 'rotate-0': !item.expanded }"
+                  style="transition: transform 0.3s ease"
+                >
+                </i>
+                } }
+              </p-button>
+            </div>
+          </ng-template>
+        </p-tieredmenu>
+      </div>
+
+      <div
+        class="sidebar-footer-buttons d-inline-grid"
+        [class.justify-content-center]="isCollapsed"
+      >
+        <div class="sidebar-button">
+          <p-button
+            fluid
+            (click)="openTerms()"
+            [styleClass]="fullyCollapsed ? 'justify-content-start' : 'justify-content-start'"
+          >
+            <i class="pi pi-file text-inherit m-3" style="font-size: 1.4rem"></i>
+            @if(!isCollapsed){
+            <span class="pe-4 sidebar-text text-start align-middle">Términos y condiciones</span>
+            }
+          </p-button>
+        </div>
+        <div class="sidebar-button mt-3">
+          <p-button
+            fluid
+            (click)="toggleFaqs()"
+            [styleClass]="fullyCollapsed ? 'justify-content-start' : 'justify-content-start'"
+          >
+            <i class="pi pi-question text-inherit m-3" style="font-size: 1.4rem"></i>
+            @if(!isCollapsed){
+            <span class="pe-4 sidebar-text text-start align-middle">Preguntas frecuentes</span>
+            }
+          </p-button>
+        </div>
+      </div>
+    </div>
+    <div class="components-content container-fluid p-0">
+      @if(showGlobalStatsPanel){
+      <div class="stats-page container p-3">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <h3 class="m-0">Estadísticas globales</h3>
+          <p-button label="Cerrar" icon="pi pi-times" (click)="showGlobalStatsPanel = false" />
+        </div>
+        @if(groupedStatsKeys && groupedStatsKeys.length > 0){
+        <div class="groups-container d-flex flex-column gap-3">
+          @for (groupName of groupedStatsKeys; track $index) {
+          <div class="group-card p-3" style="border: 1px solid var(--p-border-color); border-radius: 8px;">
+            <h4 class="m-0">{{ groupName }}</h4>
+            <div class="group-items mt-2">
+              @for (entry of groupedStats[groupName]; track $index) {
+              <div class="group-item d-flex justify-content-between align-items-center">
+                <div class="group-item-label">
+                  <h5 class="m-0 text-capitalize">{{ entry.label }}</h5>
+                </div>
+                <div class="group-item-value text-end">
+                  @if (typeof entry.value === 'number'){
+                  <h2 class="m-0">{{ entry.value }}</h2>
+                  } @else {
+                  <pre style="white-space: pre-wrap; word-break: break-word; margin:0;">{{ entry.value | json }}</pre>
+                  }
+                </div>
+              </div>
+              }
+            </div>
+          </div>
+          }
+        </div>
+        }@else {
+        <div class="p-3">No hay estadísticas para mostrar.</div>
+        }
+      </div>
+      }@else {
+      <router-outlet />
+      }
+      <p-scrolltop
+        target="parent"
+        [threshold]="100"
+        icon="pi pi-arrow-up"
+        [buttonProps]="{ severity: 'contrast', raised: true, rounded: true }"
+      />
+    </div>
+  </div>
+  <p-dialog
+    [(visible)]="showTerms"
+    modal
+    header="Términos y condiciones"
+    [style]="{ width: '60vw' }"
+    [breakpoints]="{ '960px': '75vw', '640px': '95vw' }"
+    (onHide)="closeTerms()"
+  >
+    <div class="terms-content">
+      <h4>Términos y condiciones de Círculo Solidario</h4>
+
+      <p>
+        <strong>1. Aceptación de los términos</strong><br />
+        Al utilizar la plataforma Círculo Solidario usted acepta estos Términos y Condiciones en su
+        totalidad. Si no está de acuerdo con alguno de los términos, por favor no utilice nuestros
+        servicios.
+      </p>
+
+      <p>
+        <strong>2. Descripción del servicio</strong><br />
+        Círculo Solidario facilita la publicación, donación e intercambio de productos y la
+        colaboración en proyectos solidarios. La plataforma pone en contacto a usuarios que desean
+        donar o solicitar productos y servicios; no asumimos la condición de vendedor ni comprador
+        en dichas transacciones a menos que se indique expresamente.
+      </p>
+
+      <p>
+        <strong>3. Registro y cuentas</strong><br />
+        Algunas funcionalidades requieren crear una cuenta. El usuario es responsable de mantener la
+        confidencialidad de sus credenciales y de toda actividad realizada a través de su cuenta.
+        Debe proporcionar información veraz y actualizarla cuando sea necesario.
+      </p>
+
+      <p>
+        <strong>4. Publicaciones y contenido del usuario</strong><br />
+        Los usuarios son responsables del contenido que publiquen (descripciones, fotografías,
+        condiciones de los bienes, etc.). Está prohibido publicar material ilegal, ofensivo,
+        engañoso o que infrinja derechos de terceros. Nos reservamos el derecho de retirar
+        publicaciones que violen estas normas.
+      </p>
+
+      <p>
+        <strong>5. Donaciones, entregas y responsabilidad</strong><br />
+        Las condiciones de entrega o recogida deben acordarse entre las partes. Círculo Solidario no
+        se responsabiliza por el estado final de los bienes tras la entrega, ni por acuerdos fuera
+        de la plataforma, salvo cuando exista un servicio gestionado directamente por nosotros y se
+        indique lo contrario.
+      </p>
+
+      <p>
+        <strong>6. Pagos y comisiones</strong><br />
+        Si la plataforma gestiona pagos o aplica comisiones, se informará claramente antes de
+        confirmar la operación. En caso contrario, los gastos asociados serán responsabilidad de las
+        partes según lo acordado.
+      </p>
+
+      <p>
+        <strong>7. Propiedad intelectual</strong><br />
+        Todo el contenido original de la plataforma (diseño, logos, textos, código) es propiedad de
+        Círculo Solidario o de sus licenciantes. Queda prohibido su uso no autorizado.
+      </p>
+
+      <p>
+        <strong>8. Tratamiento de datos personales</strong><br />
+        El uso y tratamiento de sus datos personales se realiza conforme a nuestra Política de
+        Privacidad. Al usar la plataforma acepta las prácticas descritas en dicha política.
+      </p>
+
+      <p>
+        <strong>9. Limitación de responsabilidad</strong><br />
+        En la máxima medida permitida por la ley, Círculo Solidario no será responsable por daños
+        indirectos, lucro cesante, pérdida de datos o cualquier perjuicio derivado del uso de la
+        plataforma o de las interacciones entre usuarios.
+      </p>
+
+      <p>
+        <strong>10. Terminación y suspensión</strong><br />
+        Podemos suspender o cancelar cuentas que incumplan estos términos o por razones operativas.
+        El usuario puede eliminar su cuenta conforme a las opciones disponibles en la plataforma.
+      </p>
+
+      <p>
+        <strong>11. Cambios en los términos</strong><br />
+        Nos reservamos el derecho de modificar estos Términos y Condiciones. Publicaremos las
+        actualizaciones en la plataforma; el uso continuado tras las modificaciones implica
+        aceptación.
+      </p>
+
+      <p>
+        <strong>12. Legislación aplicable y contacto</strong><br />
+        Estos términos se regirán por la legislación aplicable en la jurisdicción donde opera
+        Círculo Solidario. Para dudas o notificaciones utilice los canales de contacto disponibles
+        en el sitio.
+      </p>
+    </div>
+    <div class="d-flex justify-content-end mt-3">
+      <p-button label="Cerrar" (click)="closeTerms()" />
+    </div>
+  </p-dialog>
+  <p-dialog
+    [(visible)]="showFAQs"
+    modal
+    header="Preguntas frecuentes"
+    [style]="{ width: '60vw' }"
+    [breakpoints]="{ '960px': '75vw', '640px': '95vw' }"
+    (onHide)="closeFaqs()"
+  >
+    <div class="terms-content">
+      <div class="faqs-list">
+        @for (faq of faqs; track $index) {
+        <div class="faq-item mb-3">
+          <div
+            class="faq-header d-flex justify-content-between align-items-center p-2"
+            (click)="toggleFaq($index)"
+            style="cursor: pointer"
+          >
+            <span class="fw-semibold">{{ faq.question }}</span>
+            <i [class]="expandedFaqs[$index] ? 'pi pi-chevron-up' : 'pi pi-chevron-down'"></i>
+          </div>
+          @if(expandedFaqs[$index]){
+          <div class="faq-answer p-3 small">{{ faq.answer }}</div>
+          }
+        </div>
+        }
+      </div>
+    </div>
+    <div class="d-flex justify-content-end mt-3">
+      <p-button label="Cerrar" (click)="closeFaqs()" />
+    </div>
+  </p-dialog>
+
+  <!-- Diálogo de validación de organización -->
+  <p-dialog
+    [(visible)]="validationDialogVisible"
+    modal
+    [header]="validationDialogTitle"
+    [style]="{ width: '50vw' }"
+    [breakpoints]="{ '960px': '75vw', '640px': '95vw' }"
+    [closable]="false"
+    [closeOnEscape]="false"
+  >
+    <p class="text-center mb-4">{{ validationDialogMessage }}</p>
+    <div class="d-flex justify-content-center">
+      <p-button label="Aceptar" (click)="onValidationDialogAccept()" />
+    </div>
+  </p-dialog>
+
+  <!-- Estadísticas Globales ahora se muestran en la página principal cuando `showGlobalStatsPanel` es true -->
+</div>

@@ -1,0 +1,132 @@
+<div class="main-container container-fluid">
+  <div class="container-fluid d-flex flex-column justify-content-start align-items-stretch h-100 p-0">
+    <div class="d-flex p-0 mb-4 flex-shrink-0">
+      <h1 class="d-flex align-items-center m-0">
+        <i class="pi pi-chevron-left me-3 go-back-buttom" (click)="goHome()"></i> Chats
+      </h1>
+    </div>
+    <div class="d-flex p-0 flex-grow-1 overflow-hidden">
+      <div class="col-12 col-md-auto p-0 pe-3 chat-list">
+        @if(shouldShowMobileVersion()){
+        <router-outlet />
+        }@else{
+        <p-tabs [value]="defaultTab">
+          <p-tablist>
+            @if(canSeeMyProductsChats){
+            <p-tab value="0">Mis productos</p-tab>
+            }@if(canSeeMyRequestsChats){
+            <p-tab value="1">Mis solicitudes</p-tab>}
+          </p-tablist>
+          <p-tabpanels>
+            @if(canSeeMyProductsChats){
+            <p-tabpanel value="0">
+              <p-dataview #dv [value]="myRequetsChats" class="my-requests">
+                <ng-template #list>
+                  @for (chat of myRequetsChats; track $index) { @if($index != 0){
+                  <p-divider />
+                  }
+                  <div class="d-flex flex-row justify-content-between px-2 py-3 chat-link" (click)="loadChat(chat)">
+                    <div class="col-auto align-content-center me-2">
+                      @if(chat.solicitud.donador.urlImagen){
+                      <p-avatar size="large" shape="circle" [image]="chat.solicitud.donador.urlImagen" />
+                      }@else {
+                      <p-avatar size="large" shape="circle" icon="pi pi-gift" />
+                      }
+                    </div>
+                    <div class="col">
+                      <div class="flex-md-column justify-content-evenly align-items-start gap-2">
+                        <div class="fw-medium fs-5">
+                          {{ chat.solicitud.donador.alias }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  }
+                </ng-template>
+                <ng-template #emptymessage>
+                  <div class="d-block row py-3 px-2 justify-content-center text-center">
+                    <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 250" id="no-data-logo"
+                      width="75" height="75">
+                      <metadata>Created by potrace 1.10, written by Peter Selinger 2001-2011</metadata>
+                      <g transform="translate(0.000000,256.000000) scale(0.050000,-0.050000)" stroke="none">
+                        <path
+                          d="M2885 5114 c-220 -31 -373 -77 -528 -156 -407 -209 -693 -590 -784 -1045 -24 -123 -24 -413 0 -536 49 -244 180 -520 323 -680 19 -20 34 -40 34 -44 0 -4 -59 -67 -132 -140 l-131 -131 -39 26 c-47 30 -127 40 -184 22 -32 -10 -169 -142 -711 -683 -474 -473 -679 -685 -698 -719 -60 -110 -41 -234 49 -324 90 -90 214 -109 324 -49 34 19 246 224 719 698 541 542 673 679 683 711 18 57 8 137 -22 184 l-26 39 133 133 c124 123 135 132 153 119 10 -8 59 -45 108 -82 158 -120 380 -217 604 -264 118 -24 409 -24 533 0 607 121 1071 588 1183 1192 26 137 26 383 0 520 -111 597 -574 1069 -1162 1185 -104 21 -355 35 -429 24z m385 -149 c278 -54 496 -170 700 -375 206 -205 320 -419 376 -705 27 -134 24 -367 -5 -505 -74 -350 -283 -660 -573 -851 -114 -75 -157 -97 -278 -142 -159 -59 -280 -80 -465 -80 -182 0 -299 19 -458 77 -117 43 -169 69 -285 145 -295 194 -510 519 -578 871 -24 127 -24 361 0 485 35 183 107 360 211 515 57 85 200 238 278 298 198 153 434 251 679 282 98 12 294 5 398 -15z m-1653 -2728 c95 -95 95 -106 6 -198 l-67 -70 -103 103 -104 103 70 68 c92 90 102 89 198 -6z m-709 -915 c-443 -443 -560 -555 -591 -564 -99 -30 -201 65 -182 170 6 32 77 107 563 594 l557 558 102 -102 103 -103 -552 -553z" />
+                        <path
+                          d="M2915 4833 c-130 -11 -309 -64 -438 -130 -60 -30 -160 -96 -188 -124 -25 -25 -24 -64 1 -89 28 -28 59 -25 106 9 254 187 592 251 899 170 369 -96 660 -387 754 -754 80 -310 17 -645 -170 -899 -34 -47 -37 -78 -9 -106 25 -25 64 -26 89 -1 53 53 129 185 181 315 75 189 96 456 51 664 -108 509 -520 882 -1040 942 -83 10 -153 10 -236 3z" />
+                        <path
+                          d="M2102 4393 c-18 -7 -103 -135 -144 -218 -199 -399 -155 -890 113 -1245 347 -459 973 -608 1484 -352 90 45 211 126 219 147 11 30 6 55 -14 75 -27 27 -59 25 -101 -6 -354 -265 -852 -277 -1224 -29 -484 322 -614 983 -290 1470 30 46 55 93 55 104 0 42 -53 72 -98 54z" />
+                        <path
+                          d="M2487 4042 c-33 -36 -22 -73 38 -132 l55 -54 -55 -56 c-63 -63 -73 -106 -33 -134 37 -26 60 -19 120 41 l57 57 60 -57 c65 -62 97 -71 131 -37 34 34 25 66 -37 131 l-57 60 53 51 c59 60 70 88 47 123 -12 18 -25 25 -49 25 -26 0 -43 -11 -87 -55 l-54 -54 -57 54 c-63 60 -102 71 -132 37z" />
+                        <path
+                          d="M3186 4038 c-26 -37 -19 -60 41 -120 l57 -57 -57 -60 c-62 -65 -71 -97 -37 -131 34 -34 66 -25 130 36 l58 56 59 -56 c32 -31 67 -56 78 -56 36 0 65 28 65 63 0 26 -11 43 -55 87 l-55 54 55 56 c60 61 72 102 37 133 -34 31 -69 21 -131 -38 l-57 -54 -54 54 c-62 63 -106 74 -134 33z" />
+                        <path
+                          d="M2923 3350 c-107 -20 -259 -97 -298 -153 -20 -29 -19 -70 3 -90 30 -27 70 -21 115 18 56 48 113 74 205 92 71 14 86 14 156 0 92 -19 147 -44 203 -92 65 -55 133 -40 133 29 0 53 -126 144 -250 180 -68 20 -199 28 -267 16z" />
+                      </g>
+                    </svg>
+                    <h2 style="max-width: max-content; margin: auto;">Sin chats</h2>
+                    <span style="max-width: max-content; margin: auto;">No tienes chats pendientes...</span>
+                  </div>
+                </ng-template>
+              </p-dataview>
+            </p-tabpanel>}
+            @if(canSeeMyRequestsChats){
+            <p-tabpanel value="1">
+              <p-dataview #dv [value]="myProductsChats" class="my-requests">
+                <ng-template #list>
+                  @for (chat of myProductsChats; track $index) { @if($index != 0){
+                  <p-divider />
+                  }
+                  <div class="d-flex flex-row justify-content-between px-2 py-3 chat-link" (click)="loadChat(chat)">
+                    <div class="col-auto align-content-center me-2">
+                      @if(chat.solicitud.solicitante.urlImagen){
+                      <p-avatar size="large" shape="circle" [image]="chat.solicitud.solicitante.urlImagen" />
+                      }@else {
+                      <p-avatar size="large" shape="circle" icon="pi pi-gift" />
+                      }
+                    </div>
+                    <div class="col">
+                      <div class="flex-md-column justify-content-evenly align-items-start gap-2">
+                        <div class="fw-medium fs-5">
+                          {{ chat.solicitud.solicitante.alias }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  }
+                </ng-template>
+                <ng-template #emptymessage>
+                  <div class="d-block row py-3 px-2 justify-content-center text-center">
+                    <svg version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 210 250" id="no-data-logo"
+                      width="75" height="75">
+                      <metadata>Created by potrace 1.10, written by Peter Selinger 2001-2011</metadata>
+                      <g transform="translate(0.000000,256.000000) scale(0.050000,-0.050000)" stroke="none">
+                        <path
+                          d="M2885 5114 c-220 -31 -373 -77 -528 -156 -407 -209 -693 -590 -784 -1045 -24 -123 -24 -413 0 -536 49 -244 180 -520 323 -680 19 -20 34 -40 34 -44 0 -4 -59 -67 -132 -140 l-131 -131 -39 26 c-47 30 -127 40 -184 22 -32 -10 -169 -142 -711 -683 -474 -473 -679 -685 -698 -719 -60 -110 -41 -234 49 -324 90 -90 214 -109 324 -49 34 19 246 224 719 698 541 542 673 679 683 711 18 57 8 137 -22 184 l-26 39 133 133 c124 123 135 132 153 119 10 -8 59 -45 108 -82 158 -120 380 -217 604 -264 118 -24 409 -24 533 0 607 121 1071 588 1183 1192 26 137 26 383 0 520 -111 597 -574 1069 -1162 1185 -104 21 -355 35 -429 24z m385 -149 c278 -54 496 -170 700 -375 206 -205 320 -419 376 -705 27 -134 24 -367 -5 -505 -74 -350 -283 -660 -573 -851 -114 -75 -157 -97 -278 -142 -159 -59 -280 -80 -465 -80 -182 0 -299 19 -458 77 -117 43 -169 69 -285 145 -295 194 -510 519 -578 871 -24 127 -24 361 0 485 35 183 107 360 211 515 57 85 200 238 278 298 198 153 434 251 679 282 98 12 294 5 398 -15z m-1653 -2728 c95 -95 95 -106 6 -198 l-67 -70 -103 103 -104 103 70 68 c92 90 102 89 198 -6z m-709 -915 c-443 -443 -560 -555 -591 -564 -99 -30 -201 65 -182 170 6 32 77 107 563 594 l557 558 102 -102 103 -103 -552 -553z" />
+                        <path
+                          d="M2915 4833 c-130 -11 -309 -64 -438 -130 -60 -30 -160 -96 -188 -124 -25 -25 -24 -64 1 -89 28 -28 59 -25 106 9 254 187 592 251 899 170 369 -96 660 -387 754 -754 80 -310 17 -645 -170 -899 -34 -47 -37 -78 -9 -106 25 -25 64 -26 89 -1 53 53 129 185 181 315 75 189 96 456 51 664 -108 509 -520 882 -1040 942 -83 10 -153 10 -236 3z" />
+                        <path
+                          d="M2102 4393 c-18 -7 -103 -135 -144 -218 -199 -399 -155 -890 113 -1245 347 -459 973 -608 1484 -352 90 45 211 126 219 147 11 30 6 55 -14 75 -27 27 -59 25 -101 -6 -354 -265 -852 -277 -1224 -29 -484 322 -614 983 -290 1470 30 46 55 93 55 104 0 42 -53 72 -98 54z" />
+                        <path
+                          d="M2487 4042 c-33 -36 -22 -73 38 -132 l55 -54 -55 -56 c-63 -63 -73 -106 -33 -134 37 -26 60 -19 120 41 l57 57 60 -57 c65 -62 97 -71 131 -37 34 34 25 66 -37 131 l-57 60 53 51 c59 60 70 88 47 123 -12 18 -25 25 -49 25 -26 0 -43 -11 -87 -55 l-54 -54 -57 54 c-63 60 -102 71 -132 37z" />
+                        <path
+                          d="M3186 4038 c-26 -37 -19 -60 41 -120 l57 -57 -57 -60 c-62 -65 -71 -97 -37 -131 34 -34 66 -25 130 36 l58 56 59 -56 c32 -31 67 -56 78 -56 36 0 65 28 65 63 0 26 -11 43 -55 87 l-55 54 55 56 c60 61 72 102 37 133 -34 31 -69 21 -131 -38 l-57 -54 -54 54 c-62 63 -106 74 -134 33z" />
+                        <path
+                          d="M2923 3350 c-107 -20 -259 -97 -298 -153 -20 -29 -19 -70 3 -90 30 -27 70 -21 115 18 56 48 113 74 205 92 71 14 86 14 156 0 92 -19 147 -44 203 -92 65 -55 133 -40 133 29 0 53 -126 144 -250 180 -68 20 -199 28 -267 16z" />
+                      </g>
+                    </svg>
+                    <h2 style="max-width: max-content; margin: auto;">Sin chats</h2>
+                    <span style="max-width: max-content; margin: auto;">No tienes chats pendientes...</span>
+                  </div>
+                </ng-template>
+              </p-dataview>
+            </p-tabpanel>}
+          </p-tabpanels>
+        </p-tabs>
+        }
+      </div>
+      <div class="d-none d-md-block flex-grow-1 ps-3 overflow-auto">
+        <router-outlet />
+      </div>
+    </div>
+  </div>
+</div>

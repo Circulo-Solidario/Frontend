@@ -1,1 +1,383 @@
-/* You can add global styles to this file, and also import other style files */
+body {
+  background-color: var(--background-color);
+}
+
+::-webkit-scrollbar {
+  width: 4px;              /* ancho de la barra vertical */
+  height: 4px;             /* alto de la barra horizontal */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;     /* color del fondo */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;         /* color de la barra */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;         /* color al pasar el mouse */
+}
+
+:root {
+  /* === Base de colores === */
+  --dark-green: #00190f;
+  --hunter-green: #2d5537;
+  --office-green: #19730f;
+  --forest-green: #009b1e;
+  --alabaster: #e6ebe1;
+  --mint-cream: #fafffa;
+
+  /* === Tipografía y ajustes === */
+  font-family: 'Manrope';
+  font-size: small;
+
+  --p-toggleswitch-handle-background: transparent;
+  --p-toggleswitch-handle-checked-background: transparent;
+  --p-toggleswitch-handle-hover-background: transparent;
+  --p-toggleswitch-handle-checked-hover-background: transparent;
+
+  /* === Paleta cremosa (tema claro) === */
+  --color-bg-0: #fdfbf6;
+  /* base casi crema */
+  --color-bg-1: #faf7f0;
+  /* un poco más cálido */
+  --color-bg-2: #f3efe5;
+  /* fondo principal */
+  --color-bg-3: #ebe7dc;
+  /* para paneles */
+  --color-bg-4: #ddd8ca;
+  /* hover o bordes sutiles */
+  --color-accent-1: #009b1e;
+  /* forest-green */
+  --color-accent-2: #19730f;
+  /* office-green */
+  --color-accent-3: #2d5537;
+  /* hunter-green */
+  --color-text-strong: #1b241c;
+  --color-text-muted: #4a574b;
+  --color-border: #d2cbbd;
+
+  /* === Superficies === */
+  --p-surface-ground: var(--color-bg-0);
+  --p-surface-section: var(--color-bg-1);
+  --p-surface-card: var(--color-bg-2);
+  --p-surface-overlay: var(--color-bg-3);
+  --p-surface-border: var(--color-border);
+  --p-surface-hover: var(--color-bg-4);
+
+  /* === Texto === */
+  --p-text-color: var(--color-text-strong);
+  --p-text-muted-color: var(--color-text-muted);
+
+  /* === Color primario (marca) === */
+  --p-primary-color: var(--color-accent-1);
+  --p-primary-color-text: #ffffff;
+  --p-highlight-bg: var(--color-accent-2);
+  --p-highlight-text-color: #ffffff;
+
+  /* === BOTONES === */
+  --p-button-bg: var(--color-accent-1);
+  --p-button-hover-bg: var(--color-accent-2);
+  --p-button-text-color: #ffffff;
+  --p-button-border-color: transparent;
+
+  --p-button-secondary-bg: var(--color-bg-2);
+  --p-button-secondary-text-color: var(--color-text-strong);
+  --p-button-secondary-hover-bg: var(--color-bg-3);
+
+  /* === INPUTS / SELECT / DATE PICKER === */
+  --p-inputtext-bg: var(--color-bg-0);
+  --p-inputtext-border-color: var(--color-border);
+  --p-inputtext-color: var(--color-text-strong);
+  --p-inputtext-hover-border-color: var(--color-accent-1);
+  --p-inputtext-focus-border-color: var(--color-accent-2);
+
+  /* === CARD === */
+  --p-card-bg: var(--color-bg-2);
+  --p-card-border: var(--color-border);
+  --p-card-text-color: var(--color-text-strong);
+  --p-card-shadow: 0 2px 6px rgba(0, 25, 15, 0.1);
+
+  /* === SWITCH === */
+  --p-inputswitch-checked-bg: var(--color-accent-1);
+  --p-inputswitch-checked-hover-bg: var(--color-accent-2);
+  --p-inputswitch-slider-bg: var(--color-bg-4);
+
+  /* === MENU / DRAWER / TOOLBAR === */
+  --p-menubar-bg: var(--color-bg-2);
+  --p-menubar-text-color: var(--color-text-strong);
+  --p-menubar-hover-bg: var(--color-bg-3);
+  --p-menubar-hover-text-color: var(--color-accent-1);
+
+  --p-drawer-bg: var(--color-bg-1);
+  --p-toolbar-bg: var(--color-bg-3);
+  --p-toolbar-border: var(--color-border);
+
+  /* === PANEL / STEPPER === */
+  --p-panel-bg: var(--color-bg-2);
+  --p-panel-header-bg: var(--color-bg-3);
+  --p-panel-border-color: var(--color-border);
+
+  --p-stepper-header-bg: var(--color-bg-2);
+  --p-stepper-header-text-color: var(--color-text-strong);
+  --p-stepper-active-bg: var(--color-accent-1);
+  --p-stepper-active-text-color: #ffffff;
+
+  /* === DATA VIEW === */
+  --p-dataview-bg: var(--color-bg-1);
+  --p-dataview-border-color: var(--color-border);
+  --p-dataview-header-bg: var(--color-bg-3);
+
+  /* === UPLOAD === */
+  --p-fileupload-bg: var(--color-bg-2);
+  --p-fileupload-border-color: var(--color-border);
+  --p-fileupload-button-bg: var(--color-accent-1);
+  --p-fileupload-button-hover-bg: var(--color-accent-2);
+
+  /* === BADGE / CHIP === */
+  --p-badge-bg: var(--color-accent-1);
+  --p-badge-text-color: #ffffff;
+  --p-chip-bg: var(--color-bg-3);
+  --p-chip-text-color: var(--color-text-strong);
+
+  /* === SKELETON === */
+  --p-skeleton-bg: var(--color-bg-3);
+  --p-skeleton-animation-bg: var(--color-bg-4);
+}
+
+/* 🌙 Tema oscuro */
+[data-p-theme="dark"],
+:root[data-theme="dark"] {
+  --color-bg-0: #00190f;
+  --color-bg-1: #0b2a1a;
+  --color-bg-2: #173f28;
+  --color-bg-3: #224d31;
+  --color-bg-4: #2d5537;
+  --color-accent-1: #009b1e;
+  --color-accent-2: #19730f;
+  --color-accent-3: #2d5537;
+  --color-text-strong: #fafffa;
+  --color-text-muted: #cde1ce;
+  --color-border: #3a5a45;
+
+  /* Reutilizamos mismas estructuras con la escala oscura */
+  --p-surface-ground: var(--color-bg-0);
+  --p-surface-section: var(--color-bg-1);
+  --p-surface-card: var(--color-bg-2);
+  --p-surface-overlay: var(--color-bg-3);
+  --p-surface-border: var(--color-border);
+  --p-surface-hover: var(--color-bg-4);
+
+  --p-text-color: var(--color-text-strong);
+  --p-text-muted-color: var(--color-text-muted);
+
+  --p-primary-color: var(--color-accent-1);
+  --p-primary-color-text: #ffffff;
+  --p-highlight-bg: var(--color-accent-2);
+  --p-highlight-text-color: #ffffff;
+
+  --p-button-bg: var(--color-accent-1);
+  --p-button-hover-bg: var(--color-accent-2);
+  --p-button-text-color: #ffffff;
+  --p-button-border-color: transparent;
+
+  --p-inputtext-bg: var(--color-bg-1);
+  --p-inputtext-border-color: var(--color-border);
+  --p-inputtext-color: var(--color-text-strong);
+
+  --p-card-bg: var(--color-bg-2);
+  --p-card-border: var(--color-border);
+  --p-inputswitch-slider-bg: var(--color-bg-4);
+  --p-toolbar-bg: var(--color-bg-3);
+  --p-panel-bg: var(--color-bg-2);
+  --p-stepper-active-bg: var(--color-accent-1);
+  --p-badge-bg: var(--color-accent-1);
+  --p-chip-bg: var(--color-bg-4);
+  --p-skeleton-bg: var(--color-bg-3);
+}
+
+/* Global overrides for Leaflet tiles to avoid component encapsulation issues */
+.leaflet-container .leaflet-tile,
+.leaflet-container img.leaflet-tile {
+  position: absolute !important;
+  display: block !important;
+  max-width: none !important;
+  width: auto !important;
+  height: auto !important;
+  box-sizing: content-box !important;
+}
+
+/* Ensure tile container has expected positioning */
+.leaflet-container .leaflet-tile-pane,
+.leaflet-container .leaflet-tile-container {
+  position: absolute !important;
+  left: 0; top: 0;
+}
+
+/* Slightly increase specificity to prevent global img rules from breaking tiles */
+div.leaflet-container img.leaflet-tile {
+  display: block !important;
+}
+
+/* Leaflet panes - ensure they appear over tiles */
+.leaflet-pane {
+  position: absolute !important;
+}
+
+.leaflet-marker-pane {
+  position: absolute !important;
+  z-index: 600 !important;
+}
+
+.leaflet-popup-pane {
+  position: absolute !important;
+  z-index: 650 !important;
+}
+
+.leaflet-overlay-pane {
+  position: absolute !important;
+  z-index: 400 !important;
+}
+
+.leaflet-shadow-pane {
+  position: absolute !important;
+  z-index: 500 !important;
+}
+
+.leaflet-tooltip-pane {
+  position: absolute !important;
+  z-index: 700 !important;
+}
+
+/* Leaflet controls */
+.leaflet-control {
+  position: absolute !important;
+  z-index: 650 !important;
+}
+
+.leaflet-attribution-control {
+  position: absolute !important;
+  z-index: 650 !important;
+}
+
+/* Leaflet attribution - bottom-left, dark translucent background, white text */
+.leaflet-control-attribution,
+.leaflet-attribution-control {
+  position: absolute !important;
+  left: 0.75rem !important; /* ~12px */
+  right: auto !important;
+  bottom: 0.75rem !important;
+  margin: 0 !important;
+  padding: 0.25rem 0.5rem !important;
+  border-radius: 0.5rem !important;
+  background: rgba(0, 0, 0, 0.55) !important;
+  color: #fff !important;
+  line-height: 1.1;
+}
+
+.leaflet-control-attribution a,
+.leaflet-attribution-control a {
+  color: #fff !important;
+  text-decoration: underline;
+}
+
+.leaflet-control-attribution a:hover,
+.leaflet-attribution-control a:hover {
+  color: #ffffff !important;
+  opacity: 0.9;
+}
+
+/* Ensure PrimeNG menus appear above map */
+.p-menu-overlay,
+.p-tieredmenu-overlay,
+.p-overlay {
+  z-index: 2000 !important;
+}
+
+/* Custom popup styling for user location marker */
+.custom-popup-user-location {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.custom-popup-user-location .leaflet-popup-content-wrapper {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(20, 20, 20, 0.95) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 0.75rem !important;
+  padding: 0.75rem 1rem !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+.custom-popup-user-location .leaflet-popup-content {
+  color: #ffffff !important;
+  font-size: 0.95rem !important;
+  font-weight: 500 !important;
+  margin: 0 !important;
+  line-height: 1.4;
+  letter-spacing: 0.3px;
+}
+
+.custom-popup-user-location .leaflet-popup-tip {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(20, 20, 20, 0.95) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Custom popup styling for dots markers */
+.custom-popup-dot {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.custom-popup-dot .leaflet-popup-content-wrapper {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(20, 20, 20, 0.95) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  border-radius: 0.75rem !important;
+  padding: 0.75rem 1rem !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4) !important;
+}
+
+.custom-popup-dot .leaflet-popup-content {
+  color: #ffffff !important;
+  font-size: 0.95rem !important;
+  font-weight: 500 !important;
+  margin: 0 !important;
+  line-height: 1.4;
+  letter-spacing: 0.3px;
+}
+
+.custom-popup-dot .leaflet-popup-tip {
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.9) 0%, rgba(20, 20, 20, 0.95) 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+}
+
+/* Legend tooltip styling */
+.legend-tooltip {
+  padding: 0.6rem 0.85rem !important;
+  border-radius: var(--p-border-radius-lg) !important;
+  background-color: rgba(0, 0, 0, 0.85) !important;
+  border: none !important;
+}
+
+.legend-tooltip .p-tooltip-text {
+  padding: 0 !important;
+  margin: 0 !important;
+  font-size: 1rem !important;
+  line-height: 1.5 !important;
+  color: #fff !important;
+  background: transparent !important;
+}
+
+.legend-tooltip .p-tooltip-arrow {
+  border-right-color: rgba(0, 0, 0, 0.85) !important;
+}
+
+.legend-tooltip.p-tooltip-right .p-tooltip-arrow {
+  border-right-color: rgba(0, 0, 0, 0.85) !important;
+}

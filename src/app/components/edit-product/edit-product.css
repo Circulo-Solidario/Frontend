@@ -1,0 +1,54 @@
+@media (max-width: 412px) {
+    .profile-data {
+        justify-content: center;
+    }
+}
+
+@media (max-width: 575px) {
+    .main-container {
+        padding-top: 2vh !important;
+    }
+}
+
+img {
+    max-height: 30vh;
+    height: 30vh;
+    width: auto;
+    max-width: 100%;
+    border-radius: var(--p-fileupload-border-radius);
+    object-fit: cover;
+}
+
+.no-image {
+    min-height: 30vh;
+}
+
+.empty-content {
+    height: 21vh;
+    align-content: center;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 10vh;
+    max-height: 25vh;
+}
+
+
+::ng-deep .p-fileupload-header {
+    display: none !important;
+}
+
+::ng-deep .p-fileupload-content {
+    padding: 1.25rem;
+}
+
+
+.go-back-buttom {
+    cursor: pointer;
+}
+
+.main-container {
+    padding: 4vh 4vw;
+    height: max-content;
+}

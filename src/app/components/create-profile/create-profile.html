@@ -1,0 +1,450 @@
+<div class="row me-0 justify-content-between align-items-center">
+  <div class="col-auto">
+    <p-button variant="text" [disabled]="true">
+      <span style="color: transparent">-</span>
+    </p-button>
+  </div>
+  <div class="col-auto">
+    <app-theme-switcher />
+  </div>
+</div>
+<div id="screen" class="col position-absolute top-50 start-50 translate-middle">
+  <div class="container-fluid align-items-center justify-content-center">
+    <div id="card" class="col-md-3 m-auto">
+      <p-card class="shadow-lg px-4 flex" scr>
+        <div class="text-center mb-4 mt-4">
+          <h1 class="fw-bold m-0">Crea una perfil</h1>
+          <p class="text-sm m-0 mt-1">Bienvenido. Crea un perfil para comenzar.</p>
+        </div>
+        <p-tabs value="0">
+          <p-tablist class="text-center">
+            <p-tab value="0" class="w-50" (click)="changeType(0)">Usuario</p-tab>
+            <p-tab value="1" class="w-50" (click)="changeType(1)">Organización</p-tab>
+          </p-tablist>
+          <p-tabpanels>
+            <p-tabpanel value="0">
+              <div class="form-scroll-wrapper justify-content-center align-items-center">
+                <form class="mb-0 mt-2 mx-1" [formGroup]="userForm">
+                  <div class="mb-4">
+                    <label class="form-label" for="nombreApellido">Nombre y apellido<span style="color: red;">&ensp;*</span></label>
+                    <input
+                      class="w-100 mt-1"
+                      id="nombreApellido"
+                      pInputText
+                      fluid
+                      placeholder="Ingresa tu nombre y apellido"
+                      type="text"
+                      formControlName="nombreApellido"
+                      [invalid]="
+                        userForm.get('nombreApellido')?.invalid &&
+                        userForm.get('nombreApellido')?.touched &&
+                        userForm.get('nombreApellido')?.dirty
+                      "
+                    />
+                    @if (userForm.get('nombreApellido')?.invalid &&
+                    userForm.get('nombreApellido')?.touched &&
+                    userForm.get('nombreApellido')?.dirty) {
+                    <p-message severity="error" size="small" variant="simple"
+                      >Ingrese un nombre válido.</p-message
+                    >
+                    }
+                  </div>
+                  <div class="mb-4">
+                    <label class="form-label" for="alias">Alias<span style="color: red;">&ensp;*</span></label>
+                    <input
+                      class="w-100 mt-1"
+                      id="alias"
+                      pInputText
+                      fluid
+                      placeholder="Ingresa tu alias"
+                      type="text"
+                      formControlName="alias"
+                      [invalid]="
+                        userForm.get('alias')?.invalid &&
+                        userForm.get('alias')?.touched &&
+                        userForm.get('alias')?.dirty
+                      "
+                    />
+                    @if (userForm.get('alias')?.invalid && userForm.get('alias')?.touched &&
+                    userForm.get('alias')?.dirty) {
+                    <p-message severity="error" size="small" variant="simple"
+                      >Ingrese un alias válido.</p-message
+                    >
+                    }
+                  </div>
+                  <div class="mb-4">
+                    <label for="fechaNacimiento">Fecha de nacimiento</label>
+                    <p-datepicker
+                      class="mt-1"
+                      [maxDate]="today"
+                      id="fechaNacimiento"
+                      formControlName="fechaNacimiento"
+                      fluid
+                      [iconDisplay]="'input'"
+                      [showIcon]="true"
+                      inputId="icondisplay"
+                      appendTo="body"
+                      dateFormat="dd/mm/yy"
+                      placeholder="Selecciona tu fecha de nacimiento"
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label for="userImage">Foto de perfil</label>
+                    <p-fileupload
+                      name="userImage"
+                      id="userImage"
+                      styleClass="mt-1 w-100"
+                      [multiple]="false"
+                      accept=".jpg,.png,.jpeg"
+                      maxFileSize="1000000"
+                      mode="advanced"
+                      (onSelect)="setImage($event)"
+                      (onClear)="clearImage()"
+                      [files]="uploadedFiles"
+                    >
+                      <ng-template #empty>
+                        @if(imageUrl != ''){
+                        <div class="row justify-content-md-center">
+                          <div class="col-md-auto">
+                            <img
+                              [src]="imageUrl"
+                              alt="google image"
+                              width="auto"
+                              height="75vh"
+                              style="border-radius: 0.5em"
+                            />
+                          </div>
+                          <div class="col">
+                            <div class="row">Imagen de perfil de google</div>
+                            <div class="row"></div>
+                          </div>
+                        </div>
+                        } @else {
+                        <div class="row justify-content-md-center">
+                          <div class="col-md-auto">Arrastra una imagen para subirla</div>
+                        </div>
+                        }
+                      </ng-template>
+                      <ng-template #file>
+                        @if(uploadedFiles.length == 0){
+                        <div class="row justify-content-md-center">
+                          <div class="col-md-auto">Arrastra una imagen para subirla</div>
+                        </div>
+                        } @for (file of uploadedFiles; track $index) {
+                        <div class="row justify-content-md-center">
+                          <div class="col-md-auto">
+                            <img
+                              [src]="imageUrl ? imageUrl : file.objectURL"
+                              [alt]="file.name"
+                              width="auto"
+                              height="75vh"
+                              style="border-radius: 0.5em"
+                            />
+                          </div>
+                          <div class="col">
+                            <div class="row">
+                              {{ file.name }}
+                            </div>
+                            <div class="row">{{ file.size }} bytes</div>
+                          </div>
+                        </div>
+                        }
+                      </ng-template>
+                      <ng-template
+                        #header
+                        let-files
+                        let-chooseCallback="chooseCallback"
+                        let-clearCallback="clearCallback"
+                      >
+                        <div class="justify-between items-center">
+                          <div class="flex">
+                            <p-button
+                              class="me-2"
+                              (onClick)="chooseCallback($event, chooseCallback)"
+                              icon="pi pi-images"
+                              [rounded]="true"
+                              [outlined]="true"
+                            />
+                            <p-button
+                              (onClick)="clearCallback()"
+                              icon="pi pi-times"
+                              [rounded]="true"
+                              [outlined]="true"
+                              severity="danger"
+                              [disabled]="!files || (!imageUrl && files.length === 0)"
+                            />
+                          </div>
+                        </div>
+                      </ng-template>
+                    </p-fileupload>
+                  </div>
+                  <div>
+                    <label for="roles">Selecciona los roles que desea tener<span style="color: red;">&ensp;*</span></label>
+                    <div class="text-center">
+                      <p-selectbutton
+                        class="mt-1"
+                        fluid
+                        id="roles"
+                        [options]="userRolesOptions"
+                        formControlName="roles"
+                        [multiple]="true"
+                        optionLabel="label"
+                        optionValue="value"
+                        [invalid]="userForm.get('roles')?.invalid && userForm.get('roles')?.dirty"
+                      />
+                      @if(userForm.get('roles')?.invalid && userForm.get('roles')?.dirty){
+                      <p-message severity="error" size="small" variant="simple"
+                        >Seleccione al menos un rol.</p-message
+                      >
+                      }
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </p-tabpanel>
+            <p-tabpanel value="1">
+              <div class="form-scroll-wrapper justify-content-center align-items-center">
+                <form class="mb-0 mt-2 mx-1" [formGroup]="charityForm">
+                  <div class="mb-4">
+                    <label class="form-label" for="nombreApellido"
+                      >Nombre de la organización<span style="color: red;">&ensp;*</span>
+                    </label>
+                    <input
+                      class="w-100 mt-1"
+                      id="nombreApellido"
+                      pInputText
+                      placeholder="Ingresa el nombre"
+                      type="text"
+                      formControlName="nombreApellido"
+                      [invalid]="
+                        charityForm.get('nombreApellido')?.invalid &&
+                        charityForm.get('nombreApellido')?.touched &&
+                        charityForm.get('nombreApellido')?.dirty
+                      "
+                    />
+                    @if (charityForm.get('nombreApellido')?.invalid &&
+                    charityForm.get('nombreApellido')?.touched &&
+                    charityForm.get('nombreApellido')?.dirty) {
+                    <p-message severity="error" size="small" variant="simple"
+                      >Ingrese un nombre válido.</p-message
+                    >
+                    }
+                  </div>
+                  <div class="mb-4">
+                    <label class="form-label" for="alias">Alias<span style="color: red;">&ensp;*</span></label>
+                    <input
+                      class="w-100 mt-1"
+                      id="alias"
+                      pInputText
+                      placeholder="Ingresa tu alias"
+                      type="text"
+                      formControlName="alias"
+                      [invalid]="
+                        charityForm.get('alias')?.invalid &&
+                        charityForm.get('alias')?.touched &&
+                        charityForm.get('alias')?.dirty
+                      "
+                    />
+                    @if (charityForm.get('alias')?.invalid && charityForm.get('alias')?.touched &&
+                    charityForm.get('alias')?.dirty) {
+                    <p-message severity="error" size="small" variant="simple"
+                      >Ingrese un alias válido.</p-message
+                    >
+                    }
+                  </div>
+                  <div class="mb-4">
+                    <label for="fechaNacimiento">Fecha de fundación</label>
+                    <p-datepicker
+                      class="mt-1"
+                      [maxDate]="today"
+                      id="fechaNacimiento"
+                      formControlName="fechaNacimiento"
+                      fluid
+                      [iconDisplay]="'input'"
+                      [showIcon]="true"
+                      inputId="icondisplay"
+                      appendTo="body"
+                      dateFormat="dd/mm/yy"
+                      placeholder="Selecciona la fecha de fundación"
+                    />
+                  </div>
+                  <div class="mb-4">
+                    <label for="userImage">Logo</label>
+                    <p-fileupload
+                      name="userImage"
+                      id="userImage"
+                      styleClass="mt-1"
+                      [multiple]="false"
+                      accept=".jpg,.png,.jpeg"
+                      maxFileSize="1000000"
+                      mode="advanced"
+                      (onSelect)="setImage($event)"
+                      (onClear)="clearImage()"
+                      [files]="uploadedFiles"
+                    >
+                      <ng-template #empty>
+                        @if(imageUrl != ''){
+                        <div class="row justify-content-md-center">
+                          <div class="col-md-auto">
+                            <img
+                              [src]="imageUrl"
+                              alt="google image"
+                              width="auto"
+                              height="75vh"
+                              style="border-radius: 0.5em"
+                            />
+                          </div>
+                          <div class="col">
+                            <div class="row">Imagen de perfil de google</div>
+                            <div class="row"></div>
+                          </div>
+                        </div>
+                        } @else {
+                        <div class="row justify-content-md-center">
+                          <div class="col-md-auto">Arrastra una imagen para subirla</div>
+                        </div>
+                        }
+                      </ng-template>
+                      <ng-template #file>
+                        @if(uploadedFiles.length == 0){
+                        <div class="row justify-content-md-center">
+                          <div class="col-md-auto">Arrastra una imagen para subirla</div>
+                        </div>
+                        } @for (file of uploadedFiles; track $index) {
+                        <div class="row justify-content-md-center">
+                          <div class="col-md-auto">
+                            <img
+                              [src]="imageUrl ? imageUrl : file.objectURL"
+                              [alt]="file.name"
+                              width="auto"
+                              height="75vh"
+                              style="border-radius: 0.5em"
+                            />
+                          </div>
+                          <div class="col">
+                            <div class="row">
+                              {{ file.name }}
+                            </div>
+                            <div class="row">{{ file.size }} bytes</div>
+                          </div>
+                        </div>
+                        }
+                      </ng-template>
+                      <ng-template
+                        #header
+                        let-files
+                        let-chooseCallback="chooseCallback"
+                        let-clearCallback="clearCallback"
+                      >
+                        <div class="justify-between items-center">
+                          <div class="flex">
+                            <p-button
+                              class="me-2"
+                              (onClick)="chooseCallback($event, chooseCallback)"
+                              icon="pi pi-images"
+                              [rounded]="true"
+                              [outlined]="true"
+                            />
+                            <p-button
+                              (onClick)="clearCallback()"
+                              icon="pi pi-times"
+                              [rounded]="true"
+                              [outlined]="true"
+                              severity="danger"
+                              [disabled]="!files || (!imageUrl && files.length === 0)"
+                            />
+                          </div>
+                        </div>
+                      </ng-template>
+                    </p-fileupload>
+                  </div>
+                  <div>
+                    <label for="pdfDocuments">Documentos de respaldo (PDF)<span style="color: red;">&ensp;*</span></label>
+                    <p-fileupload
+                      name="pdfDocuments"
+                      id="pdfDocuments"
+                      styleClass="mt-1"
+                      [multiple]="false"
+                      accept=".pdf,application/pdf"
+                      maxFileSize="52428800"
+                      mode="advanced"
+                      (onSelect)="setPdfFile($event)"
+                      (onClear)="clearPdfFile()"
+                      [files]="uploadedPdfFiles"
+                    >
+                      <ng-template #empty>
+                        <div class="row justify-content-md-center">
+                          <div class="col-md-auto">Arrastra un PDF para subirlo</div>
+                        </div>
+                      </ng-template>
+                      <ng-template #file>
+                        @if(uploadedPdfFiles.length == 0){
+                        <div class="row justify-content-md-center">
+                          <div class="col-md-auto">Arrastra un PDF para subirlo</div>
+                        </div>
+                        } @for (file of uploadedPdfFiles; track $index) {
+                        <div class="row justify-content-md-center align-items-center">
+                          <div class="col-md-auto">
+                            <i class="pi pi-file-pdf" style="font-size: 3rem; color: #e74c3c;"></i>
+                          </div>
+                          <div class="col">
+                            <div class="row">
+                              <strong>{{ file.name }}</strong>
+                            </div>
+                            <div class="row">{{ (file.size / 1024 / 1024).toFixed(2) }} MB</div>
+                          </div>
+                        </div>
+                        }
+                      </ng-template>
+                      <ng-template
+                        #header
+                        let-files
+                        let-chooseCallback="chooseCallback"
+                        let-clearCallback="clearCallback"
+                      >
+                        <div class="justify-between items-center">
+                          <div class="flex">
+                            <p-button
+                              class="me-2"
+                              (onClick)="chooseCallback($event, chooseCallback)"
+                              icon="pi pi-file-pdf"
+                              [rounded]="true"
+                              [outlined]="true"
+                            />
+                            <p-button
+                              (onClick)="clearCallback()"
+                              icon="pi pi-times"
+                              [rounded]="true"
+                              [outlined]="true"
+                              severity="danger"
+                              [disabled]="!files || files.length === 0"
+                            />
+                          </div>
+                        </div>
+                      </ng-template>
+                    </p-fileupload>
+                  </div>
+                </form>
+              </div>
+            </p-tabpanel>
+          </p-tabpanels>
+        </p-tabs>
+        <div class="row mt-2 mb-4 justify-content-md-center">
+          <div class="col-md-auto w-100">
+            <p-button
+              fluid
+              (onClick)="onSubmit()"
+              [disabled]="
+                (typeSelected == 1 && userForm.invalid) ||
+                (typeSelected == 2 && (charityForm.invalid || !uploadedPdfFiles.length)) ||
+                postUser
+              "
+            >
+              Crear perfil @if(postUser){<i class="pi pi-spin pi-spinner"></i>}
+            </p-button>
+          </div>
+        </div>
+      </p-card>
+    </div>
+  </div>
+</div>

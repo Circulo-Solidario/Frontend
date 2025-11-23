@@ -1,0 +1,74 @@
+@media (max-width: 575px) {
+  .main-container {
+    padding-top: 2vh !important;
+  }
+}
+
+@media (max-width: 767px){
+  .chat-list {
+    border-right: 0 !important;
+  }
+}
+
+.go-back-buttom {
+  cursor: pointer;
+}
+
+#no-data-logo{
+    fill: var(--p-tabs-tabpanel-color);
+    width: max-content;
+    height: max-content;
+}
+
+.main-container {
+  padding: 4vh;
+  height: 100%;
+}
+
+.chat-list {
+  border-right: 1px solid var(--p-primary-color);
+  min-height: 100%;
+  min-width: 20vw;
+}
+
+::ng-deep .p-tablist-tab-list,
+.p-tabpanels,
+.p-tablist {
+  background-color: transparent !important;
+  z-index: 0;
+}
+
+::ng-deep .p-dataview-content {
+  border-radius: var(--p-content-border-radius);
+}
+
+::ng-deep .p-dataview-content.chat-link {
+  cursor: pointer !important;
+}
+
+.chat-link {
+  cursor: pointer !important;
+}
+
+::ng-deep .p-tabpanels{
+  max-height: 100%;
+  overflow: auto;
+}
+
+::ng-deep .p-tabs{
+  max-height: 100%;
+}
+
+::ng-deep p-tablist{
+  min-height: max-content;
+  margin-bottom: 1rem;
+}
+
+::ng-deep .p-tabpanels{
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+::ng-deep .p-divider{
+  margin: 0;
+}

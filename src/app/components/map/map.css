@@ -1,0 +1,192 @@
+#people-map {
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.main-container .col {
+    display: flex !important;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+}
+
+.map-wrapper {
+    position: relative;
+    flex: 1;
+    background: var(--p-content-background);
+    border-radius: var(--p-border-radius-xl);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    min-height: 0;
+    margin-bottom: 0.5rem;
+}
+
+#people-map img.leaflet-tile {
+    max-width: none !important;
+}
+
+.leaflet-pane {
+    position: absolute !important;
+}
+
+.leaflet-marker-pane {
+    position: absolute !important;
+    z-index: 1060 !important;
+}
+
+.leaflet-popup-pane {
+    position: absolute !important;
+    z-index: 1070 !important;
+}
+
+.leaflet-overlay-pane {
+    position: absolute !important;
+    z-index: 1040 !important;
+}
+
+.leaflet-shadow-pane {
+    position: absolute !important;
+    z-index: 1050 !important;
+}
+
+.leaflet-tooltip-pane {
+    position: absolute !important;
+    z-index: 1080 !important;
+}
+
+.leaflet-attribution-control {
+    position: absolute !important;
+    z-index: 1050 !important;
+    bottom: 10px !important;
+    left: 10px !important;
+}
+
+.leaflet-control {
+    position: absolute !important;
+    z-index: 1050 !important;
+}
+
+.map-controls {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 700;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    pointer-events: auto;
+}
+
+.control-btn {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+.go-back-buttom {
+    cursor: pointer;
+}
+
+/* Dialog styling */
+.point-dialog {
+    border-radius: var(--p-border-radius-xl);
+}
+
+.dialog-content {
+    padding: 1rem 0;
+}
+
+.dialog-content label {
+    font-weight: 500;
+    color: var(--p-text-color);
+}
+
+.dialog-content textarea {
+    background-color: var(--p-inputtext-bg);
+    border: 1px solid var(--p-inputtext-border-color);
+    border-radius: var(--p-border-radius-lg);
+    color: var(--p-inputtext-color);
+    padding: 0.75rem;
+    font-size: 0.95rem;
+}
+
+/* Dot popup button styling */
+.dot-popup-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: flex-start;
+}
+
+.dot-popup-content p {
+    margin: 0;
+    color: inherit;
+    font-size: 0.9rem;
+}
+
+.btn-mark-attended {
+    border: none;
+    background: none;
+    cursor: pointer;
+    padding: 0;
+    font: inherit;
+}
+
+.btn-mark-attended.p-button {
+    font-size: 0.85rem;
+    padding: 0.5rem 1rem;
+}
+
+/* Legend tooltip styling */
+.map-controls-left {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 700;
+    display: flex;
+}
+
+.left-buttons-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.legend-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 0;
+    margin: 0;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 1rem;
+    margin: 0;
+    padding: 0;
+    line-height: 1;
+    color: #fff;
+}
+
+.legend-item span:last-child {
+    white-space: nowrap;
+}
+
+.legend-icon {
+    font-size: 0.9rem !important;
+}
+
+.legend-text {
+    color: #fff !important;
+    white-space: nowrap;
+}

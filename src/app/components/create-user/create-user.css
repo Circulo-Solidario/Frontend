@@ -1,0 +1,74 @@
+@media (max-width: 1200px) {
+    #screen {
+        width: 45% !important;
+    }
+}
+
+@media (max-width: 768px) {
+    #screen {
+        width: 75% !important;
+    }
+}
+
+@media (max-width: 576px) {
+    #screen {
+        width: 100% !important;
+    }
+}
+
+#screen {
+    width: 40%;
+}
+
+#card {
+    width: 100%;
+    max-height: 90vh;
+}
+
+.scroll-max {
+    max-height: 90vh;
+    border: 0px;
+}
+
+.form-scroll-wrapper {
+    max-height: 35vh;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.2) transparent;
+}
+
+.form-scroll-wrapper::-webkit-scrollbar {
+    width: 4px;
+}
+
+.form-scroll-wrapper::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+}
+
+.form-scroll-wrapper::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+:host ::ng-deep .p-message-content {
+    height: auto !important;
+}
+
+.limited-text {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+::ng-deep .p-fileupload-file-badge {
+    display: none !important;
+}
+
+::ng-deep .p-progressbar {
+    display: none !important;
+}
+
+::ng-deep .p-fileupload-file-actions {
+    display: none !important;
+}

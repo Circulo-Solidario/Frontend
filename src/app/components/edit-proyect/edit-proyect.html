@@ -1,0 +1,148 @@
+<div class="main-container container-fluid">
+  <div class="col-auto justify-content-center align-content-center h-100">
+    <h1 class="d-flex my-2 align-items-center mb-4">
+      <i class="pi pi-chevron-left me-3 go-back-buttom" (click)="goBack()"></i> Editar Proyecto
+    </h1>
+    <p-card>
+      <div class="p-fluid p-4" [formGroup]="proyectForm">
+        <div class="row w-100">
+          <div class="col-12 col-sm-12 col-md-12 col-lg-4 text-center">
+            <label for="inputImage"
+              >Imagen del proyecto<span style="color: red">&ensp;*</span></label
+            >
+            <p-fileupload
+              name="inputImage"
+              [multiple]="false"
+              accept=".jpg,.png,.jpeg"
+              maxFileSize="1000000"
+              styleClass="mt-2"
+              (onSelect)="setImage($event)"
+            >
+              <ng-template #header let-chooseCallback="chooseCallback"> </ng-template>
+              <ng-template #content let-files>
+                @for (file of files; track $index) {
+                <div class="flex items-center justify-center flex-col">
+                  <img role="presentation" [alt]="file.name" [src]="file.objectURL" />
+                </div>
+                }
+              </ng-template>
+              <ng-template #empty>
+                @if (imagenUrl && !imagen) {
+                <div class="flex items-center justify-center flex-col">
+                  <img role="presentation" alt="Imagen actual" [src]="originalProyectImage" />
+                </div>
+                } @else {
+                <div class="justify-content-center align-items-center empty-content no-image">
+                  <i class="pi pi-file-arrow-up" style="font-size: 2.5rem"></i>
+                  <p class="mt-6 mb-0">Carga una imagen</p>
+                </div>
+                }
+              </ng-template>
+            </p-fileupload>
+            @if(!imagen && !imagenUrl){
+            <p-button styleClass="mt-2" label="Elegir imagen" icon="pi pi-upload" (onClick)="choose()" />
+            }@else if(!imagen && imagenUrl) {
+            <p-button styleClass="mt-2" label="Cambiar imagen" icon="pi pi-refresh" (onClick)="choose()" />
+            }@else {
+            <p-button
+              styleClass="mt-2"
+              label="Quitar imagen"
+              icon="pi pi-times"
+              severity="danger"
+              (onClick)="clearImage()"
+            />
+            }
+          </div>
+          <div class="col-12 col-sm-12 col-md-12 col-lg-8 mt-4 mt-lg-0">
+            <div class="row-gap-0">
+              <label for="title">Título del proyecto<span style="color: red">&ensp;*</span></label>
+              <input
+                name="title"
+                placeholder="Ej: Fondos para..."
+                class="mt-2"
+                pInputText
+                type="text"
+                fluid
+                formControlName="nombre"
+              />
+            </div>
+            <div class="mt-4 row-gap-0">
+              <label for="description"
+                >Descripción<span style="color: red">&ensp;*</span
+                ><span
+                  >&ensp;({{ proyectForm.get('descripcion')?.value.length ?? 0 }}/255)</span
+                ></label
+              >
+              <textarea
+                name="description"
+                placeholder="Describe el motivo del proyecto detalladamente..."
+                class="mt-2"
+                formControlName="descripcion"
+                rows="5"
+                cols="30"
+                pTextarea
+                fluid
+              ></textarea>
+            </div>
+            <div class="mt-4 row-gap-0 row">
+              <div class="col-12 col-sm-12 col-md-6 col-lg-6 mt-4 mt-md-0 mt-lg-0">
+                <label for="fechaFinalizacion">Fecha finalización</label>
+                <p-datepicker
+                  class="mt-1"
+                  id="fechaFinalizacion"
+                  formControlName="fechaFin"
+                  fluid
+                  [iconDisplay]="'input'"
+                  [showIcon]="true"
+                  inputId="icondisplay"
+                  appendTo="body"
+                  dateFormat="dd/mm/yy"
+                  placeholder="Selecciona la fecha de finalización"
+                  [minDate]="minDate"
+                />
+              </div>
+              <div class="col-12 col-sm-12 col-md-6 col-lg-6 mt-4 mt-md-0 mt-lg-0">
+                <label for="objetivo">Monto objetivo a recaudar</label>
+                <p-inputnumber class="mt-1" [min]="0" fluid formControlName="objetivo" inputId="currency-ars" mode="currency" currency="ARS" locale="es-AR" placeholder="$ 10.000,00"/>
+              </div>
+            </div>
+            <div class="mt-4 row-gap-0">
+              <div class="col-12 col-sm-12 col-md-6 col-lg-6 mt-4 mt-md-0 mt-lg-0">
+                <div class="row-gap-0">
+                  <label class="p-0" for="title">Estado</label>
+                </div>
+                <div class="d-flex row-gap-0 py-2 align-content-center">
+                  <p-tag
+                    class="w-100"
+                    name
+                    icon="pi pi-check"
+                    severity="success"
+                    value="Activo"
+                    fluid
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row w-100 justify-content-end">
+          <div class="col-auto mt-4">
+            <p-button
+              class="me-4"
+              label="Cancelar"
+              severity="secondary"
+              (onClick)="cancel()"
+              [disabled]="proyectForm.pristine && !changeImage || setUploading"
+            />
+            <p-button
+              (onClick)="onSubmit()"
+              [disabled]="proyectForm.invalid || (!imagen && !imagenUrl) || setUploading"
+            >
+              Guardar cambios@if(setUploading){<i class="pi pi-spin pi-spinner"></i>}
+            </p-button>
+          </div>
+        </div>
+      </div>
+    </p-card>
+  </div>
+</div>
