@@ -347,32 +347,37 @@
               {{ item.label }}
             </span>
           </a>
-        </div>
+        </div>        
       </ng-template>
     </p-panelmenu>
     <ng-template #footer>
-      <div class="d-flex justify-content-center gap-5" style="align-items: center">
-        <p-button [label]="loggedUser?.alias" (onClick)="goEditProfile()" fluid>
-          <p-avatar
-            [icon]="loggedUser?.urlImagen ? '' : 'pi pi-user fs-6'"
-            [image]="loggedUser?.urlImagen ? loggedUser.urlImagen : ''"
-            class="avatar"
-            shape="circle"
-          />
-        </p-button>
-        <p-button label="Cerrar sesión" (click)="logOut()" icon="pi pi-sign-out" fluid />
+      <div class="d-flex flex-column gap-2">
         <p-button
           label="Términos y condiciones"
           (click)="openTerms()"
           icon="pi pi-file"
           variant="text"
+          fluid
         />
         <p-button
           label="Preguntas frecuentes"
           (click)="toggleFaqs()"
           icon="pi pi-question"
           variant="text"
+          fluid
+          class="mt-2"
         />
+        <div class="d-flex justify-content-center gap-2 mt-4" style="align-items: center">
+          <p-button [label]="loggedUser?.alias" (onClick)="goEditProfile()" fluid>
+            <p-avatar
+              [icon]="loggedUser?.urlImagen ? '' : 'pi pi-user fs-6'"
+              [image]="loggedUser?.urlImagen ? loggedUser.urlImagen : ''"
+              class="avatar"
+              shape="circle"
+            />
+          </p-button>
+          <p-button label="Cerrar sesión" (click)="logOut()" icon="pi pi-sign-out" fluid />
+        </div>
       </div>
     </ng-template>
   </p-drawer>
