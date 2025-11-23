@@ -80,6 +80,7 @@
               <div class="col-12 col-sm-12 col-md-6 col-lg-6 mt-4 mt-md-0 mt-lg-0">
                 <label for="fechaFinalizacion">Fecha finalización</label>
                 <p-datepicker
+                  [minDate]="today"
                   class="mt-1"
                   id="fechaFinalizacion"
                   formControlName="fechaFin"

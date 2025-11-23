@@ -63,7 +63,7 @@
               class="tag"
               icon="pi pi-check"
               [severity]="getSeverity(productData?.estado)"
-              [value]="productData?.estado"
+              [value]="productData?.estado.replace('_', ' ')"
               [rounded]="true"
             />
             <p-button class="mt-4 mt-xl-0" icon="pi pi-thumbs-up" fluid label="Solicitar producto" 

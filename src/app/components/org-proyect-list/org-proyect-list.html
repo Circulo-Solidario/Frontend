@@ -18,7 +18,7 @@
                   [alt]="item.nombre"
                 />
                 <p-tag
-                  [value]="item.estado.replace('_', ' ')"
+                  [value]="item.estado.replaceAll('_', ' ')"
                   [severity]="getSeverity(item)"
                   class="position-absolute bg-dark"
                   style="left: 4px; top: 4px"

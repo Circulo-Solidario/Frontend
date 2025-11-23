@@ -69,13 +69,23 @@ export class Notifications {
     this.channels.forEach(channel => {
       this.pusher.unsubscribe(channel.name);    
     });
+    this.channels = [];
     return new Promise((resolve) => {resolve();});
   }
 
   disconnect(): void{
-    this.unsubscribeAllNotification();
-    if (this.pusher.connection.state === 'connected') {
-      this.pusher.disconnect();
-    }    
+    try {
+      this.channels.forEach(channel => {
+        try {
+          this.pusher.unsubscribe(channel.name);
+        } catch (e) {
+          // Ignorar errores de unsubscribe
+        }
+      });
+      this.channels = [];
+      // No llamar a pusher.disconnect() para evitar errores con WebSocket
+    } catch (e) {
+      // Ignorar errores
+    }
   }
 }

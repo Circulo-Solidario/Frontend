@@ -11,6 +11,8 @@ import { TooltipModule } from 'primeng/tooltip';
 import * as L from 'leaflet';
 import { Dots } from '../../services/dots';
 import { Toasts } from '../../services/toasts';
+import { LoginService } from '../../services/login';
+import { PermissionsService } from '../../services/permissions';
 
 @Component({
   selector: 'app-map',
@@ -23,13 +25,17 @@ export class Map implements OnInit, AfterViewInit, OnDestroy {
   private toasts: Toasts = inject(Toasts);
   private dotsService: Dots = inject(Dots);
   private resizeObserver?: ResizeObserver | null = null;
-  map!: L.Map;
-  userLocation: [number, number] = [-34.6037, -58.3816];
   private userMarker?: L.Marker;
   private userAccuracyCircle?: L.Circle | null = null;
   private geoWatchId?: number;
   private selectedMarker?: L.Marker | null = null;
   private dotsMarkers: L.Marker[] = [];
+  private loginService: LoginService = inject(LoginService);
+  private permissionsService: PermissionsService = inject(PermissionsService);
+
+  map!: L.Map;
+  userLocation: [number, number] = [-34.6037, -58.3816];
+  logedUser: any;
 
   // Dialog properties
   showPointDialog: boolean = false;
@@ -42,6 +48,11 @@ export class Map implements OnInit, AfterViewInit, OnDestroy {
   showMarkAsAttendedDialog: boolean = false;
   pendingPointId?: number;
   isMarkingAsAttended: boolean = false;
+
+  // Delete point dialog properties
+  showDeletePointDialog: boolean = false;
+  pendingDeleteDotId?: number;
+  isDeletingPoint: boolean = false;
 
   // Legend tooltip content
   legendContent: string = '';
@@ -56,6 +67,19 @@ export class Map implements OnInit, AfterViewInit, OnDestroy {
   };
 
   ngOnInit(): void {
+    this.loginService.getLoggedUser().subscribe((user: any) => {
+      this.logedUser = user;
+      if (user == null) {
+        this.router.navigate(['/login']);
+        return;
+      }
+      
+      // Validación de permisos para acceder a esta ruta
+      if (!this.permissionsService.canAccessRoute(user, this.router.url)) {
+        this.router.navigate(['/principal']);
+        return;
+      }
+    });
     this.initLegendContent();
     this.pickPointItems = [
       {
@@ -342,12 +366,21 @@ export class Map implements OnInit, AfterViewInit, OnDestroy {
 
     let popupContent = descripcion;
     if (estado === 'pendiente') {
-      popupContent = `<div class="dot-popup-content">
-        <p>${descripcion}</p>
-        <button class="btn-mark-attended p-button p-button-outlined p-button-secondary" data-dot-id="${id}">
-          <span class="p-button-label">Marcar como atendido</span>
-        </button>
-      </div>`;
+      if (this.logedUser?.tipoUsuario === 'USUARIO') {
+        popupContent = `<div class="dot-popup-content">
+          <p>${descripcion}</p>
+          <button class="btn-mark-attended p-button p-button-outlined p-button-secondary" data-dot-id="${id}">
+            <span class="p-button-label">Marcar como atendido</span>
+          </button>
+        </div>`;
+      } else if (this.logedUser?.tipoUsuario === 'ADMINISTRADOR') {
+        popupContent = `<div class="dot-popup-content">
+          <p>${descripcion}</p>
+          <button class="btn-delete-point p-button p-button-outlined p-button-danger" data-dot-id="${id}">
+            <span class="p-button-label">Eliminar punto</span>
+          </button>
+        </div>`;
+      }
     }
 
     const marker = L.marker([latitud, longitud], { icon: dotIcon })
@@ -358,9 +391,14 @@ export class Map implements OnInit, AfterViewInit, OnDestroy {
         autoClose: true
       });
     marker.on('popupopen', () => {
-      const btn = document.querySelector(`button[data-dot-id="${id}"]`);
-      if (btn) {
-        btn.addEventListener('click', () => this.openMarkAsAttendedDialog(id));
+      const btnMarkAttended = document.querySelector(`button.btn-mark-attended[data-dot-id="${id}"]`);
+      const btnDeletePoint = document.querySelector(`button.btn-delete-point[data-dot-id="${id}"]`);
+      
+      if (btnMarkAttended) {
+        btnMarkAttended.addEventListener('click', () => this.openMarkAsAttendedDialog(id));
+      }
+      if (btnDeletePoint) {
+        btnDeletePoint.addEventListener('click', () => this.openDeletePointDialog(id));
       }
     });
 
@@ -370,6 +408,11 @@ export class Map implements OnInit, AfterViewInit, OnDestroy {
   private openMarkAsAttendedDialog(dotId: number): void {
     this.pendingPointId = dotId;
     this.showMarkAsAttendedDialog = true;
+  }
+
+  private openDeletePointDialog(dotId: number): void {
+    this.pendingDeleteDotId = dotId;
+    this.showDeletePointDialog = true;
   }
 
   savePoint(): void {
@@ -473,6 +516,45 @@ export class Map implements OnInit, AfterViewInit, OnDestroy {
   cancelMarkAsAttended(): void {
     this.showMarkAsAttendedDialog = false;
     this.pendingPointId = undefined;
+  }
+
+  confirmDeletePoint(): void {
+    if (!this.pendingDeleteDotId) return;
+
+    this.isDeletingPoint = true;
+
+    this.dotsService.deleteDot(this.pendingDeleteDotId).subscribe({
+      next: () => {
+        this.isDeletingPoint = false;
+        this.showDeletePointDialog = false;
+        this.pendingDeleteDotId = undefined;
+        
+        this.toasts.showToast({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'El punto se eliminó con éxito'
+        });
+
+        // Reload dots to reflect the change
+        this.dotsMarkers.forEach(m => m.remove());
+        this.dotsMarkers = [];
+        this.loadDots();
+      },
+      error: (err) => {
+        this.isDeletingPoint = false;
+        console.error('Error deleting point:', err);
+        this.toasts.showToast({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'No se pudo eliminar el punto'
+        });
+      }
+    });
+  }
+
+  cancelDeletePoint(): void {
+    this.showDeletePointDialog = false;
+    this.pendingDeleteDotId = undefined;
   }
 
   ngOnDestroy(): void {
