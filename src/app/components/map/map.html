@@ -8,6 +8,14 @@
       <div id="people-map"></div>
       <div class="map-controls-left">
         <p-menu #pickPointMenu [popup]="true" [model]="pickPointItems" [appendTo]="'body'"></p-menu>
+        <p-menu #legendMenu [popup]="true" [model]="legendItems" [appendTo]="'body'">
+          <ng-template #item let-item>
+            <div class="d-flex align-items-center gap-2" style="max-width: max-content;">
+              <i [class]="item.icon + ' legend-icon'" [style]="item.style"></i>
+              <span>{{ item.label }}</span>
+            </div>
+          </ng-template>
+        </p-menu>
         <div class="left-buttons-group">
           @if(logedUser?.tipoUsuario != 'ADMINISTRADOR'){
           <p-button
@@ -24,10 +32,8 @@
             [rounded]="true"
             severity="secondary"
             class="control-btn"
-            [pTooltip]="legendContent"
-            tooltipPosition="right"
-            [escape]="false"
-            tooltipStyleClass="legend-tooltip">
+            title="Ver leyenda"
+            (onClick)="openLegendMenu($event)">
           </p-button>
         </div>
       </div>
