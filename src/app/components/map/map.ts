@@ -74,11 +74,11 @@ export class Map implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit(): void {
     // Load marker images from public folder
-    this.markerBlueUrl = '/marker-icon-2x-blue.png';
-    this.markerGreenUrl = '/marker-icon-2x-green.png';
-    this.markerGreyUrl = '/marker-icon-2x-grey.png';
-    this.markerOrangeUrl = '/marker-icon-2x-orange.png';
-    this.markerShadowUrl = '/marker-shadow.png';
+    this.markerBlueUrl = 'https://i.ibb.co/BVqMGnCB/marker-icon-2x-blue.png';
+    this.markerGreenUrl = 'https://i.ibb.co/jvBt1MNs/marker-icon-2x-green.png';
+    this.markerGreyUrl = 'https://i.ibb.co/MygwXhh3/marker-icon-2x-grey.png';
+    this.markerOrangeUrl = 'https://i.ibb.co/QjDQcwQ1/marker-icon-2x-orange.png';
+    this.markerShadowUrl = 'https://i.ibb.co/kVm9tMB2/marker-shadow.png';
 
     this.loginService.getLoggedUser().subscribe((user: any) => {
       this.logedUser = user;
