@@ -37,6 +37,13 @@ export class Map implements OnInit, AfterViewInit, OnDestroy {
   userLocation: [number, number] = [-34.6037, -58.3816];
   logedUser: any;
 
+  // Marker images URLs
+  markerBlueUrl: string = '';
+  markerGreenUrl: string = '';
+  markerGreyUrl: string = '';
+  markerOrangeUrl: string = '';
+  markerShadowUrl: string = '';
+
   // Dialog properties
   showPointDialog: boolean = false;
   pointDescription: string = '';
@@ -54,11 +61,10 @@ export class Map implements OnInit, AfterViewInit, OnDestroy {
   pendingDeleteDotId?: number;
   isDeletingPoint: boolean = false;
 
-  // Legend tooltip content
-  legendContent: string = '';
-
   @ViewChild('pickPointMenu') pickPointMenu?: Menu;
+  @ViewChild('legendMenu') legendMenu?: Menu;
   pickPointItems: MenuItem[] = [];
+  legendItems: MenuItem[] = [];
 
   private resizeListener = () => {
     if (this.map) {
@@ -67,6 +73,13 @@ export class Map implements OnInit, AfterViewInit, OnDestroy {
   };
 
   ngOnInit(): void {
+    // Load marker images from public folder
+    this.markerBlueUrl = '/marker-icon-2x-blue.png';
+    this.markerGreenUrl = '/marker-icon-2x-green.png';
+    this.markerGreyUrl = '/marker-icon-2x-grey.png';
+    this.markerOrangeUrl = '/marker-icon-2x-orange.png';
+    this.markerShadowUrl = '/marker-shadow.png';
+
     this.loginService.getLoggedUser().subscribe((user: any) => {
       this.logedUser = user;
       if (user == null) {
@@ -100,7 +113,12 @@ export class Map implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private initLegendContent(): void {
-    this.legendContent = `<div class="legend-content"><div class="legend-item"><i class="pi pi-circle-fill legend-icon" style="color: #2ecc71; margin-right: 0.75rem;"></i><span class="legend-text">Mi ubicación</span></div><div class="legend-item"><i class="pi pi-circle-fill legend-icon" style="color: #FFA500; margin-right: 0.75rem;"></i><span class="legend-text">Sin atender</span></div><div class="legend-item"><i class="pi pi-circle-fill legend-icon" style="color: #a9a9a9; margin-right: 0.75rem;"></i><span class="legend-text">Atendidos</span></div><div class="legend-item"><i class="pi pi-circle-fill legend-icon" style="color: #87CEEB; margin-right: 0.75rem;"></i><span class="legend-text">Nuevo punto</span></div></div>`;
+    this.legendItems = [
+      { label: 'Mi ubicación', icon: 'pi pi-circle-fill', style: { 'color': '#2ecc71' } },
+      { label: 'Sin atender', icon: 'pi pi-circle-fill', style: { color: '#FFA500' } },
+      { label: 'Atendidos', icon: 'pi pi-circle-fill', style: { color: '#a9a9a9' } },
+      { label: 'Nuevo punto', icon: 'pi pi-circle-fill', style: { color: '#87CEEB' } }
+    ];
   }
 
   private requestGeolocationPermission(): void {
@@ -215,6 +233,10 @@ export class Map implements OnInit, AfterViewInit, OnDestroy {
     this.pickPointMenu?.toggle(event);
   }
 
+  openLegendMenu(event: Event): void {
+    this.legendMenu?.toggle(event);
+  }
+
   private markCurrentPositionAsPoint(): void {
     this.placeOrMoveSelectedMarker(this.userLocation[0], this.userLocation[1], false);
     this.pendingPointLocation = [this.userLocation[0], this.userLocation[1]];
@@ -243,8 +265,8 @@ export class Map implements OnInit, AfterViewInit, OnDestroy {
 
   private placeOrMoveSelectedMarker(lat: number, lng: number, draggable: boolean): void {
     const blueIcon = L.icon({
-      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+      iconUrl: this.markerBlueUrl,
+      shadowUrl: this.markerShadowUrl,
       iconSize: [25, 41],
       iconAnchor: [12, 41],
       popupAnchor: [1, -34],
@@ -268,8 +290,8 @@ export class Map implements OnInit, AfterViewInit, OnDestroy {
     }
 
     const greenIcon = L.icon({
-      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+      iconUrl: this.markerGreenUrl,
+      shadowUrl: this.markerShadowUrl,
       iconSize: [25, 41],
       iconAnchor: [12, 41],
       popupAnchor: [1, -34],
@@ -353,11 +375,11 @@ export class Map implements OnInit, AfterViewInit, OnDestroy {
     const { id, latitud, longitud, descripcion, estado } = dot;
     
     const iconColor = estado === 'pendiente' ? 'orange' : 'grey';
-    const iconUrl = `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${iconColor}.png`;
+    const iconUrl = iconColor === 'orange' ? this.markerOrangeUrl : this.markerGreyUrl;
 
     const dotIcon = L.icon({
       iconUrl,
-      shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+      shadowUrl: this.markerShadowUrl,
       iconSize: [25, 41],
       iconAnchor: [12, 41],
       popupAnchor: [1, -34],
