@@ -1,0 +1,1 @@
+import{Ta as a,r as i}from"./chunk-RM4WEROU.js";import{$ as e,ea as r}from"./chunk-B6WBXPKU.js";var o=class t{httpClient=r(i);apiPath="/categorias";getCategories(){return this.httpClient.get(`${a.apiUrl}${this.apiPath}`)}static \u0275fac=function(n){return new(n||t)};static \u0275prov=e({token:t,factory:t.\u0275fac,providedIn:"root"})};export{o as a};
