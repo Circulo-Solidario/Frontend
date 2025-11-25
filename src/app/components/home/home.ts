@@ -289,6 +289,10 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
             id: 'subReportsMyStats',
             label: 'Mis estadísticas',
             icon: 'pi pi-chart-scatter',
+            command: () => {
+              this.router.navigate(['/principal/dashboard-personal']);
+              this.visible = false;
+            },
           },
           {
             id: 'subReportsGlobalStats',

@@ -87,6 +87,10 @@ export const routes: Routes = [
       {
         path: 'validar-organizaciones',
         loadComponent: () => import('./components/invalid-users-list/invalid-users-list').then((m) => m.InvalidUsersList)
+      },
+      {
+        path: 'dashboard-personal',
+        loadComponent: () => import('./components/personal-dashboard/personal-dashboard').then((m) => m.PersonalDashboard)
       }
     ]
   },  

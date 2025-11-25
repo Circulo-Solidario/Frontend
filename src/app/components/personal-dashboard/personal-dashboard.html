@@ -1,0 +1,49 @@
+<div class="personal-dashboard-container">
+  <div class="dashboard-header">
+    <div class="header-content">
+      <h2 class="header-title">Mi Dashboard</h2>
+      <p class="header-subtitle">Estadísticas personales de tu actividad</p>
+    </div>
+  </div>
+
+  @if(loading) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando estadísticas personales...</p>
+    </div>
+  } @else if(groupedStatsKeys && groupedStatsKeys.length > 0) {
+    <div class="stats-content">
+      @for (groupName of groupedStatsKeys; track $index) {
+        <div class="stats-group">
+          <h3 class="group-title">{{ groupName }}</h3>
+          <div class="stats-grid">
+            @for (item of groupedStats[groupName]; track $index) {
+              <div class="stat-card" [attr.data-severity]="item.severity">
+                <div class="stat-card-header">
+                  <i class="stat-icon" [class]="item.icon"></i>
+                  <h4 class="stat-label">{{ item.label }}</h4>
+                </div>
+                <div class="stat-card-body">
+                  @if (typeof item.value === 'number') {
+                    <div class="stat-value">{{ item.value }}</div>
+                  } @else if (typeof item.value === 'string') {
+                    <div class="stat-value-text">{{ item.value }}</div>
+                  } @else {
+                    <div class="stat-value-json">
+                      <pre>{{ item.value | json }}</pre>
+                    </div>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  } @else {
+    <div class="no-data-container">
+      <i class="pi pi-inbox"></i>
+      <p>No hay datos disponibles para mostrar</p>
+    </div>
+  }
+</div>
