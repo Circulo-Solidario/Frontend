@@ -7,6 +7,16 @@ export const routes: Routes = [
   },
   { path: 'login', loadComponent: () => import('./components/login/login').then((m) => m.Login) },
   {
+    path: 'crear-perfil',
+    loadComponent: () =>
+      import('./components/create-profile/create-profile').then((m) => m.CreateProfile),
+  },
+  {
+    path: 'recuperar-contrasena',
+    loadComponent: () =>
+      import('./components/forgot-password/forgot-password').then((m) => m.ForgotPassword),
+  },
+  {
     path: 'principal',
     loadComponent: () => import('./components/home/home').then((m) => m.Home),
     children: [
@@ -79,12 +89,7 @@ export const routes: Routes = [
         loadComponent: () => import('./components/invalid-users-list/invalid-users-list').then((m) => m.InvalidUsersList)
       }
     ]
-  },
-  {
-    path: 'crear-perfil',
-    loadComponent: () =>
-      import('./components/create-profile/create-profile').then((m) => m.CreateProfile),
-  },
+  },  
   { path: '', redirectTo: 'principal', pathMatch: 'full' },
   { path: '**', redirectTo: 'principal' },
 ];

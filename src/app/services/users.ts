@@ -69,4 +69,22 @@ export class Users {
   validateUser(id:any, state: any): Observable<any>{
     return this.httpCliente.patch(`${environment.apiUrl}${this.apiPath}/${id}/validar`, { estado: state });
   }
+
+  forgotPassword(email: string): Observable<any>{
+    return this.httpCliente.get(`${environment.apiUrl}${this.apiPath}/recuperar-contrasena`, { params: { email: email } });
+  }
+
+  validateCodeFP(email: string, code: string): Observable<any>{
+    return this.httpCliente.post(`${environment.apiUrl}${this.apiPath}/validar-codigo`, {
+      email: email,
+      codigo: code
+    });
+  }
+
+  changePassword(idUser: any, newPassword: string): Observable<any>{
+    return this.httpCliente.patch(`${environment.apiUrl}${this.apiPath}/${idUser}/cambiar-contrasena`, { 
+      nuevaContrasena: newPassword 
+    });
+  }
+
 }
