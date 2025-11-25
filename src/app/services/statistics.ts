@@ -13,4 +13,12 @@ export class Statistics {
   getGlobalStats(): Observable<any> {
     return this.httpClient.get(`${environment.apiUrl}${this.apiPath}/global`);
   }
+
+  getPersonalStats(userId: number): Observable<any> {
+    return this.httpClient.get(`${environment.apiUrl}${this.apiPath}/global/personal/${userId}`);
+  }
+
+  getOrganizationProjectStats(organizationId: number): Observable<any> {
+    return this.httpClient.get(`${environment.apiUrl}${this.apiPath}/global/organizacion/${organizationId}/proyectos`);
+  }
 }
