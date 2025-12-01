@@ -92,6 +92,11 @@ export const routes: Routes = [
         path: 'dashboard-personal',
         loadComponent: () => import('./components/personal-dashboard/personal-dashboard').then((m) => m.PersonalDashboard)
       }
+      ,
+      {
+        path: 'estadisticas-globales',
+        loadComponent: () => import('./components/global-stats/global-stats').then((m) => m.GlobalStats)
+      }
     ]
   },  
   { path: '', redirectTo: 'principal', pathMatch: 'full' },

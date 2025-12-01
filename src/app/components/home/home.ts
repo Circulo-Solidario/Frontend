@@ -100,11 +100,6 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
 
   faqs: { question: string; answer: string }[] = [
     {
-      question: '¿Qué es Círculo Solidario?',
-      answer:
-        'Círculo Solidario es una plataforma para publicar, ofrecer y solicitar donaciones de productos y proyectos solidarios. Conectamos a donantes con personas y organizaciones que necesitan recursos.',
-    },
-    {
       question: '¿Cómo creo una publicación para donar un producto?',
       answer:
         'En el apartado "Productos" vas a encontrar la opcion "Publicar producto", elige fotos claras, agrega una descripción honesta del producto, y especifica su categoria y estado. Revisa y publica cuando estés listo.',
@@ -123,11 +118,6 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
       question: '¿Hay algún costo por usar la plataforma?',
       answer:
         'Usar Círculo Solidario para publicar y solicitar productos es gratuito. Si un proyecto solicita donaciones monetarias, los términos y comisiones (si hubiera) quedarán indicados claramente en ese proyecto.',
-    },
-    {
-      question: '¿Cómo puedo contactar al soporte?',
-      answer:
-        'Puedes contactarnos a través del correo 405865@tecnicatura.frc.utn.edu.ar o 113114@tecnicatura.frc.utn.edu.ar. Intentamos responder en un plazo razonable.',
     },
     {
       question: '¿Qué debo hacer si hay un problema con una donación?',
@@ -159,6 +149,8 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
   // the data structures in place so nothing is removed.
   hasOverflow = false;
   notificationContent!: ElementRef<HTMLDivElement>;
+  // Estado para detectar si el router-outlet tiene contenido activo
+  outletActivated: boolean = false;
 
   ngOnInit() {
     this.loginService.getLoggedUser().subscribe((user: any) => {
@@ -299,7 +291,7 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
             label: 'Estadísticas globales',
             icon: 'pi pi-chart-line',
             command: () => {
-              this.showGlobalStats();
+              this.router.navigate(['/principal/estadisticas-globales']);
               this.visible = false;
             },
           },
@@ -670,6 +662,15 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
   toggleFaqs(): void {
     this.showFAQs = !this.showFAQs;
     if (this.showFAQs) this.visible = false;
+  }
+
+  // Handlers para saber si hay una ruta hija activa en el outlet
+  onOutletActivate(): void {
+    this.outletActivated = true;
+  }
+
+  onOutletDeactivate(): void {
+    this.outletActivated = false;
   }
 
   toggleMenuItem(item: any): void {

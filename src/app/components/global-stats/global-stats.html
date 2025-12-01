@@ -1,0 +1,32 @@
+<div class="stats-page container p-3">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3 class="m-0">Estadísticas globales</h3>
+  </div>
+  @if(groupedStatsKeys && groupedStatsKeys.length > 0){
+  <div class="groups-container d-flex flex-column gap-3">
+    @for (groupName of groupedStatsKeys; track $index) {
+    <div class="group-card p-3" style="border: 1px solid var(--p-border-color); border-radius: 8px;">
+      <h4 class="m-0">{{ groupName }}</h4>
+      <div class="group-items mt-2">
+        @for (entry of groupedStats[groupName]; track $index) {
+        <div class="group-item d-flex justify-content-between align-items-center">
+          <div class="group-item-label">
+            <h5 class="m-0 text-capitalize">{{ entry.label }}</h5>
+          </div>
+          <div class="group-item-value text-end">
+            @if (typeof entry.value === 'number'){
+            <h2 class="m-0">{{ entry.value }}</h2>
+            } @else {
+            <pre style="white-space: pre-wrap; word-break: break-word; margin:0;">{{ entry.value | json }}</pre>
+            }
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+    }
+  </div>
+  }@else {
+  <div class="p-3">No hay estadísticas para mostrar.</div>
+  }
+</div>

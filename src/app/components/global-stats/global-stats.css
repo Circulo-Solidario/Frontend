@@ -1,0 +1,7 @@
+/* Basic styling to match other stats pages */
+.stats-page { padding: 1.5rem; }
+.group-card { background: var(--p-form-field-background); border: 1px solid var(--p-content-border-color); border-radius: 8px; padding: 1rem; box-shadow: 0 1px 3px rgba(0,0,0,0.04); }
+.group-item { display:flex; justify-content: space-between; align-items:center; padding: .5rem 0; border-bottom: 1px solid rgba(0,0,0,0.06); }
+.group-item:last-child { border-bottom:none; }
+.group-item-label h5 { margin:0; font-weight:600 }
+.group-item-value h2 { margin:0; font-size:1.25rem }

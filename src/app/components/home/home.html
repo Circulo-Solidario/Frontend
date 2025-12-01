@@ -453,42 +453,31 @@
       </div>
     </div>
     <div class="components-content container-fluid p-0">
-      @if(showGlobalStatsPanel){
-      <div class="stats-page container p-3">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h3 class="m-0">Estadísticas globales</h3>
-          <p-button label="Cerrar" icon="pi pi-times" (click)="showGlobalStatsPanel = false" />
-        </div>
-        @if(groupedStatsKeys && groupedStatsKeys.length > 0){
-        <div class="groups-container d-flex flex-column gap-3">
-          @for (groupName of groupedStatsKeys; track $index) {
-          <div class="group-card p-3" style="border: 1px solid var(--p-border-color); border-radius: 8px;">
-            <h4 class="m-0">{{ groupName }}</h4>
-            <div class="group-items mt-2">
-              @for (entry of groupedStats[groupName]; track $index) {
-              <div class="group-item d-flex justify-content-between align-items-center">
-                <div class="group-item-label">
-                  <h5 class="m-0 text-capitalize">{{ entry.label }}</h5>
-                </div>
-                <div class="group-item-value text-end">
-                  @if (typeof entry.value === 'number'){
-                  <h2 class="m-0">{{ entry.value }}</h2>
-                  } @else {
-                  <pre style="white-space: pre-wrap; word-break: break-word; margin:0;">{{ entry.value | json }}</pre>
-                  }
-                </div>
-              </div>
-              }
-            </div>
+      <router-outlet #routerOutlet="outlet" (activate)="onOutletActivate()" (deactivate)="onOutletDeactivate()"></router-outlet>
+      @if(!outletActivated){
+      <div class="home-empty-panel p-3">
+        <div class="home-empty-inner">
+          <h3 class="m-0 mb-2">Bienvenido a Círculo Solidario</h3>
+          <p>
+            Círculo Solidario conecta donantes, organizaciones y personas que necesitan ayuda.
+            Publicá o buscá productos para donar o recibir, colabora con proyectos solidarios
+            y comunicate con la comunidad para coordinar entregas. Nuestra misión es facilitar
+            el intercambio de recursos y fortalecer las redes de solidaridad locales.
+          </p>
+
+          <h5 class="mt-3 mb-1">Contacto y soporte</h5>
+          <p class="mb-0">
+            Antes de contactar al equipo, intentá resolver dudas directamente con la otra parte
+            a través del chat. Si necesitás soporte, podés escribirnos a través de los correos
+            o usar los botones de contacto rápido.
+          </p>
+
+          <div class="contact-links">
+            <a class="mail-btn" href="mailto:405865@tecnicatura.frc.utn.edu.ar">405865@tecnicatura.frc.utn.edu.ar</a>
+            <a class="mail-btn" href="mailto:113114@tecnicatura.frc.utn.edu.ar">113114@tecnicatura.frc.utn.edu.ar</a>
           </div>
-          }
         </div>
-        }@else {
-        <div class="p-3">No hay estadísticas para mostrar.</div>
-        }
       </div>
-      }@else {
-      <router-outlet />
       }
       <p-scrolltop
         target="parent"
