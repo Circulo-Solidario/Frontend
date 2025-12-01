@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { Tag } from 'primeng/tag';
 import { Button, ButtonModule } from 'primeng/button';
 import { SelectButton } from 'primeng/selectbutton';
+import { ToggleButton, ToggleButtonModule } from 'primeng/togglebutton';
 import { DataView } from 'primeng/dataview';
 import { PanelModule } from 'primeng/panel';
 import { SelectModule } from 'primeng/select';
@@ -22,6 +23,7 @@ import { Notifications, TipoNotificaciones } from '../../services/notifications'
 import { ConfirmationService } from 'primeng/api';
 import { TextareaModule } from 'primeng/textarea';
 import { ConfirmDialog } from 'primeng/confirmdialog';
+import { Geolocation } from '../../services/geolocation';
 @Component({
   selector: 'app-products-list',
   imports: [
@@ -33,6 +35,8 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
     ButtonModule,
     PanelModule,
     Button,
+    ToggleButton,
+    ToggleButtonModule,
     SelectModule,
     SliderModule,
     ScrollTopModule,
@@ -59,6 +63,7 @@ export class ProductsList implements OnInit {
   private requestService: Requests = inject(Requests);
   private notificationService: Notifications = inject(Notifications);
   private confirmationService: ConfirmationService = inject(ConfirmationService);
+  private geolocation: Geolocation = inject(Geolocation);
   logedUser: any;
   currentPage: number = 0;
   pageSize: number = 10;
@@ -67,6 +72,8 @@ export class ProductsList implements OnInit {
   collapsed: boolean = true;
   name: any;
   distance: any = 15;
+  useLocation: boolean = false;
+  userCoords: { lat: number; lng: number } | null = null;
   products: any;
   filters: any = {};
   categories: any;
@@ -149,17 +156,33 @@ export class ProductsList implements OnInit {
     });
   }
 
-  getProducts() {
+  async getProducts() {
     this.filters = {
       nombre: this.name,
       distancia: this.distance,
       page: this.currentPage,
       size: this.pageSize
     }
+
+    if (this.useLocation) {
+      try {
+        const pos = await this.geolocation.getCurrentPosition();
+        this.userCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+        this.filters = { ...this.filters, lat: this.userCoords.lat, lng: this.userCoords.lng };
+      } catch (err: any) {
+        this.toasts.showToast({ severity: 'error', summary: 'Ubicación', detail: err?.message ?? 'No se pudo obtener la ubicación' });
+        // If we couldn't get location, disable the option and continue without coords
+        this.useLocation = false;
+        this.userCoords = null;
+      }
+    }
     const queryParams = { ...this.route.snapshot.queryParams };
     let queryString = new URLSearchParams(queryParams).toString();
     if (!queryString.includes('&distancia=')) {
       queryString += `&distancia=${this.distance}`;
+    }
+    if (this.useLocation && !queryString.includes('&cerca=')) {
+      queryString += `&cerca=true`;
     }
     if (this.selectedCategory) {
       this.filters = {
@@ -194,6 +217,8 @@ export class ProductsList implements OnInit {
   clearFilters() {
     this.distance = 15;
     this.selectedCategory = null;
+    this.useLocation = false;
+    this.userCoords = null;
     this.filterData();
   }
 
