@@ -1,7 +1,6 @@
 .personal-dashboard-container {
   padding: 2rem;
   min-height: 100vh;
-  background: var(--p-surface-ground);
 }
 
 .dashboard-header {

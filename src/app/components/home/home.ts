@@ -325,7 +325,8 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
             allMenuItems.donaciones.items![2], // Mis proyectos publicados
           ]
         },
-        {...allMenuItems.personasCalle} // Personas en situación de calle
+        {...allMenuItems.personasCalle},
+        {...allMenuItems.reportes} // Personas en situación de calle
       ];
     } else if (userType === 'USUARIO') {
       // Usuarios con roles específicos

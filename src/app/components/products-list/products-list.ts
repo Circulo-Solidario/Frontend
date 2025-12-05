@@ -71,8 +71,8 @@ export class ProductsList implements OnInit {
   hasMoreData: boolean = true;
   collapsed: boolean = true;
   name: any;
-  distance: any = 15;
-  useLocation: boolean = false;
+  distance: any = 5;
+  useLocation: boolean = true;
   userCoords: { lat: number; lng: number } | null = null;
   products: any;
   filters: any = {};
@@ -99,7 +99,7 @@ export class ProductsList implements OnInit {
     this.route.queryParams.subscribe((params) => {
       this.name = params['nombre'];
       params['categoria'] ? this.selectedCategory = Number(params['categoria']) : null;
-      params['distancia'] ? this.distance = Number(params['distancia']) : null;
+      params['distancia'] ? this.distance = Number(params['distancia']) : 5;
       this.filterData();
     });
     this.categoriesService.getCategories().subscribe({
@@ -159,7 +159,7 @@ export class ProductsList implements OnInit {
   async getProducts() {
     this.filters = {
       nombre: this.name,
-      distancia: this.distance,
+      distanciaKm: this.distance,
       page: this.currentPage,
       size: this.pageSize
     }
@@ -167,22 +167,17 @@ export class ProductsList implements OnInit {
     if (this.useLocation) {
       try {
         const pos = await this.geolocation.getCurrentPosition();
-        this.userCoords = { lat: pos.coords.latitude, lng: pos.coords.longitude };
-        this.filters = { ...this.filters, lat: this.userCoords.lat, lng: this.userCoords.lng };
+        this.filters = { ...this.filters, latitud: pos.coords.latitude, longitud: pos.coords.longitude };
       } catch (err: any) {
         this.toasts.showToast({ severity: 'error', summary: 'Ubicación', detail: err?.message ?? 'No se pudo obtener la ubicación' });
         // If we couldn't get location, disable the option and continue without coords
-        this.useLocation = false;
-        this.userCoords = null;
+        this.router.navigate(['/principal']);
       }
     }
     const queryParams = { ...this.route.snapshot.queryParams };
     let queryString = new URLSearchParams(queryParams).toString();
     if (!queryString.includes('&distancia=')) {
       queryString += `&distancia=${this.distance}`;
-    }
-    if (this.useLocation && !queryString.includes('&cerca=')) {
-      queryString += `&cerca=true`;
     }
     if (this.selectedCategory) {
       this.filters = {
@@ -215,10 +210,8 @@ export class ProductsList implements OnInit {
   }
 
   clearFilters() {
-    this.distance = 15;
+    this.distance = 5;
     this.selectedCategory = null;
-    this.useLocation = false;
-    this.userCoords = null;
     this.filterData();
   }
 

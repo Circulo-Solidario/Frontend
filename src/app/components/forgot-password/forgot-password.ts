@@ -104,7 +104,7 @@ export class ForgotPassword implements OnInit {
           this.toastService.showToast({
             severity: 'error',
             summary: 'Mail erróneo',
-            detail: 'No existe un usuario con el mail ingresado.',
+            detail: error.error.message,
           });
         } else {
           this.toastService.showToast({

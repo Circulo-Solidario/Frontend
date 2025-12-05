@@ -1,32 +1,252 @@
-<div class="stats-page container p-3">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h3 class="m-0">Estadísticas globales</h3>
-  </div>
-  @if(groupedStatsKeys && groupedStatsKeys.length > 0){
-  <div class="groups-container d-flex flex-column gap-3">
-    @for (groupName of groupedStatsKeys; track $index) {
-    <div class="group-card p-3" style="border: 1px solid var(--p-border-color); border-radius: 8px;">
-      <h4 class="m-0">{{ groupName }}</h4>
-      <div class="group-items mt-2">
-        @for (entry of groupedStats[groupName]; track $index) {
-        <div class="group-item d-flex justify-content-between align-items-center">
-          <div class="group-item-label">
-            <h5 class="m-0 text-capitalize">{{ entry.label }}</h5>
+<div class="stats-container py-4">
+  <div class="container-fluid px-5">
+    <!-- Título -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <h1 class="d-flex fw-bold mb-0 align-items-center"> <i class="pi pi-chevron-left m-0 me-3 go-back-buttom" (click)="goHome()"></i> Estadísticas Globales</h1>
+        <p class="small">Dashboard con las estadísticas del sistema</p>
+      </div>
+    </div>
+
+    @if(loading) {
+    <div class="row">
+      <div class="col-12 text-center">
+        <p>Cargando estadísticas...</p>
+      </div>
+    </div>
+    } @else if(statsData) {
+    <!-- SECCIÓN USUARIOS -->
+    <section class="stats-section mb-5">
+      <h2 class="section-title mb-4">👥 Usuarios</h2>
+      
+      <div class="row">
+        <!-- Card: Cantidad de Usuarios Registrados -->
+        <div class="col-lg-3 col-md-6 mb-3">
+          <div class="stat-card">
+            <div class="stat-card-body">
+              <h6 class="stat-card-label">Usuarios Registrados</h6>
+              <h2 class="stat-card-value">{{ statsData.usuarios.cantidadRegistrados }}</h2>
+            </div>
           </div>
-          <div class="group-item-value text-end">
-            @if (typeof entry.value === 'number'){
-            <h2 class="m-0">{{ entry.value }}</h2>
+        </div>
+
+        <!-- Gráfico: Tipos de Usuarios (Torta) -->
+        <div class="col-lg-4 col-md-6 mb-3">
+          <div class="chart-card">
+            <h6 class="chart-card-title">Tipos de Usuarios</h6>
+            @if(hasData(statsData.usuarios.cantidadPorTipo)) {
+            <p-chart type="pie" [data]="usuariosTipoChart" [options]="usuariosTipoChart.options"></p-chart>
             } @else {
-            <pre style="white-space: pre-wrap; word-break: break-word; margin:0;">{{ entry.value | json }}</pre>
+            <div class="empty-chart">No hay datos</div>
             }
           </div>
         </div>
-        }
+
+        <!-- Gráfico: Usuarios por Rol (Barras) -->
+        <div class="col-lg-5 col-md-12 mb-3">
+          <div class="chart-card">
+            <h6 class="chart-card-title">Usuarios por Rol</h6>
+            @if(hasData(statsData.usuarios.usuariosUserPorRol)) {
+            <p-chart type="bar" [data]="usuariosRolChart" [options]="usuariosRolChart.options"></p-chart>
+            } @else {
+            <div class="empty-chart">No hay datos</div>
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN PRODUCTOS -->
+    <section class="stats-section mb-5">
+      <h2 class="section-title mb-4">📦 Productos</h2>
+      
+      <div class="row">
+        <!-- Card: Cantidad de Productos Publicados -->
+        <div class="col-lg-3 col-md-6 mb-3">
+          <div class="stat-card">
+            <div class="stat-card-body">
+              <h6 class="stat-card-label">Productos Publicados</h6>
+              <h2 class="stat-card-value">{{ statsData.productos.cantidadPublicados }}</h2>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gráfico: Productos por Estado (Torta) -->
+        <div class="col-lg-4 col-md-6 mb-3">
+          <div class="chart-card">
+            <h6 class="chart-card-title">Productos por Estado</h6>
+            @if(hasData(statsData.productos.cantidadPorEstado)) {
+            <p-chart type="pie" [data]="productosEstadoChart" [options]="productosEstadoChart.options"></p-chart>
+            } @else {
+            <div class="empty-chart">No hay datos</div>
+            }
+          </div>
+        </div>
+
+        <!-- Gráfico: Productos por Categoría (Barras) -->
+        <div class="col-lg-5 col-md-12 mb-3">
+          <div class="chart-card">
+            <h6 class="chart-card-title">Productos por Categoría</h6>
+            @if(hasData(statsData.productos.cantidadPorCategoria)) {
+            <p-chart type="bar" [data]="productosCategoriaChart" [options]="productosCategoriaChart.options"></p-chart>
+            } @else {
+            <div class="empty-chart">No hay datos</div>
+            }
+          </div>
+        </div>
+
+        <!-- Tabla: Top 5 Usuarios con Más Productos Entregados -->
+        <div class="col-12 mb-3">
+          <div class="table-card">
+            <h6 class="table-card-title">Top 5 Usuarios con Más Productos Entregados</h6>
+            @if(!isEmptyArray(statsData.productos.topUsuariosConMasEntregados)) {
+            <div class="table-responsive">
+              <table class="table table-sm table-hover">
+                <thead class="table-light">
+                  <tr>
+                    <th>Usuario</th>
+                    <th class="text-end">Productos Entregados</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (usuario of statsData.productos.topUsuariosConMasEntregados; track usuario.usuarioId) {
+                  <tr>
+                    <td>{{ usuario.nombreUsuario }}</td>
+                    <td class="text-end">
+                      <span class="badge bg-success">{{ usuario.cantidadProductosEntregados }}</span>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+            } @else {
+            <div class="empty-table">No hay datos disponibles</div>
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN PROYECTOS SOLIDARIOS -->
+    <section class="stats-section mb-5">
+      <h2 class="section-title mb-4">🎯 Proyectos Solidarios</h2>
+      
+      <div class="row">
+        <!-- Card: Cantidad de Proyectos -->
+        <div class="col-lg-3 col-md-6 mb-3">
+          <div class="stat-card">
+            <div class="stat-card-body">
+              <h6 class="stat-card-label">Proyectos Publicados</h6>
+              <h2 class="stat-card-value">{{ statsData.proyectosSolidarios.cantidadPublicados }}</h2>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card: Total Recaudado -->
+        <div class="col-lg-3 col-md-6 mb-3">
+          <div class="stat-card">
+            <div class="stat-card-body">
+              <h6 class="stat-card-label">Total Recaudado</h6>
+              <h2 class="stat-card-value">${{ statsData.proyectosSolidarios.totalRecaudado }}</h2>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gráfico: Proyectos por Estado (Barras) -->
+        <div class="col-lg-6 col-md-12 mb-3">
+          <div class="chart-card">
+            <h6 class="chart-card-title">Proyectos por Estado</h6>
+            @if(hasData(statsData.proyectosSolidarios.cantidadPorEstado)) {
+            <p-chart type="bar" [data]="proyectosEstadoChart" [options]="proyectosEstadoChart.options"></p-chart>
+            } @else {
+            <div class="empty-chart">No hay datos</div>
+            }
+          </div>
+        </div>
+
+        <!-- Gráfico: Recaudo por Día (Histograma) -->
+        <div class="col-lg-12 col-md-12 mb-3">
+          <div class="chart-card">
+            <h6 class="chart-card-title">Recaudo por Día</h6>
+            @if(hasData(statsData.proyectosSolidarios.recaudoPorDia)) {
+            <p-chart type="bar" [data]="proyectosRecaudoChart" [options]="proyectosRecaudoChart.options"></p-chart>
+            } @else {
+            <div class="empty-chart">No hay datos</div>
+            }
+          </div>
+        </div>
+
+        <!-- Tabla: Top 5 Usuarios con Más Donaciones -->
+        <div class="col-12 mb-3">
+          <div class="table-card">
+            <h6 class="table-card-title">Top 5 Usuarios con Más Donaciones</h6>
+            @if(!isEmptyArray(statsData.proyectosSolidarios.topUsuariosConMasDonaciones)) {
+            <div class="table-responsive">
+              <table class="table table-sm table-hover">
+                <thead class="table-light">
+                  <tr>
+                    <th>Usuario</th>
+                    <th class="text-end">Total Donado</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @for (usuario of statsData.proyectosSolidarios.topUsuariosConMasDonaciones; track usuario.usuarioId) {
+                  <tr>
+                    <td>{{ usuario.nombreUsuario }}</td>
+                    <td class="text-end">
+                      <span class="badge bg-primary">${{ usuario.totalDonaciones }}</span>
+                    </td>
+                  </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+            } @else {
+            <div class="empty-table">No hay datos disponibles</div>
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECCIÓN PUNTOS (PERSONAS EN SITUACIÓN DE CALLE) -->
+    <section class="stats-section mb-5">
+      <h2 class="section-title mb-4">📍 Personas en Situación de Calle</h2>
+      
+      <div class="row">
+        <!-- Card: Cantidad Total -->
+        <div class="col-lg-3 col-md-6 mb-3">
+          <div class="stat-card">
+            <div class="stat-card-body">
+              <h6 class="stat-card-label">Total Registrado</h6>
+              <h2 class="stat-card-value">{{ statsData.puntos.cantidadTotal }}</h2>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gráfico: Puntos por Estado (Torta) -->
+        <div class="col-lg-4 col-md-6 mb-3">
+          <div class="chart-card">
+            <h6 class="chart-card-title">Estado del Registro</h6>
+            @if(hasData(statsData.puntos.cantidadPorEstado)) {
+            <p-chart type="pie" [data]="puntosEstadoChart" [options]="puntosEstadoChart.options"></p-chart>
+            } @else {
+            <div class="empty-chart">No hay datos</div>
+            }
+          </div>
+        </div>
+      </div>
+    </section>
+
+    } @else {
+    <div class="row">
+      <div class="col-12">
+        <div class="alert alert-info" role="alert">
+          No hay estadísticas disponibles en este momento.
+        </div>
       </div>
     </div>
     }
   </div>
-  }@else {
-  <div class="p-3">No hay estadísticas para mostrar.</div>
-  }
 </div>

@@ -144,6 +144,20 @@
           }
           @if(isOrganization){
           <div class="col-12 col-sm-12 col-md-6 mb-4">
+            <label for="token">Token de Mercado Pago</label>
+            <input class="w-100 mt-1" id="token" type="text" pInputText formControlName="mercadoPagoAccessToken"
+              placeholder="Ingresa tu token de Mercado Pago" fluid />
+            @if (editUserForm.get('mercadoPagoAccessToken')?.invalid &&
+            editUserForm.get('mercadoPagoAccessToken')?.touched &&
+            editUserForm.get('mercadoPagoAccessToken')?.dirty) {
+            <div class="row mt-1">
+              <p-message severity="error" size="small" variant="simple">
+                Ingrese un token válido.
+              </p-message>
+            </div>
+          }
+          </div>
+          <div class="col-12 col-sm-12 col-md-6 mb-4">
             <label>Documentos de respaldo (PDF)</label>
             <div class="row mt-3 w-100 m-0">
               @if(documentoActual && !originalData?.validado){
