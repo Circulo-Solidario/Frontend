@@ -121,7 +121,7 @@
             type="text"
             pInputText
             placeholder="Busca los productos que necesites..."
-            fluid
+
             (keypress)="searchProduct($event)"
           />
         </p-iconfield>
@@ -357,18 +357,18 @@
           (click)="openTerms()"
           icon="pi pi-file"
           variant="text"
-          fluid
+
         />
         <p-button
           label="Preguntas frecuentes"
           (click)="toggleFaqs()"
           icon="pi pi-question"
           variant="text"
-          fluid
+
           class="mt-2"
         />
         <div class="d-flex justify-content-center gap-2 mt-4" style="align-items: center">
-          <p-button [label]="loggedUser?.alias" (onClick)="goEditProfile()" fluid>
+          <p-button [label]="loggedUser?.alias" (onClick)="goEditProfile()">
             <p-avatar
               [icon]="loggedUser?.urlImagen ? '' : 'pi pi-user fs-6'"
               [image]="loggedUser?.urlImagen ? loggedUser.urlImagen : ''"
@@ -376,7 +376,7 @@
               shape="circle"
             />
           </p-button>
-          <p-button label="Cerrar sesión" (click)="logOut()" icon="pi pi-sign-out" fluid />
+          <p-button label="Cerrar sesión" (click)="logOut()" icon="pi pi-sign-out" />
         </div>
       </div>
     </ng-template>
@@ -397,7 +397,7 @@
           <ng-template #item let-item>
             <div class="sidebar-button">
               <p-button
-                fluid
+
                 [styleClass]="
                   fullyCollapsed ? 'justify-content-start' : 'justify-content-start w-100'
                 "
@@ -428,7 +428,7 @@
       >
         <div class="sidebar-button">
           <p-button
-            fluid
+
             (click)="openTerms()"
             [styleClass]="fullyCollapsed ? 'justify-content-start' : 'justify-content-start'"
           >
@@ -440,7 +440,7 @@
         </div>
         <div class="sidebar-button mt-3">
           <p-button
-            fluid
+
             (click)="toggleFaqs()"
             [styleClass]="fullyCollapsed ? 'justify-content-start' : 'justify-content-start'"
           >
@@ -468,13 +468,12 @@
           <h5 class="mt-3 mb-1">Contacto y soporte</h5>
           <p class="mb-0">
             Antes de contactar al equipo, intentá resolver dudas directamente con la otra parte
-            a través del chat. Si necesitás soporte, podés escribirnos a través de los correos
-            o usar los botones de contacto rápido.
+            a través del chat. Si necesitás soporte, podés escribirnos a través de los correos.
           </p>
 
-          <div class="contact-links">
-            <a class="mail-btn" href="mailto:405865@tecnicatura.frc.utn.edu.ar">405865@tecnicatura.frc.utn.edu.ar</a>
-            <a class="mail-btn" href="mailto:113114@tecnicatura.frc.utn.edu.ar">113114@tecnicatura.frc.utn.edu.ar</a>
+          <div class="contact-links flex-column flex-sm-row">
+            <span class="mail-info">405865@tecnicatura.frc.utn.edu.ar</span>
+            <span class="mail-info">113114@tecnicatura.frc.utn.edu.ar</span>
           </div>
         </div>
       </div>

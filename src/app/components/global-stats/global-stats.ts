@@ -359,10 +359,40 @@ export class GlobalStats implements OnInit {
 
   // Métodos auxiliares para validar datos
   hasData(data: any): boolean {
-    if (!data) return false;
-    if (typeof data === 'object') {
-      return Object.keys(data).length > 0;
+    if (data == null) return false;
+
+    if (Array.isArray(data)) {
+      return data.length > 0 && data.some((item) => {
+        if (item == null) return false;
+        if (typeof item === 'number') return item !== 0;
+        if (typeof item === 'string') return !isNaN(Number(item)) ? Number(item) !== 0 : item.trim().length > 0;
+        if (Array.isArray(item)) return item.length > 0;
+        if (typeof item === 'object') return Object.keys(item).length > 0;
+        return true;
+      });
     }
+
+    if (typeof data === 'object') {
+      const values = Object.values(data);
+      if (values.length === 0) return false;
+      for (const v of values) {
+        if (v == null) continue;
+        if (typeof v === 'number' && v !== 0) return true;
+        if (typeof v === 'string') {
+          const n = Number(v);
+          if (!isNaN(n) && n !== 0) return true;
+          if (v.trim().length > 0) return true;
+        }
+        if (Array.isArray(v) && v.length > 0) return true;
+        if (typeof v === 'object' && Object.keys(v).length > 0) {
+          if (this.hasData(v)) return true;
+        }
+      }
+      return false;
+    }
+
+    if (typeof data === 'number') return data !== 0;
+    if (typeof data === 'string') return data.trim().length > 0;
     return true;
   }
 

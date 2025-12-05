@@ -37,7 +37,7 @@
             @if(hasData(statsData.usuarios.cantidadPorTipo)) {
             <p-chart type="pie" [data]="usuariosTipoChart" [options]="usuariosTipoChart.options"></p-chart>
             } @else {
-            <div class="empty-chart">No hay datos</div>
+            <div class="empty-chart">No hay datos para mostrar</div>
             }
           </div>
         </div>
@@ -49,7 +49,7 @@
             @if(hasData(statsData.usuarios.usuariosUserPorRol)) {
             <p-chart type="bar" [data]="usuariosRolChart" [options]="usuariosRolChart.options"></p-chart>
             } @else {
-            <div class="empty-chart">No hay datos</div>
+            <div class="empty-chart">No hay datos para mostrar</div>
             }
           </div>
         </div>
@@ -121,7 +121,7 @@
               </table>
             </div>
             } @else {
-            <div class="empty-table">No hay datos disponibles</div>
+            <div class="empty-table">No hay datos para mostrar</div>
             }
           </div>
         </div>
@@ -160,7 +160,7 @@
             @if(hasData(statsData.proyectosSolidarios.cantidadPorEstado)) {
             <p-chart type="bar" [data]="proyectosEstadoChart" [options]="proyectosEstadoChart.options"></p-chart>
             } @else {
-            <div class="empty-chart">No hay datos</div>
+            <div class="empty-chart">No hay datos para mostrar</div>
             }
           </div>
         </div>
@@ -172,7 +172,7 @@
             @if(hasData(statsData.proyectosSolidarios.recaudoPorDia)) {
             <p-chart type="bar" [data]="proyectosRecaudoChart" [options]="proyectosRecaudoChart.options"></p-chart>
             } @else {
-            <div class="empty-chart">No hay datos</div>
+            <div class="empty-chart">No hay datos para mostrar</div>
             }
           </div>
         </div>
@@ -203,7 +203,7 @@
               </table>
             </div>
             } @else {
-            <div class="empty-table">No hay datos disponibles</div>
+            <div class="empty-table">No hay datos para mostrar</div>
             }
           </div>
         </div>
@@ -232,7 +232,7 @@
             @if(hasData(statsData.puntos.cantidadPorEstado)) {
             <p-chart type="pie" [data]="puntosEstadoChart" [options]="puntosEstadoChart.options"></p-chart>
             } @else {
-            <div class="empty-chart">No hay datos</div>
+            <div class="empty-chart">No hay datos para mostrar</div>
             }
           </div>
         </div>
