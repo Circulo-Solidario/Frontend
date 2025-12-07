@@ -6,6 +6,7 @@ import { Statistics } from '../../services/statistics';
 import { Toasts } from '../../services/toasts';
 import { firstValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
+import { ThemeService } from '../../services/theme';
 
 interface StatsData {
   usuarios: {
@@ -42,6 +43,7 @@ export class GlobalStats implements OnInit {
   private statisticsService: Statistics = inject(Statistics);
   private toastService: Toasts = inject(Toasts);
   private router = inject(Router);
+  private themeService: ThemeService = inject(ThemeService);
 
   statsData: StatsData | null = null;
   loading: boolean = true;
@@ -57,6 +59,12 @@ export class GlobalStats implements OnInit {
 
   ngOnInit(): void {
     this.loadGlobalStats();
+    // Suscribirse a cambios de tema para reinicializar charts
+    this.themeService.onThemeChanged().subscribe(() => {
+      if (this.statsData) {
+        this.initializeCharts();
+      }
+    });
   }
 
   async loadGlobalStats(): Promise<void> {
@@ -66,14 +74,8 @@ export class GlobalStats implements OnInit {
       
       if (this.statsData) {
         this.initializeCharts();
-        this.toastService.showToast({ 
-          severity: 'success', 
-          summary: 'Estadísticas', 
-          detail: 'Estadísticas globales cargadas correctamente' 
-        });
       }
     } catch (error) {
-      console.error('Error al obtener estadísticas globales:', error);
       this.toastService.showToast({ 
         severity: 'error', 
         summary: 'Error', 
@@ -121,7 +123,7 @@ export class GlobalStats implements OnInit {
 
     // Gráfico de Usuarios por Tipo (Torta)
     this.usuariosTipoChart = {
-      labels: Object.keys(this.statsData.usuarios.cantidadPorTipo || {}),
+      labels: Object.keys(this.statsData.usuarios.cantidadPorTipo || {}).map(r => r.replaceAll('_', ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())),
       datasets: [{
         data: Object.values(this.statsData.usuarios.cantidadPorTipo || {}),
         backgroundColor: [
@@ -134,6 +136,7 @@ export class GlobalStats implements OnInit {
         borderWidth: 2
       }],
       options: {
+        maintainAspectRatio: false,
         plugins: {
           legend: {
             position: 'bottom',
@@ -150,7 +153,7 @@ export class GlobalStats implements OnInit {
 
     // Gráfico de Usuarios por Rol (Barras)
     this.usuariosRolChart = {
-      labels: Object.keys(this.statsData.usuarios.usuariosUserPorRol || {}),
+      labels: Object.keys(this.statsData.usuarios.usuariosUserPorRol || {}).map(r => r.replaceAll('_', ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())),
       datasets: [{
         label: 'Cantidad de Usuarios',
         data: Object.values(this.statsData.usuarios.usuariosUserPorRol || {}),
@@ -159,6 +162,7 @@ export class GlobalStats implements OnInit {
         borderWidth: 1
       }],
       options: {
+        maintainAspectRatio: false,
         indexAxis: 'y',
         plugins: {
           legend: {
@@ -176,7 +180,8 @@ export class GlobalStats implements OnInit {
           },
           x: {
             ticks: {
-              color: textColor
+              color: textColor,
+              stepSize: 1
             },
             grid: {
               color: this.getPrimeNGColor('--p-content-border-color')
@@ -188,7 +193,7 @@ export class GlobalStats implements OnInit {
 
     // Gráfico de Productos por Estado (Torta)
     this.productosEstadoChart = {
-      labels: Object.keys(this.statsData.productos.cantidadPorEstado || {}),
+      labels: Object.keys(this.statsData.productos.cantidadPorEstado || {}).map(r => r.replaceAll('_', ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())),
       datasets: [{
         data: Object.values(this.statsData.productos.cantidadPorEstado || {}),
         backgroundColor: [
@@ -201,6 +206,7 @@ export class GlobalStats implements OnInit {
         borderWidth: 2
       }],
       options: {
+        maintainAspectRatio: false,
         plugins: {
           legend: {
             position: 'bottom',
@@ -217,7 +223,7 @@ export class GlobalStats implements OnInit {
 
     // Gráfico de Productos por Categoría (Barras)
     this.productosCategoriaChart = {
-      labels: Object.keys(this.statsData.productos.cantidadPorCategoria || {}),
+      labels: Object.keys(this.statsData.productos.cantidadPorCategoria || {}).map(r => r.replaceAll('_', ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())),
       datasets: [{
         label: 'Cantidad de Productos',
         data: Object.values(this.statsData.productos.cantidadPorCategoria || {}),
@@ -226,6 +232,7 @@ export class GlobalStats implements OnInit {
         borderWidth: 1
       }],
       options: {
+        maintainAspectRatio: false,
         indexAxis: 'y',
         plugins: {
           legend: {
@@ -243,7 +250,8 @@ export class GlobalStats implements OnInit {
           },
           x: {
             ticks: {
-              color: textColor
+              color: textColor,
+              stepSize: 1
             },
             grid: {
               color: this.getPrimeNGColor('--p-content-border-color')
@@ -255,7 +263,7 @@ export class GlobalStats implements OnInit {
 
     // Gráfico de Proyectos por Estado (Barras)
     this.proyectosEstadoChart = {
-      labels: Object.keys(this.statsData.proyectosSolidarios.cantidadPorEstado || {}),
+      labels: Object.keys(this.statsData.proyectosSolidarios.cantidadPorEstado || {}).map(r => r.replaceAll('_', ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())),
       datasets: [{
         label: 'Cantidad de Proyectos',
         data: Object.values(this.statsData.proyectosSolidarios.cantidadPorEstado || {}),
@@ -264,6 +272,7 @@ export class GlobalStats implements OnInit {
         borderWidth: 1
       }],
       options: {
+        maintainAspectRatio: false,
         plugins: {
           legend: {
             display: false
@@ -272,7 +281,8 @@ export class GlobalStats implements OnInit {
         scales: {
           y: {
             ticks: {
-              color: textColor
+              color: textColor,
+              stepSize: 1
             },
             grid: {
               color: this.getPrimeNGColor('--p-content-border-color')
@@ -281,6 +291,7 @@ export class GlobalStats implements OnInit {
           x: {
             ticks: {
               color: textColor
+              
             },
             grid: {
               color: this.getPrimeNGColor('--p-content-border-color')
@@ -297,12 +308,13 @@ export class GlobalStats implements OnInit {
       labels: sortedDates,
       datasets: [{
         label: 'Recaudo por Día',
-        data: sortedDates.map(date => recaudoPorDia[date]),
+        data: sortedDates.map(date => Math.round(recaudoPorDia[date])),
         backgroundColor: this.getPrimeNGColor('--p-purple-500'),
         borderColor: '#1F2937',
         borderWidth: 1
       }],
       options: {
+        maintainAspectRatio: false,
         plugins: {
           legend: {
             display: false
@@ -311,7 +323,8 @@ export class GlobalStats implements OnInit {
         scales: {
           y: {
             ticks: {
-              color: textColor
+              color: textColor,
+              stepSize: 100
             },
             grid: {
               color: this.getPrimeNGColor('--p-content-border-color')

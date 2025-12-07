@@ -1,7 +1,12 @@
+@media (max-width: 575px) {
+  .stats-container {
+    padding-top: 2vh !important;
+  }
+}
+
 .stats-container {
-  background: var(--p-surface-ground);
   min-height: 100vh;
-  padding: 2rem 0;
+  padding: 4vh;
 }
 
 .section-title {
@@ -30,11 +35,6 @@
   min-height: max-content;
 }
 
-.stat-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
-}
-
 .stat-card-body {
   display: flex;
   flex-direction: column;
@@ -47,7 +47,6 @@
   font-size: 0.875rem;
   color: var(--p-text-color-secondary);
   font-weight: 600;
-  text-transform: uppercase;
   letter-spacing: 0.5px;
   margin-bottom: 0.5rem;
 }
@@ -84,13 +83,14 @@
 .chart-card :deep(.p-chart) {
   flex: 1;
   display: flex;
+  height: 120px;
 }
 
 .empty-chart {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 250px;
+  height: 120px;
   color: var(--p-text-color-secondary);
   font-style: italic;
   background: var(--p-surface-overlay);
@@ -145,10 +145,6 @@
   transition: background-color 0.2s ease;
 }
 
-.table-card ::ng-deep .p-datatable .p-datatable-tbody > tr:hover {
-  background-color: var(--p-surface-hover);
-}
-
 .table-card ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
   padding: 0.75rem;
   color: var(--p-text-color);
@@ -156,9 +152,6 @@
   background-color: transparent;
 }
 
-.table-card ::ng-deep .p-datatable .p-datatable-tbody > tr.p-datatable-selected {
-  background-color: var(--p-surface-overlay);
-}
 
 /* HTML Table Styling */
 .table {
@@ -179,10 +172,6 @@
   border-bottom: 1px solid var(--p-content-border-color);
   transition: background-color 0.2s ease;
   background-color: transparent;
-}
-
-.table tbody tr:hover {
-  background-color: var(--p-surface-hover);
 }
 
 .table tbody td {

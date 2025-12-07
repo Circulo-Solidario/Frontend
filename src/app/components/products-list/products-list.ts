@@ -6,7 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { Tag } from 'primeng/tag';
 import { Button, ButtonModule } from 'primeng/button';
 import { SelectButton } from 'primeng/selectbutton';
-import { ToggleButton, ToggleButtonModule } from 'primeng/togglebutton';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 import { DataView } from 'primeng/dataview';
 import { PanelModule } from 'primeng/panel';
 import { SelectModule } from 'primeng/select';
@@ -35,7 +35,6 @@ import { Geolocation } from '../../services/geolocation';
     ButtonModule,
     PanelModule,
     Button,
-    ToggleButton,
     ToggleButtonModule,
     SelectModule,
     SliderModule,

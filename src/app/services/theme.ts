@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -6,6 +7,7 @@ import { Injectable } from '@angular/core';
 export class ThemeService {
   private isDarkMode = false;
   private readonly themeKey = 'primeNG-theme-mode';
+  private themeChanged$ = new Subject<boolean>();
 
   constructor() {
     this.loadInitialTheme();
@@ -26,6 +28,7 @@ export class ThemeService {
     this.isDarkMode = !this.isDarkMode;
     this.applyTheme();
     localStorage.setItem(this.themeKey, this.isDarkMode ? 'dark' : 'light');
+    this.themeChanged$.next(this.isDarkMode);
   }
 
   private applyTheme(): void {
@@ -44,9 +47,14 @@ export class ThemeService {
     return this.isDarkMode;
   }
 
+  onThemeChanged() {
+    return this.themeChanged$.asObservable();
+  }
+
   setTheme(isDark: boolean): void {
     this.isDarkMode = isDark;
     this.applyTheme();
     localStorage.setItem(this.themeKey, isDark ? 'dark' : 'light');
+    this.themeChanged$.next(isDark);
   }
 }
