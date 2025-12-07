@@ -82,7 +82,6 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
   private notificationService: Notifications = inject(Notifications);
   private userService: Users = inject(Users);
   private toastService: Toasts = inject(Toasts);
-  private statisticsService: Statistics = inject(Statistics);
   private notificationsSubscription?: Subscription;
   private resizeObserver!: ResizeObserver;
   loggedUser: any;
@@ -99,11 +98,6 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
   validationDialogType: 'RECHAZADO' | 'PENDIENTE' | 'VALIDADO' | null = null;
 
   faqs: { question: string; answer: string }[] = [
-    {
-      question: '¿Qué es Círculo Solidario?',
-      answer:
-        'Círculo Solidario es una plataforma para publicar, ofrecer y solicitar donaciones de productos y proyectos solidarios. Conectamos a donantes con personas y organizaciones que necesitan recursos.',
-    },
     {
       question: '¿Cómo creo una publicación para donar un producto?',
       answer:
@@ -125,11 +119,6 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
         'Usar Círculo Solidario para publicar y solicitar productos es gratuito. Si un proyecto solicita donaciones monetarias, los términos y comisiones (si hubiera) quedarán indicados claramente en ese proyecto.',
     },
     {
-      question: '¿Cómo puedo contactar al soporte?',
-      answer:
-        'Puedes contactarnos a través del correo 405865@tecnicatura.frc.utn.edu.ar o 113114@tecnicatura.frc.utn.edu.ar. Intentamos responder en un plazo razonable.',
-    },
-    {
       question: '¿Qué debo hacer si hay un problema con una donación?',
       answer:
         'Primero intenta resolverlo directamente con la otra parte por chat. Si no se soluciona, repórtalo al equipo de soporte con detalles y pruebas; nosotros te orientaremos para medir el siguiente paso.',
@@ -142,23 +131,10 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
   notifications: NotificationInter[] = [];
   unreadCount: number = 0;
   showNotifications: boolean = false;
-  globalStats: any = null;
-  showGlobalStatsDialog: boolean = false; 
-  showGlobalStatsPanel: boolean = false;
-  globalStatsEntries: Array<{ key: string; value: any; label?: string; sanitizedKey?: string }> = [];
-  chartDataMap: Record<string, any> = {};
-  chartOptionsMap: Record<string, any> = {};
-  chartTypeMap: Record<string, any> = {};
-  chartInstances: Record<string, any> = {};
-  groupedStats: Record<string, Array<{ key: string; value: any; label?: string; sanitizedKey?: string }>> = {};
-  groupedStatsKeys: string[] = [];
-
-  // Chart-related runtime is currently disabled (commented).
-  // If you want to re-enable charts, uncomment Chart import above and
-  // the methods `createChart` / `destroyAllCharts` below. Keeping
-  // the data structures in place so nothing is removed.
   hasOverflow = false;
   notificationContent!: ElementRef<HTMLDivElement>;
+  // Estado para detectar si el router-outlet tiene contenido activo
+  outletActivated: boolean = false;
 
   ngOnInit() {
     this.loginService.getLoggedUser().subscribe((user: any) => {
@@ -289,13 +265,17 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
             id: 'subReportsMyStats',
             label: 'Mis estadísticas',
             icon: 'pi pi-chart-scatter',
+            command: () => {
+              this.router.navigate(['/principal/dashboard-personal']);
+              this.visible = false;
+            },
           },
           {
             id: 'subReportsGlobalStats',
             label: 'Estadísticas globales',
             icon: 'pi pi-chart-line',
             command: () => {
-              this.showGlobalStats();
+              this.router.navigate(['/principal/estadisticas-globales']);
               this.visible = false;
             },
           },
@@ -329,7 +309,8 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
             allMenuItems.donaciones.items![2], // Mis proyectos publicados
           ]
         },
-        {...allMenuItems.personasCalle} // Personas en situación de calle
+        {...allMenuItems.personasCalle},
+        {...allMenuItems.reportes} // Personas en situación de calle
       ];
     } else if (userType === 'USUARIO') {
       // Usuarios con roles específicos
@@ -425,71 +406,6 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
     if (this.resizeObserver) {
       this.resizeObserver.disconnect();
     }
-    this.destroyAllCharts();
-  }
-
-  closeGlobalStats(): void {
-    this.showGlobalStatsPanel = false;
-    this.destroyAllCharts();
-  }
-
-  private labelMap: Record<string, string> = {
-    total_users: 'Usuarios totales',
-    total_products: 'Productos totales',
-    total_requests: 'Solicitudes totales',
-  };
-
-  private capitalizeWords(s: string) {
-    return s
-      .split(/\s+/)
-      .filter(Boolean)
-      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-      .join(' ');
-  }
-
-  private getFriendlyLabel(key: string) {
-    if (!key) return '';
-    if (this.labelMap[key]) return this.labelMap[key];
-    const snake = key
-      .replace(/([a-z0-9])([A-Z])/g, '$1_$2')
-      .replace(/[-\s]+/g, '_')
-      .toLowerCase();
-    if (this.labelMap[snake]) return this.labelMap[snake];
-
-    if (snake.startsWith('total_')) {
-      const rest = snake.substring(6).replace(/_/g, ' ');
-      return 'Total de ' + this.capitalizeWords(rest);
-    }
-
-    const human = key.replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/[_-]+/g, ' ');
-    return this.capitalizeWords(human);
-  }
-
-  private colorPalette = [
-    '#4f46e5', // indigo
-    '#059669', // emerald
-    '#d97706', // amber
-    '#ef4444', // red
-    '#0ea5e9', // sky
-    '#a78bfa', // violet
-  ];
-
-  private getColorForKey(key: string, index = 0) {
-    const hash = Array.from(key).reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
-    return this.colorPalette[(hash + index) % this.colorPalette.length];
-  }
-
-  private getGroupLabel(key: string) {
-    if (!key) return 'Otros';
-    const k = String(key).toLowerCase();
-    if (k.includes('user') || k.includes('usuario') || k.includes('usuarios')) return 'Usuarios';
-    if (k.includes('product') || k.includes('producto') || k.includes('productos')) return 'Productos';
-    if (k.includes('request') || k.includes('solicitud') || k.includes('requests')) return 'Solicitudes';
-    if (k.includes('proyect') || k.includes('proyecto') || k.includes('proyectos')) return 'Proyectos';
-    if (k.includes('message') || k.includes('mensaje') || k.includes('mensajes') || k.includes('chat')) return 'Mensajes';
-    if (k.includes('room') || k.includes('rooms')) return 'Salas';
-    if (k.includes('total')) return 'Totales';
-    return 'Otros';
   }
 
   initResizeObserver() {
@@ -668,6 +584,15 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
     if (this.showFAQs) this.visible = false;
   }
 
+  // Handlers para saber si hay una ruta hija activa en el outlet
+  onOutletActivate(): void {
+    this.outletActivated = true;
+  }
+
+  onOutletDeactivate(): void {
+    this.outletActivated = false;
+  }
+
   toggleMenuItem(item: any): void {
     if (item.items && item.items.length > 0) {
       // Toggle del item actual
@@ -760,164 +685,9 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
     }
   }
 
-  async showGlobalStats(): Promise<void> {
-    this.showGlobalStatsPanel = true;
-    try {
-      this.globalStats = await firstValueFrom(this.statisticsService.getGlobalStats());
-      if (this.globalStats && typeof this.globalStats === 'object') {
-        this.globalStatsEntries = Object.entries(this.globalStats).map(([k, v]) => ({
-          key: k,
-          sanitizedKey: String(k).replace(/[^a-zA-Z0-9_-]/g, '_'),
-          label: this.getFriendlyLabel(String(k)),
-          value: v,
-        }));
-      } else {
-        this.globalStatsEntries = [
-          { key: 'data', sanitizedKey: 'data', label: 'data', value: this.globalStats },
-        ];
-      }
-      this.globalStatsEntries.forEach((entry) => this.buildChartForEntry(entry));
-      try {
-        console.debug('Global stats entries:', this.globalStatsEntries.map(e => ({ key: e.key, type: typeof e.value, valueSample: e.value && (Array.isArray(e.value) ? e.value.slice(0,3) : (typeof e.value === 'object' ? Object.keys(e.value).slice(0,5) : e.value)) })));
-      } catch (e) {}
-      // Group entries into categories for display (e.g. Usuarios, Productos, etc.)
-      this.groupedStats = {};
-      this.globalStatsEntries.forEach((entry) => {
-        const group = this.getGroupLabel(entry.key);
-        if (!this.groupedStats[group]) this.groupedStats[group] = [];
-        this.groupedStats[group].push(entry);
-      });
-      this.groupedStatsKeys = Object.keys(this.groupedStats);
-      // Chart initialization is disabled per user request. Keeping buildChartForEntry
-      // so data structures are populated but not used to render canvases.
-      console.log('Estadísticas globales cargadas:', this.globalStats);
-      this.toastService.showToast({
-        severity: 'success',
-        summary: 'Estadísticas',
-        detail: 'Estadísticas globales cargadas correctamente',
-      });
-    } catch (error) {
-      console.error('Error al obtener estadísticas globales:', error);
-      this.toastService.showToast({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'No se pudieron obtener las estadísticas globales',
-      });
-      this.showGlobalStatsPanel = false;
-    }
-  }
+  
 
-  private buildChartForEntry(entry: { key: string; value: any; label?: string }) {
-    const key = entry.key;
-    const v = entry.value;
-    delete this.chartDataMap[key];
-    delete this.chartOptionsMap[key];
-    delete this.chartTypeMap[key];
-
-    if (v && typeof v === 'object' && !Array.isArray(v)) {
-      const labels = Object.keys(v);
-      const data = labels.map((l) => {
-        const val = v[l];
-        const num = typeof val === 'number' ? val : Number(val);
-        return isNaN(num) ? 0 : num;
-      });
-      const allZero = data.every((d) => d === 0);
-      if (!allZero) {
-        const color = this.getColorForKey(key, 0);
-        this.chartDataMap[key] = {
-          labels,
-          datasets: [
-            {
-              data,
-              label: entry.label || this.labelMap[key] || key,
-              backgroundColor: labels.map((_, i) => this.getColorForKey(key, i)),
-              borderColor: color,
-              borderWidth: 1,
-            },
-          ],
-        };
-        this.chartTypeMap[key] = 'bar';
-        this.chartOptionsMap[key] = {
-          responsive: true,
-          maintainAspectRatio: false,
-          plugins: {
-            legend: { display: false },
-            title: { display: !!(entry.label || this.labelMap[key]), text: entry.label || this.labelMap[key] || key },
-          },
-          scales: { y: { beginAtZero: true } },
-        };
-        return;
-      }
-    }
-
-    if (Array.isArray(v) && v.length > 0 && v.every((x) => typeof x === 'number' || !isNaN(Number(x)))) {
-      const data = v.map((x: any) => Number(x));
-      const labels = data.map((_, i) => `#${i + 1}`);
-      const color = this.getColorForKey(key, 0);
-      this.chartDataMap[key] = {
-        labels,
-        datasets: [
-          {
-            data,
-            label: entry.label || this.labelMap[key] || key,
-            fill: false,
-            borderColor: color,
-            backgroundColor: color,
-            tension: 0.2,
-          },
-        ],
-      };
-      this.chartTypeMap[key] = 'line';
-      this.chartOptionsMap[key] = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          title: { display: !!(entry.label || this.labelMap[key]), text: entry.label || this.labelMap[key] || key },
-        },
-        scales: { x: { display: true }, y: { beginAtZero: true } },
-      };
-      return;
-    }
-
-    if (typeof v === 'number') {
-      const num = Number(v);
-      const color = this.getColorForKey(key, 0);
-      this.chartDataMap[key] = {
-        labels: [''],
-        datasets: [
-          {
-            data: [num],
-            label: entry.label || this.labelMap[key] || key,
-            backgroundColor: [this.getColorForKey(key, 0)],
-            borderColor: color,
-            borderWidth: 1,
-          },
-        ],
-      };
-      this.chartTypeMap[key] = 'bar';
-      this.chartOptionsMap[key] = {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: { display: false },
-          title: { display: !!(entry.label || this.labelMap[key]), text: entry.label || this.labelMap[key] || key },
-        },
-        scales: { y: { beginAtZero: true } },
-      };
-      return;
-    }
-  }
-
-  private createChart(sanitizedKey: string, key: string) {
-    // Chart runtime disabled: this function intentionally returns immediately.
-    return;
-  }
-
-  private destroyAllCharts() {
-    // Chart cleanup disabled. Keep placeholder to avoid removing code.
-    this.chartInstances = {};
-  }
+  
 
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {

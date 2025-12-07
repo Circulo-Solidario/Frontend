@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { Tag } from 'primeng/tag';
 import { Button, ButtonModule } from 'primeng/button';
 import { SelectButton } from 'primeng/selectbutton';
+import { ToggleButtonModule } from 'primeng/togglebutton';
 import { DataView } from 'primeng/dataview';
 import { PanelModule } from 'primeng/panel';
 import { SelectModule } from 'primeng/select';
@@ -22,6 +23,7 @@ import { Notifications, TipoNotificaciones } from '../../services/notifications'
 import { ConfirmationService } from 'primeng/api';
 import { TextareaModule } from 'primeng/textarea';
 import { ConfirmDialog } from 'primeng/confirmdialog';
+import { Geolocation } from '../../services/geolocation';
 @Component({
   selector: 'app-products-list',
   imports: [
@@ -33,6 +35,7 @@ import { ConfirmDialog } from 'primeng/confirmdialog';
     ButtonModule,
     PanelModule,
     Button,
+    ToggleButtonModule,
     SelectModule,
     SliderModule,
     ScrollTopModule,
@@ -59,6 +62,7 @@ export class ProductsList implements OnInit {
   private requestService: Requests = inject(Requests);
   private notificationService: Notifications = inject(Notifications);
   private confirmationService: ConfirmationService = inject(ConfirmationService);
+  private geolocation: Geolocation = inject(Geolocation);
   logedUser: any;
   currentPage: number = 0;
   pageSize: number = 10;
@@ -66,7 +70,9 @@ export class ProductsList implements OnInit {
   hasMoreData: boolean = true;
   collapsed: boolean = true;
   name: any;
-  distance: any = 15;
+  distance: any = 5;
+  useLocation: boolean = true;
+  userCoords: { lat: number; lng: number } | null = null;
   products: any;
   filters: any = {};
   categories: any;
@@ -92,7 +98,7 @@ export class ProductsList implements OnInit {
     this.route.queryParams.subscribe((params) => {
       this.name = params['nombre'];
       params['categoria'] ? this.selectedCategory = Number(params['categoria']) : null;
-      params['distancia'] ? this.distance = Number(params['distancia']) : null;
+      params['distancia'] ? this.distance = Number(params['distancia']) : 5;
       this.filterData();
     });
     this.categoriesService.getCategories().subscribe({
@@ -149,12 +155,23 @@ export class ProductsList implements OnInit {
     });
   }
 
-  getProducts() {
+  async getProducts() {
     this.filters = {
       nombre: this.name,
-      distancia: this.distance,
+      distanciaKm: this.distance,
       page: this.currentPage,
       size: this.pageSize
+    }
+
+    if (this.useLocation) {
+      try {
+        const pos = await this.geolocation.getCurrentPosition();
+        this.filters = { ...this.filters, latitud: pos.coords.latitude, longitud: pos.coords.longitude };
+      } catch (err: any) {
+        this.toasts.showToast({ severity: 'error', summary: 'Ubicación', detail: err?.message ?? 'No se pudo obtener la ubicación' });
+        // If we couldn't get location, disable the option and continue without coords
+        this.router.navigate(['/principal']);
+      }
     }
     const queryParams = { ...this.route.snapshot.queryParams };
     let queryString = new URLSearchParams(queryParams).toString();
@@ -192,7 +209,7 @@ export class ProductsList implements OnInit {
   }
 
   clearFilters() {
-    this.distance = 15;
+    this.distance = 5;
     this.selectedCategory = null;
     this.filterData();
   }

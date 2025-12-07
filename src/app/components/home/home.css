@@ -365,3 +365,110 @@
     .stat-card { min-width: 140px; flex: 1 1 45%; }
     .group-card { padding: .75rem; }
 }
+
+.home-empty-panel{
+    background: linear-gradient(135deg, #064e3b 0%, #059669 50%, #10b981 100%);
+    color: #fff;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 3.5rem 4rem;
+    margin: 0;
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    animation: introFadeIn 600ms ease both;
+}
+
+.home-empty-panel h3{
+    font-size: 3.6rem;
+    font-weight: 900;
+    margin: 0 0 .25rem 0;
+    line-height: 1.02;
+    text-align: center;
+}
+
+.home-empty-panel p{
+    margin: 0;
+    max-width: 70ch;
+    line-height: 1.45;
+    opacity: 0.95;
+    font-size: 0.95rem; 
+}
+
+.home-empty-panel h5{
+    margin: 0.75rem 0 0 0;
+    font-weight: 800;
+    font-size: 1.8rem; 
+    text-align: center;
+}
+
+.home-empty-inner{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    width: 100%;
+    max-width: 980px;
+}
+
+.home-empty-panel a{
+    color: #e6fffa; 
+    text-decoration: none;
+}
+
+.home-empty-panel .contact-links{
+    display: flex;
+    gap: 1rem;
+    margin-top: .75rem;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.home-empty-panel .mail-info {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .7rem 1.2rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.08);
+    color: #ffffff;
+    font-weight: 900;
+    font-size: 1.05rem;
+    box-shadow: 0 6px 18px rgba(2,6,23,0.13);
+    margin-bottom: 0.5rem;
+    word-break: break-all;
+}
+
+@media (max-width: 575px){
+    .home-empty-panel .contact-links {
+        flex-direction: column !important;
+        gap: 0.5rem !important;
+    }
+    .home-empty-panel .mail-info {
+        font-size: 0.95rem;
+        padding: .6rem 0.7rem;
+    }
+}
+
+@keyframes introFadeIn{
+    from{ transform: translateY(6px); opacity: 0; }
+    to{ transform: translateY(0); opacity: 1; }
+}
+
+@media (max-width: 991px){
+    .home-empty-panel{ padding: 2rem; }
+    .home-empty-panel h3{ font-size: 2.2rem; }
+    .home-empty-panel h5{ font-size: 1.3rem; }
+}
+
+@media (max-width: 575px){
+    .home-empty-panel{ padding: 1.25rem; align-items: center; text-align: center; }
+    .home-empty-panel h3{ font-size: 1.6rem; }
+    .home-empty-panel h5{ font-size: 1.05rem; }
+}
+/*#endregion */

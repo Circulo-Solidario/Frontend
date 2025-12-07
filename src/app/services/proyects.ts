@@ -54,9 +54,10 @@ export class Proyects {
     localStorage.setItem('proyectId', id);
   }
 
-  updateFounding(id: any, amount: any): Observable<any>{
+  updateFounding(id: any, amount: any, idUser: any): Observable<any>{
     let founding = {
-      "recaudado": amount
+      "recaudado": amount,
+      "usuarioId": idUser
     }
     return this.http.patch(`${this.apiPath}/${id}/actualizar-recaudado`, founding);
   }

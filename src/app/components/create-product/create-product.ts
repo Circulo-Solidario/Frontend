@@ -170,6 +170,8 @@ export class CreateProduct implements OnInit {
       return;
     }    
     let product = {
+      latitud: this.coords!.latitude,
+      longitud: this.coords!.longitude,
       idUsuario: this.loggedUser.id,
       urlImagen: this.imagenUrl,
       ...this.productForm.value,

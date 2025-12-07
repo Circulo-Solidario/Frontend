@@ -86,6 +86,7 @@ export class EditProfile {
       ]),
       alias: new FormControl('', [Validators.minLength(3), Validators.maxLength(25)]),
       fechaNacimiento: new FormControl(''),
+      mercadoPagoAccessToken: new FormControl('', [Validators.minLength(10), Validators.maxLength(255)]),
       // contrasena: new FormControl('', [
       //   Validators.required,
       //   Validators.minLength(8),
@@ -114,13 +115,13 @@ export class EditProfile {
       this.originalUserImage = this.originalData.urlImagen;
       this.userImage = this.originalData.urlImagen;
     }
-    console.log(this.originalData.fechaNacimiento?.replaceAll('-', '/') ?? '');
     
     this.editUserForm.setValue({
       nombreApellido: this.originalData.nombreApellido ?? '',
       alias: this.originalData.alias ?? '',
       fechaNacimiento:
         this.originalData.fechaNacimiento?.replaceAll('-', '/') ?? '',
+      mercadoPagoAccessToken: this.originalData.mercadoPagoAccessToken ?? ''
     });
     if (this.originalData.tipoUsuario != 'ORGANIZACION') {
       this.isOrganization = false;
@@ -322,6 +323,7 @@ export class EditProfile {
   cancel() {
     this.editUserForm.get('nombreApellido')?.setValue(this.originalData.nombreApellido ?? '');
     this.editUserForm.get('alias')?.setValue(this.originalData.alias ?? '');
+    this.editUserForm.get('mercadoPagoAccessToken')?.setValue(this.originalData.mercadoPagoAccessToken ?? '');
     this.editUserForm
       .get('fechaNacimiento')
       ?.setValue(this.originalData.fechaNacimiento?.replaceAll('-', '/') ?? '');

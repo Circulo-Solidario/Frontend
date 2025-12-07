@@ -357,18 +357,18 @@
           (click)="openTerms()"
           icon="pi pi-file"
           variant="text"
-          fluid
+
         />
         <p-button
           label="Preguntas frecuentes"
           (click)="toggleFaqs()"
           icon="pi pi-question"
           variant="text"
-          fluid
+
           class="mt-2"
         />
         <div class="d-flex justify-content-center gap-2 mt-4" style="align-items: center">
-          <p-button [label]="loggedUser?.alias" (onClick)="goEditProfile()" fluid>
+          <p-button [label]="loggedUser?.alias" (onClick)="goEditProfile()">
             <p-avatar
               [icon]="loggedUser?.urlImagen ? '' : 'pi pi-user fs-6'"
               [image]="loggedUser?.urlImagen ? loggedUser.urlImagen : ''"
@@ -376,7 +376,7 @@
               shape="circle"
             />
           </p-button>
-          <p-button label="Cerrar sesión" (click)="logOut()" icon="pi pi-sign-out" fluid />
+          <p-button label="Cerrar sesión" (click)="logOut()" icon="pi pi-sign-out" />
         </div>
       </div>
     </ng-template>
@@ -397,7 +397,7 @@
           <ng-template #item let-item>
             <div class="sidebar-button">
               <p-button
-                fluid
+
                 [styleClass]="
                   fullyCollapsed ? 'justify-content-start' : 'justify-content-start w-100'
                 "
@@ -428,7 +428,7 @@
       >
         <div class="sidebar-button">
           <p-button
-            fluid
+
             (click)="openTerms()"
             [styleClass]="fullyCollapsed ? 'justify-content-start' : 'justify-content-start'"
           >
@@ -440,7 +440,7 @@
         </div>
         <div class="sidebar-button mt-3">
           <p-button
-            fluid
+
             (click)="toggleFaqs()"
             [styleClass]="fullyCollapsed ? 'justify-content-start' : 'justify-content-start'"
           >
@@ -453,42 +453,30 @@
       </div>
     </div>
     <div class="components-content container-fluid p-0">
-      @if(showGlobalStatsPanel){
-      <div class="stats-page container p-3">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-          <h3 class="m-0">Estadísticas globales</h3>
-          <p-button label="Cerrar" icon="pi pi-times" (click)="showGlobalStatsPanel = false" />
-        </div>
-        @if(groupedStatsKeys && groupedStatsKeys.length > 0){
-        <div class="groups-container d-flex flex-column gap-3">
-          @for (groupName of groupedStatsKeys; track $index) {
-          <div class="group-card p-3" style="border: 1px solid var(--p-border-color); border-radius: 8px;">
-            <h4 class="m-0">{{ groupName }}</h4>
-            <div class="group-items mt-2">
-              @for (entry of groupedStats[groupName]; track $index) {
-              <div class="group-item d-flex justify-content-between align-items-center">
-                <div class="group-item-label">
-                  <h5 class="m-0 text-capitalize">{{ entry.label }}</h5>
-                </div>
-                <div class="group-item-value text-end">
-                  @if (typeof entry.value === 'number'){
-                  <h2 class="m-0">{{ entry.value }}</h2>
-                  } @else {
-                  <pre style="white-space: pre-wrap; word-break: break-word; margin:0;">{{ entry.value | json }}</pre>
-                  }
-                </div>
-              </div>
-              }
-            </div>
+      <router-outlet #routerOutlet="outlet" (activate)="onOutletActivate()" (deactivate)="onOutletDeactivate()"></router-outlet>
+      @if(!outletActivated){
+      <div class="home-empty-panel p-3">
+        <div class="home-empty-inner">
+          <h3 class="m-0 mb-2">Bienvenido a Círculo Solidario</h3>
+          <p>
+            Círculo Solidario conecta donantes, organizaciones y personas que necesitan ayuda.
+            Publicá o buscá productos para donar o recibir, colabora con proyectos solidarios
+            y comunicate con la comunidad para coordinar entregas. Nuestra misión es facilitar
+            el intercambio de recursos y fortalecer las redes de solidaridad locales.
+          </p>
+
+          <h5 class="mt-3 mb-1">Contacto y soporte</h5>
+          <p class="mb-0">
+            Antes de contactar al equipo, intentá resolver dudas directamente con la otra parte
+            a través del chat. Si necesitás soporte, podés escribirnos a través de los correos.
+          </p>
+
+          <div class="contact-links flex-column flex-sm-row">
+            <span class="mail-info">405865@tecnicatura.frc.utn.edu.ar</span>
+            <span class="mail-info">113114@tecnicatura.frc.utn.edu.ar</span>
           </div>
-          }
         </div>
-        }@else {
-        <div class="p-3">No hay estadísticas para mostrar.</div>
-        }
       </div>
-      }@else {
-      <router-outlet />
       }
       <p-scrolltop
         target="parent"

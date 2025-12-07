@@ -93,7 +93,7 @@ export class ProyectDetail implements OnInit {
       return;
     }
     if ((status.collection_status && status.status) == 'approved' && (status.payment_id != payment_id)) {
-      this.proyectService.updateFounding(this.id, donationAmount).subscribe({
+      this.proyectService.updateFounding(this.id, donationAmount, this.logedUser.id).subscribe({
         next: () => {
           this.confirmationService.confirm({
             key: 'approvedPay',
@@ -128,7 +128,7 @@ export class ProyectDetail implements OnInit {
       }
     });
     this.loading = true;
-    const preferenceId = await this.donationService.createPreference(this.proyectData?.nombre, this.amount, this.logedUser.correo);
+    const preferenceId = await this.donationService.createPreference(this.proyectData?.id, this.amount);
     await this.donationService.createPayButton(preferenceId);
     localStorage.setItem('donation-amount', this.amount);
     this.loading = false;

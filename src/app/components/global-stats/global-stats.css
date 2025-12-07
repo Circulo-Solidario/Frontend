@@ -1,0 +1,240 @@
+@media (max-width: 575px) {
+  .stats-container {
+    padding-top: 2vh !important;
+  }
+}
+
+.stats-container {
+  min-height: 100vh;
+  padding: 4vh;
+}
+
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--p-text-color);
+  border-left: 4px solid var(--p-primary-color);
+  padding-left: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.go-back-buttom {
+  cursor: pointer;
+}
+
+/* Stat Cards */
+.stat-card {
+  background: var(--p-surface-card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  border: 1px solid var(--p-content-border-color);
+  height: 100%;
+  max-height: max-content;
+  min-height: max-content;
+}
+
+.stat-card-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.stat-card-label {
+  font-size: 0.875rem;
+  color: var(--p-text-color-secondary);
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.stat-card-value {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--p-primary-color);
+  margin: 0;
+}
+
+/* Chart Cards */
+.chart-card {
+  background: var(--p-surface-card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--p-content-border-color);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  max-height: max-content;
+  min-height: max-content;
+}
+
+.chart-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--p-text-color);
+  margin-bottom: 1rem;
+  margin-top: 0;
+}
+
+.chart-card :deep(.p-chart) {
+  flex: 1;
+  display: flex;
+  height: 120px;
+}
+
+.empty-chart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 120px;
+  color: var(--p-text-color-secondary);
+  font-style: italic;
+  background: var(--p-surface-overlay);
+  border-radius: 8px;
+}
+
+/* Table Cards */
+.table-card {
+  background: var(--p-surface-card);
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid var(--p-content-border-color);
+  overflow-x: auto;
+}
+
+.table-card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--p-text-color);
+  margin-bottom: 1rem;
+  margin-top: 0;
+}
+
+.empty-table {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 150px;
+  color: var(--p-text-color-secondary);
+  font-style: italic;
+  background: var(--p-surface-overlay);
+  border-radius: 8px;
+}
+
+/* Table Styling with PrimeNG overrides */
+.table-card ::ng-deep .p-datatable {
+  background: transparent;
+}
+
+.table-card ::ng-deep .p-datatable .p-datatable-thead > tr > th {
+  background-color: transparent;
+  color: var(--p-text-color);
+  font-weight: 600;
+  border-color: var(--p-content-border-color);
+  padding: 0.75rem;
+}
+
+.table-card ::ng-deep .p-datatable .p-datatable-tbody > tr {
+  border-bottom: 1px solid var(--p-content-border-color);
+  background-color: transparent;
+  transition: background-color 0.2s ease;
+}
+
+.table-card ::ng-deep .p-datatable .p-datatable-tbody > tr > td {
+  padding: 0.75rem;
+  color: var(--p-text-color);
+  vertical-align: middle;
+  background-color: transparent;
+}
+
+
+/* HTML Table Styling */
+.table {
+  margin-bottom: 0;
+  font-size: 0.9rem;
+  background: transparent;
+}
+
+.table thead th {
+  background-color: transparent;
+  color: var(--p-text-color);
+  font-weight: 600;
+  border-color: var(--p-content-border-color);
+  padding: 0.75rem;
+}
+
+.table tbody tr {
+  border-bottom: 1px solid var(--p-content-border-color);
+  transition: background-color 0.2s ease;
+  background-color: transparent;
+}
+
+.table tbody td {
+  padding: 0.75rem;
+  color: var(--p-text-color);
+  vertical-align: middle;
+  background-color: transparent;
+}
+
+.badge {
+  font-size: 0.85rem;
+  padding: 0.4rem 0.6rem;
+  font-weight: 600;
+}
+
+.badge.bg-success {
+  background-color: var(--p-green-500) !important;
+}
+
+.badge.bg-primary {
+  background-color: var(--p-blue-500) !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .stats-container {
+    padding: 1rem 0;
+  }
+
+  .section-title {
+    font-size: 1.25rem;
+  }
+
+  .stat-card-value {
+    font-size: 2rem;
+  }
+
+  .stat-card,
+  .chart-card,
+  .table-card {
+    padding: 1rem;
+  }
+
+  .chart-card {
+    height: auto;
+    min-height: 250px;
+  }
+
+  .empty-chart {
+    height: 200px;
+  }
+
+  .table-responsive {
+    border-radius: 8px;
+    border: 1px solid var(--p-content-border-color);
+  }
+
+  .table {
+    font-size: 0.8rem;
+  }
+
+  .table thead th,
+  .table tbody td {
+    padding: 0.5rem;
+  }
+}

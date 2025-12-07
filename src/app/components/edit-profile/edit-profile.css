@@ -1,22 +1,22 @@
-@media (max-width: 412px){
-  .profile-data{
+@media (max-width: 412px) {
+  .profile-data {
     justify-content: center;
   }
 }
 
-@media (max-width: 575px){
-  .main-container{
+@media (max-width: 575px) {
+  .main-container {
     padding-top: 2vh !important;
   }
 }
 
-.go-back-buttom{
+.go-back-buttom {
   cursor: pointer;
 }
 
-.main-container{
-    padding: 4vh 4vw;
-    height: max-content;
+.main-container {
+  padding: 4vh 4vw;
+  height: max-content;
 }
 
 .image-container {
@@ -35,7 +35,7 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   color: white;
   display: none !important;
   border-radius: 50%;
@@ -43,19 +43,19 @@
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
-.image-container:hover .upload-btn{
+.image-container:hover .upload-btn {
   display: flex !important
 }
 
-::ng-deep .password-form p-inputgroup{
-    align-items: baseline;
+::ng-deep .password-form p-inputgroup {
+  align-items: baseline;
 }
 
-::ng-deep .password-form .p-button{
-    height: max-content;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
+::ng-deep .password-form .p-button {
+  height: max-content;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
 }

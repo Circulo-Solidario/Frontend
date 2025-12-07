@@ -10,14 +10,13 @@ import { HttpClient } from '@angular/common/http';
 export class Donation {
   private readonly http: HttpClient = inject(HttpClient);
   private readonly apiUrl = `${environment.apiUrl}/donaciones`;
-  private readonly mpKey = 'APP_USR-e0fd294a-60f4-4ba3-98f8-d22e14eaf6a3';
+  private readonly mpKey = 'TEST-de7a69a9-75ca-49e1-9d42-a1a043c99c1d';
 
-  async createPreference(proyectName: string, amount: number, donorEmail: string): Promise<string> {
+  async createPreference(proyectId: number, amount: number): Promise<string> {
     const res = await firstValueFrom(
       this.http.post<{ preferenceId: string }>(this.apiUrl, {
-        nombreProyecto: proyectName,
-        monto: amount,
-        donadorEmail: donorEmail
+        proyectoId: proyectId,
+        monto: amount
       })
     );
     return res.preferenceId;
