@@ -105,6 +105,13 @@ export class CreateProduct implements OnInit {
       return;
     }
     this.imagen = fileSelected.files[0];
+    
+    // Crear un FileReader para procesar la imagen correctamente en dispositivos móviles
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagenUrl = reader.result as string;
+    };
+    reader.readAsDataURL(this.imagen);
   }
 
   choose() {
@@ -122,6 +129,7 @@ export class CreateProduct implements OnInit {
   clearImage() {
     this.fileUpload.clear();
     this.imagen = null;
+    this.imagenUrl = null;
   }
 
   async onSubmit() {
