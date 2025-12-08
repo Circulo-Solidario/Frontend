@@ -10,6 +10,8 @@ import { Tag } from 'primeng/tag';
 import { LoginService } from '../../services/login';
 import { PermissionsService } from '../../services/permissions';
 import { Requests } from '../../services/requests';
+import { Rooms } from '../../services/rooms';
+import { Messages } from '../../services/messages';
 import { Notifications, TipoNotificaciones } from '../../services/notifications';
 import { ConfirmDialog } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
@@ -32,6 +34,8 @@ export class ProductDetail implements OnInit {
   private permissionsService: PermissionsService = inject(PermissionsService);
   private requestService: Requests = inject(Requests);
   private notificationService: Notifications = inject(Notifications);
+  private roomService: Rooms = inject(Rooms);
+  private messagesService: Messages = inject(Messages);
   private confirmationService: ConfirmationService = inject(ConfirmationService);
   id: any;
   filters: any;
@@ -105,7 +109,7 @@ export class ProductDetail implements OnInit {
         mensaje: message,
       })
       .subscribe({
-        next: () => {
+        next: (response: any) => {
           this.toasts.showToast({
             severity: 'success',
             summary: 'Producto solicitado!',
@@ -120,6 +124,26 @@ export class ProductDetail implements OnInit {
             })
             .subscribe();
           this.getProductData();
+
+          try {
+            this.roomService.getRequesterRooms(this.logedUser.id).subscribe({
+              next: (rooms: any[]) => {
+                const room = rooms.find(r => r?.solicitud?.producto?.id === this.productData.id && r?.solicitud?.solicitante?.id === this.logedUser.id);
+                if (room && message && message.trim()) {
+                  const messageRequest = {
+                    mensaje: message,
+                    idUsuario: this.logedUser.id,
+                    idSala: room.id,
+                  };
+                  this.messagesService.sendMessage(messageRequest).subscribe({
+                    next: () => {},
+                    error: () => {}
+                  });
+                }
+              },
+              error: () => {}
+            });
+          } catch (e) {}
         },
         error: () => {
           this.toasts.showToast({

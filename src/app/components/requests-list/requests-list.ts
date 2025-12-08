@@ -13,6 +13,8 @@ import { DataViewModule } from 'primeng/dataview';
 import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { Notifications, TipoNotificaciones } from '../../services/notifications';
+import { Rooms } from '../../services/rooms';
+import { Messages } from '../../services/messages';
 
 @Component({
   selector: 'app-requests-list',
@@ -33,6 +35,8 @@ export class RequestsList implements OnInit {
   private loginService: LoginService = inject(LoginService);
   private requestService: Requests = inject(Requests);
   private notificationService: Notifications = inject(Notifications)
+  private roomService: Rooms = inject(Rooms);
+  private messagesService: Messages = inject(Messages);
   private router: Router = inject(Router);  
   private toasts: Toasts = inject(Toasts);
   private permissionsService: PermissionsService = inject(PermissionsService);
@@ -159,6 +163,28 @@ export class RequestsList implements OnInit {
         }).subscribe({
           next: () => {}
         });
+
+        // Intentar localizar la sala creada para esta solicitud y enviar el mensaje inicial del solicitante
+        try {
+          this.roomService.getDonorRooms(this.logedUser?.id).subscribe({
+            next: (rooms: any[]) => {
+              const room = rooms.find(r => r?.solicitud?.id === request.id
+                || (r?.solicitud?.producto?.id === product.id && r?.solicitud?.solicitante?.id === request.fromUser.id));
+              if (room && request.message) {
+                const messageRequest = {
+                  mensaje: request.message,
+                  idUsuario: request.fromUser.id,
+                  idSala: room.id,
+                };
+                this.messagesService.sendMessage(messageRequest).subscribe({
+                  next: () => {},
+                  error: () => {}
+                });
+              }
+            },
+            error: () => {}
+          });
+        } catch (e) {}
       },
       error: () => {
         this.toasts.showToast({
