@@ -7,36 +7,26 @@
       <div class="p-fluid p-4" [formGroup]="productForm">
         <div class="row w-100">
           <div class="col-12 col-sm-12 col-md-12 col-lg-4 text-center">
-            <label for="inputImage"
-              >Imagen del producto<span style="color: red">&ensp;*</span></label
-            >
-            <p-fileupload
-              name="inputImage"
-              [multiple]="false"
-              accept=".jpg,.png,.jpeg"
-              maxFileSize="1000000"
-              styleClass="mt-2"
-              (onSelect)="setImage($event)"
-            >
+            <label for="inputImage">Imagen del producto<span style="color: red">&ensp;*</span></label>
+            <p-fileupload name="inputImage" [multiple]="false" accept=".jpg,.png,.jpeg" maxFileSize="1000000"
+              styleClass="mt-2" (onSelect)="setImage($event)">
               <ng-template #header let-chooseCallback="chooseCallback"> </ng-template>
               <ng-template #content let-files>
                 @if(imagenUrl) {
                 <div class="flex items-center justify-center flex-col">
-                  <img role="presentation" [src]="imagenUrl" alt="Imagen cargada"/>
+                  <img role="presentation" [src]="imagenUrl" alt="Imagen cargada" />
                 </div>
-                } @else if(!changeImage) {
+                } @else if(!changeImage && imagen != null) {
                 <div class="flex items-center justify-center flex-col">
-                  <img
-                    role="presentation"
-                    [alt]="imagen?.name"
-                    [src]="imagen"
-                  />
+                  <img role="presentation" [alt]="imagen.name" [src]="imagen" />
                 </div>
                 } @else if(files.length > 0) {
                 @for (file of files; track $index) {
+                @if(file != null){
                 <div class="flex items-center justify-center flex-col">
                   <img role="presentation" [alt]="file.name" [src]="file.objectURL" />
                 </div>
+                }
                 }
                 }
               </ng-template>
@@ -52,76 +42,34 @@
             @if(!imagen){
             <p-button styleClass="mt-2" label="Elegir" icon="pi pi-upload" (onClick)="choose()" />
             }@else {
-            <p-button
-              styleClass="mt-2"
-              label="Quitar"
-              icon="pi pi-times"
-              severity="danger"
-              (onClick)="clearImage()"
-            />
+            <p-button styleClass="mt-2" label="Quitar" icon="pi pi-times" severity="danger" (onClick)="clearImage()" />
             }
           </div>
           <div class="col-12 col-sm-12 col-md-12 col-lg-8 mt-4 mt-lg-0">
             <div class="row-gap-0">
               <label for="title">Título del producto<span style="color: red">&ensp;*</span></label>
-              <input
-                name="title"
-                placeholder="Ej: Remera de algodón"
-                class="mt-2"
-                pInputText
-                type="text"
-                fluid
-                formControlName="nombre"
-              />
+              <input name="title" placeholder="Ej: Remera de algodón" class="mt-2" pInputText type="text" fluid
+                formControlName="nombre" />
             </div>
             <div class="mt-4 row-gap-0">
-              <label for="description"
-                >Descripción<span style="color: red">&ensp;*</span
-                ><span
-                  >&ensp;({{ productForm.get('descripcion')?.value.length ?? 0 }}/255)</span
-                ></label
-              >
-              <textarea
-                name="description"
-                placeholder="Describe el producto detalladamente..."
-                class="mt-2"
-                formControlName="descripcion"
-                rows="5"
-                cols="30"
-                pTextarea
-                fluid
-              ></textarea>
+              <label for="description">Descripción<span style="color: red">&ensp;*</span><span>&ensp;({{
+                  productForm.get('descripcion')?.value.length ?? 0 }}/255)</span></label>
+              <textarea name="description" placeholder="Describe el producto detalladamente..." class="mt-2"
+                formControlName="descripcion" rows="5" cols="30" pTextarea fluid></textarea>
             </div>
             <div class="mt-4 row">
               <div class="col-12 col-sm-12 col-md-6 col-lg-6">
                 <label for="category">Categoría<span style="color: red">&ensp;*</span></label>
-                <p-select
-                  name="category"
-                  class="mt-2"
-                  formControlName="categoriaId"
-                  [loading]="!categories"
-                  optionLabel="nombre"
-                  optionValue="id"
-                  [options]="categories"
-                  [placeholder]="categories ? 'Seleccione una categoría' : ''"
-                  fluid
-                  [showClear]="true"
-                  fluid
-                />
+                <p-select name="category" class="mt-2" formControlName="categoriaId" [loading]="!categories"
+                  optionLabel="nombre" optionValue="id" [options]="categories"
+                  [placeholder]="categories ? 'Seleccione una categoría' : ''" fluid [showClear]="true" fluid />
               </div>
               <div class="col-12 col-sm-12 col-md-6 col-lg-6 mt-4 mt-md-0 mt-lg-0">
                 <div class="row-gap-0">
                   <label class="p-0" for="title">Estado</label>
                 </div>
                 <div class="d-flex row-gap-0 mt-2 py-2 align-content-center">
-                  <p-tag
-                    class="w-100"
-                    name
-                    icon="pi pi-check"
-                    severity="success"
-                    value="Disponible"
-                    fluid
-                  />
+                  <p-tag class="w-100" name icon="pi pi-check" severity="success" value="Disponible" fluid />
                 </div>
               </div>
             </div>
@@ -129,17 +77,9 @@
         </div>
         <div class="row w-100 justify-content-end">
           <div class="col-auto mt-4">
-            <p-button
-              class="me-4"
-              label="Cancelar"
-              severity="secondary"
-              (onClick)="cancel()"
-              [disabled]="(productForm.pristine && !changeImage) || setUploading"
-            />
-            <p-button
-              (onClick)="onSubmit()"
-              [disabled]="productForm.invalid || !imagen || setUploading"
-            >
+            <p-button class="me-4" label="Cancelar" severity="secondary" (onClick)="cancel()"
+              [disabled]="(productForm.pristine && !changeImage) || setUploading" />
+            <p-button (onClick)="onSubmit()" [disabled]="productForm.invalid || !imagen || setUploading">
               Editar@if(setUploading){<i class="pi pi-spin pi-spinner"></i>}
             </p-button>
           </div>
