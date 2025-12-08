@@ -76,6 +76,7 @@ export class EditProfile {
   documentoActual: any = null;
   documentoNuevo: File | null = null;
   uploadedPdfFiles: any = [];
+  onSaving: boolean = false;
 
   constructor() {
     this.editUserForm = new FormGroup({
@@ -160,6 +161,7 @@ export class EditProfile {
   }
 
   async onSubmit() {
+    this.onSaving = true;
     if (this.editUserForm.valid || (this.isOrganization && this.documentoNuevo && !this.editUserForm.valid)) {
       // Caso 1: Solo cambio de documento para organizaciones
       const soloDocumento = this.isOrganization && this.documentoNuevo && this.editUserForm.pristine && !this.changedImage;
@@ -172,7 +174,7 @@ export class EditProfile {
           if (this.documentoActual && this.documentoActual.id) {
             try {
               await firstValueFrom(this.userService.deleteDocument(this.id, this.documentoActual.id));
-            } catch (deleteError) {
+            } catch (deleteError) {              
               console.error('Error al eliminar documento anterior:', deleteError);
               this.toastService.showToast({
                 severity: 'warn',
@@ -214,6 +216,7 @@ export class EditProfile {
             detail: 'No se pudo subir el nuevo documento',
           });
         }
+        this.onSaving = false;
         return;
       }
       
@@ -281,6 +284,7 @@ export class EditProfile {
             summary: 'Error al subir documento',
             detail: 'No se pudo subir el nuevo documento',
           });
+          this.onSaving = false;
           return;
         }
       }
@@ -312,6 +316,7 @@ export class EditProfile {
         },
       });
     }
+    this.onSaving = false;
   }
 
   reverseDate(date: string): string {
