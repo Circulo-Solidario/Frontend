@@ -292,7 +292,7 @@
                                 <div class="row justify-content-md-center">
                                   <div class="col-md-auto">
                                     <img
-                                      [src]="file.objectURL"
+                                      [src]="imageUrl ? imageUrl : file.objectURL"
                                       [alt]="file.name"
                                       width="auto"
                                       height="75vh"
@@ -456,7 +456,7 @@
                                 <div class="row justify-content-md-center">
                                   <div class="col-md-auto">
                                     <img
-                                      [src]="file.objectURL"
+                                      [src]="imageUrl ? imageUrl : file.objectURL"
                                       [alt]="file.name"
                                       width="auto"
                                       height="75vh"

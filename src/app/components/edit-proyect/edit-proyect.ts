@@ -158,6 +158,13 @@ export class EditProyect implements OnInit {
     }
     this.imagen = fileSelected.files[0];
     this.changeImage = true;
+    
+    // Crear un FileReader para procesar la imagen correctamente en dispositivos móviles
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagenUrl = reader.result as string;
+    };
+    reader.readAsDataURL(this.imagen);
   }
 
   showImageError(): void {

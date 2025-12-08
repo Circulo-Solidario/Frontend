@@ -141,6 +141,13 @@ export class CreateUser implements OnInit {
     } else {
       this.uploadedFiles[0] = fileSelected.files[0];
     }
+    
+    // Crear un FileReader para procesar la imagen correctamente en dispositivos móviles
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imageUrl = reader.result as string;
+    };
+    reader.readAsDataURL(fileSelected.files[0]);
   }
 
   clearImage() {
