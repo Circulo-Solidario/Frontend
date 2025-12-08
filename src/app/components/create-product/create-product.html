@@ -27,10 +27,12 @@
                 }
               </ng-template>
               <ng-template #empty>
+                @if(!imagenUrl) {
                 <div class="justify-content-center align-items-center empty-content no-image">
                   <i class="pi pi-file-arrow-up" style="font-size: 2.5rem;"></i>
                   <p class="mt-6 mb-0">Carga una imagen</p>
                 </div>
+                }
               </ng-template>
             </p-fileupload>
             @if(!imagen){

@@ -139,7 +139,14 @@ export class EditProduct implements OnInit {
       return;
     }
     this.imagen = fileSelected.files[0];
-
+    this.changeImage = true;
+    
+    // Crear un FileReader para procesar la imagen correctamente en dispositivos móviles
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagenUrl = reader.result as string;
+    };
+    reader.readAsDataURL(this.imagen);
   }
 
   showImageError() {
@@ -153,7 +160,8 @@ export class EditProduct implements OnInit {
   clearImage() {
     this.fileUpload.clear();
     this.imagen = null;
-    this.changeImage = true;
+    this.imagenUrl = null;
+    this.changeImage = false;
   }
 
   async onSubmit() {
