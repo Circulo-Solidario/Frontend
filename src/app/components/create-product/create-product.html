@@ -14,10 +14,16 @@
               <ng-template #header let-chooseCallback="chooseCallback">
               </ng-template>
               <ng-template #content let-files>
+                @if(imagenUrl) {
+                <div class="flex items-center justify-center flex-col">
+                  <img role="presentation" [src]="imagenUrl" alt="Imagen cargada"/>
+                </div>
+                } @else if(files.length > 0) {
                 @for (file of files; track $index) {
                 <div class="flex items-center justify-center flex-col">
                   <img role="presentation" [alt]="file.name" [src]="file.objectURL"/>
                 </div>
+                }
                 }
               </ng-template>
               <ng-template #empty>
