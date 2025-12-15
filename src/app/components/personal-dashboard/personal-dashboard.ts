@@ -1,10 +1,13 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
-import { firstValueFrom } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 import { Statistics } from '../../services/statistics';
 import { LoginService } from '../../services/login';
 import { Toasts } from '../../services/toasts';
+import { Messages } from '../../services/messages';
+import { Notifications } from '../../services/notifications';
+import { Rooms } from '../../services/rooms';
 
 interface StatItem {
   key: string;
@@ -27,6 +30,11 @@ export class PersonalDashboard implements OnInit {
   private toastService: Toasts = inject(Toasts);
   private router: Router = inject(Router);
   private route: ActivatedRoute = inject(ActivatedRoute);
+  private messagesService: Messages = inject(Messages);
+  private notificationsService: Notifications = inject(Notifications);
+  private roomsService: Rooms = inject(Rooms);
+
+  private subscriptions: Subscription[] = [];
 
   personalStats: any = null;
   loading = true;
@@ -43,10 +51,40 @@ export class PersonalDashboard implements OnInit {
         return;
       }
       this.loadPersonalStats();
+
+      // Suscribirse a eventos en tiempo real que pueden cambiar estadísticas
+      try {
+        this.subscriptions.push(
+          this.messagesService.messages$.subscribe((m) => {
+            if (m) this.loadPersonalStats(true);
+          })
+        );
+      } catch (e) {
+      }
+
+      try {
+        this.subscriptions.push(
+          this.notificationsService.notification$.subscribe((n) => {
+            if (n) this.loadPersonalStats(true);
+          })
+        );
+      } catch (e) {}
+
+      try {
+        this.subscriptions.push(
+          this.roomsService.reloadRooms$.subscribe((r) => {
+            if (r) this.loadPersonalStats(true);
+          })
+        );
+      } catch (e) {}
     });
   }
 
-  async loadPersonalStats(): Promise<void> {
+  ngOnDestroy(): void {
+    this.subscriptions.forEach(s => s.unsubscribe());
+  }
+
+  async loadPersonalStats(suppressToast = false): Promise<void> {
     try {
       this.loading = true;
       
@@ -61,15 +99,21 @@ export class PersonalDashboard implements OnInit {
         );
       }
       
+      console.info('personal-dashboard: raw personalStats payload', this.personalStats);
+
       if (this.personalStats && typeof this.personalStats === 'object') {
+        this.personalStats = this.normalizePersonalStats(this.personalStats);
+        console.info('personal-dashboard: normalized personalStats', this.personalStats);
         this.processStats(this.personalStats);
       }
       
-      this.toastService.showToast({
-        severity: 'success',
-        summary: 'Éxito',
-        detail: 'Estadísticas personales cargadas',
-      });
+      if (!suppressToast) {
+        this.toastService.showToast({
+          severity: 'success',
+          summary: 'Éxito',
+          detail: 'Estadísticas personales cargadas',
+        });
+      }
     } catch (error) {
       console.error('Error al cargar estadísticas personales:', error);
       this.toastService.showToast({
@@ -211,6 +255,86 @@ export class PersonalDashboard implements OnInit {
     if (k.includes('publican') || k.includes('publicado')) return 'info';
     
     return 'secondary';
+  }
+
+  private normalizePersonalStats(stats: any): any {
+    const out: any = { ...stats };
+    const toNum = (v: any) => {
+      if (v == null) return 0;
+      if (typeof v === 'number') return v;
+      if (typeof v === 'string') {
+        const cleaned = v.replace(/,/g, '');
+        const n = Number(cleaned);
+        return isNaN(n) ? 0 : n;
+      }
+      return 0;
+    };
+
+    // productos_creados
+    if (out.productos_creados == null) {
+      if (stats.productos && typeof stats.productos === 'object') {
+        if ('cantidadPublicados' in stats.productos) out.productos_creados = toNum(stats.productos.cantidadPublicados);
+        else if ('cantidad_publicados' in stats.productos) out.productos_creados = toNum(stats.productos.cantidad_publicados);
+        else if ('cantidadPublicadosTotal' in stats.productos) out.productos_creados = toNum(stats.productos.cantidadPublicadosTotal);
+      }
+    } else {
+      out.productos_creados = toNum(out.productos_creados);
+    }
+
+    // productos_disponibles (try cantidadPorEstado['disponible'] or similar)
+    if (out.productos_disponibles == null) {
+      if (stats.productos && typeof stats.productos === 'object') {
+        const cpe = stats.productos.cantidadPorEstado || stats.productos.cantidad_por_estado || {};
+        let dispo = 0;
+        if (cpe && typeof cpe === 'object') {
+          for (const k of Object.keys(cpe)) {
+            if (k.toLowerCase().includes('dispon')) {
+              dispo += toNum(cpe[k]);
+            }
+          }
+        }
+        if (dispo > 0) out.productos_disponibles = dispo;
+      }
+    } else {
+      out.productos_disponibles = toNum(out.productos_disponibles);
+    }
+
+    // productos_solicitados_por_usuario
+    if (out.productos_solicitados_por_usuario == null) {
+      if (stats.solicitudes && typeof stats.solicitudes === 'object') {
+        if ('realizadas' in stats.solicitudes) out.productos_solicitados_por_usuario = toNum(stats.solicitudes.realizadas);
+        else if ('cantidad' in stats.solicitudes) out.productos_solicitados_por_usuario = toNum(stats.solicitudes.cantidad);
+      }
+      if (out.productos_solicitados_por_usuario == null && stats.productos && typeof stats.productos === 'object' && 'cantidadSolicitadas' in stats.productos) {
+        out.productos_solicitados_por_usuario = toNum(stats.productos.cantidadSolicitadas);
+      }
+    } else {
+      out.productos_solicitados_por_usuario = toNum(out.productos_solicitados_por_usuario);
+    }
+
+    // mensajes_enviados
+    if (out.mensajes_enviados == null) {
+      if (stats.mensajes && typeof stats.mensajes === 'object') {
+        if ('enviados' in stats.mensajes) out.mensajes_enviados = toNum(stats.mensajes.enviados);
+        else if ('total' in stats.mensajes) out.mensajes_enviados = toNum(stats.mensajes.total);
+      }
+      if (out.mensajes_enviados == null && 'total_mensajes' in stats) out.mensajes_enviados = toNum(stats.total_mensajes);
+    } else {
+      out.mensajes_enviados = toNum(out.mensajes_enviados);
+    }
+
+    // notificaciones_no_leidas
+    if (out.notificaciones_no_leidas == null) {
+      if (stats.notificaciones && typeof stats.notificaciones === 'object') {
+        if ('noLeidas' in stats.notificaciones) out.notificaciones_no_leidas = toNum(stats.notificaciones.noLeidas);
+        else if ('no_leidas' in stats.notificaciones) out.notificaciones_no_leidas = toNum(stats.notificaciones.no_leidas);
+      }
+      if (out.notificaciones_no_leidas == null && typeof stats.notificaciones === 'number') out.notificaciones_no_leidas = toNum(stats.notificaciones);
+    } else {
+      out.notificaciones_no_leidas = toNum(out.notificaciones_no_leidas);
+    }
+
+    return out;
   }
 
   goBack(): void {
