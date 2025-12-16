@@ -18,10 +18,18 @@
           <h3 class="group-title">{{ groupName }}</h3>
           <div class="stats-grid">
             @for (item of groupedStats[groupName]; track $index) {
-              <div class="stat-card" [attr.data-severity]="item.severity">
+              <div class="stat-card" [attr.data-severity]="item.severity" [attr.data-key]="item.key">
                 <div class="stat-card-header">
                   <i class="stat-icon" [class]="item.icon"></i>
-                  <h4 class="stat-label">{{ item.label }}</h4>
+                  <div class="stat-header-content">
+                    <h4 class="stat-label">{{ item.label }}</h4>
+                    @if(item.key.includes('tasa') || item.key.includes('porcentaje')) {
+                      <span class="stat-badge">Métrica</span>
+                    }
+                    @if(item.key.includes('pendiente')) {
+                      <span class="stat-badge pending">Atención</span>
+                    }
+                  </div>
                 </div>
                 <div class="stat-card-body">
                   @if (typeof item.value === 'number') {
