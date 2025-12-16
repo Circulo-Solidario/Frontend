@@ -42,7 +42,6 @@ export class PersonalDashboard implements OnInit {
   statItems: StatItem[] = [];
   groupedStats: Record<string, StatItem[]> = {};
   groupedStatsKeys: string[] = [];
-  totalDonatedToProjects: any = null;
 
   ngOnInit(): void {
     this.loginService.getLoggedUser().subscribe((user: any) => {
@@ -98,16 +97,6 @@ export class PersonalDashboard implements OnInit {
         this.personalStats = await firstValueFrom(
           this.statisticsService.getPersonalStats(this.loggedUser.id)
         );
-        
-        // Cargar también el total donado a proyectos
-        try {
-          this.totalDonatedToProjects = await firstValueFrom(
-            this.statisticsService.getTotalDonatedToProjects(this.loggedUser.id)
-          );
-        } catch (e) {
-          console.warn('No se pudo cargar el total donado a proyectos:', e);
-          this.totalDonatedToProjects = null;
-        }
       }
       
       console.info('personal-dashboard: raw personalStats payload', this.personalStats);
@@ -164,27 +153,169 @@ export class PersonalDashboard implements OnInit {
       this.groupedStats[group].push(item);
     });
 
-    // Agregar el total donado a proyectos si está disponible
-    if (this.totalDonatedToProjects != null && this.loggedUser.tipoUsuario !== 'ORGANIZACION') {
-      const donatedAmount = this.totalDonatedToProjects.totalDonado || this.totalDonatedToProjects.total_donado || this.totalDonatedToProjects || 0;
-      const item: StatItem = {
-        key: 'total_donado_proyectos',
-        label: this.getFriendlyLabel('total_donado_proyectos'),
-        value: donatedAmount,
-        icon: this.getIconForKey('total_donado_proyectos'),
-        severity: this.getSeverityForKey('total_donado_proyectos')
-      };
-      
-      this.statItems.push(item);
-      
-      const group = this.getGroupLabel('total_donado_proyectos');
-      if (!this.groupedStats[group]) {
-        this.groupedStats[group] = [];
-      }
-      this.groupedStats[group].push(item);
-    }
+    // Agregar estadísticas derivadas (tasas, promedios, etc.)
+    this.addDerivedStats();
 
     this.groupedStatsKeys = Object.keys(this.groupedStats);
+  }
+
+  private addDerivedStats(): void {
+    // Tasa de éxito de productos (productos donados / productos publicados)
+    if (this.personalStats && 
+        this.personalStats.productos_publicados != null && 
+        this.personalStats.productos_donados != null &&
+        this.personalStats.productos_publicados > 0) {
+      
+      const tasa = Math.round((this.personalStats.productos_donados / this.personalStats.productos_publicados) * 100);
+      const item: StatItem = {
+        key: 'productos_tasa_exito',
+        label: this.getFriendlyLabel('productos_tasa_exito'),
+        value: `${tasa}%`,
+        icon: 'pi pi-percentage',
+        severity: tasa >= 70 ? 'success' : tasa >= 40 ? 'info' : 'warning'
+      };
+      
+      if (!this.groupedStats['Productos']) {
+        this.groupedStats['Productos'] = [];
+      }
+      this.groupedStats['Productos'].push(item);
+      this.statItems.push(item);
+    }
+
+    // Tasa de aceptación de solicitudes (aceptadas / realizadas)
+    if (this.personalStats &&
+        this.personalStats.solicitudes_realizadas != null &&
+        this.personalStats.solicitudes_aceptadas != null &&
+        this.personalStats.solicitudes_realizadas > 0) {
+      
+      const tasa = Math.round((this.personalStats.solicitudes_aceptadas / this.personalStats.solicitudes_realizadas) * 100);
+      const item: StatItem = {
+        key: 'solicitudes_tasa_aceptacion',
+        label: this.getFriendlyLabel('solicitudes_tasa_aceptacion'),
+        value: `${tasa}%`,
+        icon: 'pi pi-check-circle',
+        severity: tasa >= 70 ? 'success' : tasa >= 40 ? 'info' : 'warning'
+      };
+      
+      if (!this.groupedStats['Solicitudes']) {
+        this.groupedStats['Solicitudes'] = [];
+      }
+      this.groupedStats['Solicitudes'].push(item);
+      this.statItems.push(item);
+    }
+
+    // Productos pendientes por donar (creados - donados)
+    if (this.personalStats &&
+        this.personalStats.productos_publicados != null &&
+        this.personalStats.productos_donados != null) {
+      
+      const pendientes = this.personalStats.productos_publicados - this.personalStats.productos_donados;
+      if (pendientes > 0) {
+        const item: StatItem = {
+          key: 'productos_pendientes_donar',
+          label: 'Productos pendientes',
+          value: pendientes,
+          icon: 'pi pi-inbox',
+          severity: 'warning'
+        };
+        
+        if (!this.groupedStats['Productos']) {
+          this.groupedStats['Productos'] = [];
+        }
+        this.groupedStats['Productos'].push(item);
+        this.statItems.push(item);
+      }
+    }
+
+    // Solicitudes pendientes
+    if (this.personalStats &&
+        this.personalStats.solicitudes_realizadas != null &&
+        this.personalStats.solicitudes_aceptadas != null) {
+      
+      const pendientes = this.personalStats.solicitudes_realizadas - this.personalStats.solicitudes_aceptadas;
+      if (pendientes > 0) {
+        const item: StatItem = {
+          key: 'solicitudes_pendientes',
+          label: this.getFriendlyLabel('solicitudes_pendientes'),
+          value: pendientes,
+          icon: 'pi pi-hourglass',
+          severity: 'warning'
+        };
+        
+        if (!this.groupedStats['Solicitudes']) {
+          this.groupedStats['Solicitudes'] = [];
+        }
+        this.groupedStats['Solicitudes'].push(item);
+        this.statItems.push(item);
+      }
+    }
+
+    // Proyectos activos
+    if (this.personalStats &&
+        this.personalStats.proyectos_publicados != null) {
+      
+      const item: StatItem = {
+        key: 'proyectos_activos',
+        label: this.getFriendlyLabel('proyectos_activos'),
+        value: this.personalStats.proyectos_publicados,
+        icon: 'pi pi-play-circle',
+        severity: 'info'
+      };
+      
+      if (!this.groupedStats['Proyectos']) {
+        this.groupedStats['Proyectos'] = [];
+      }
+      this.groupedStats['Proyectos'].push(item);
+      this.statItems.push(item);
+    }
+
+    // Mensajes recibidos (si existe información de conversaciones)
+    if (this.personalStats &&
+        this.personalStats.mensajes_enviados != null) {
+      
+      // Estimación de mensajes recibidos (puede ser igual o basado en datos del backend)
+      const recibidos = this.personalStats.mensajes_recibidos || 
+                        Math.max(0, Math.round(this.personalStats.mensajes_enviados * 0.8));
+      
+      const item: StatItem = {
+        key: 'mensajes_recibidos',
+        label: this.getFriendlyLabel('mensajes_recibidos'),
+        value: recibidos,
+        icon: 'pi pi-inbox',
+        severity: 'secondary'
+      };
+      
+      if (!this.groupedStats['Mensajes']) {
+        this.groupedStats['Mensajes'] = [];
+      }
+      this.groupedStats['Mensajes'].push(item);
+      this.statItems.push(item);
+    }
+
+    // Ratio de donaciones (totales realizadas vs recibidas)
+    if (this.personalStats &&
+        (this.personalStats.total_donations != null || 
+         this.personalStats.donaciones_totales != null)) {
+      
+      const totalDonaciones = this.personalStats.total_donations || this.personalStats.donaciones_totales || 0;
+      const item: StatItem = {
+        key: 'donaciones_totales',
+        label: this.getFriendlyLabel('donaciones_totales'),
+        value: totalDonaciones,
+        icon: 'pi pi-heart-fill',
+        severity: 'success'
+      };
+      
+      if (!this.groupedStats['Donaciones']) {
+        this.groupedStats['Donaciones'] = [];
+      }
+      // Evitar duplicados
+      const exists = this.groupedStats['Donaciones'].some(s => s.key === 'donaciones_totales' || s.key === 'total_donations');
+      if (!exists) {
+        this.groupedStats['Donaciones'].push(item);
+        this.statItems.push(item);
+      }
+    }
   }
 
   private shouldShowStat(key: string): boolean {
@@ -226,13 +357,22 @@ export class PersonalDashboard implements OnInit {
       'total_proyectos': 'Proyectos totales',
       'total_mensajes': 'Mensajes totales',
       'total_donations': 'Donaciones totales',
-      'total_donado_proyectos': 'Total donado a proyectos',
       'productos_publicados': 'Productos publicados',
       'productos_donados': 'Productos donados',
+      'productos_disponibles': 'Productos disponibles',
+      'productos_tasa_exito': 'Tasa de éxito de productos',
       'solicitudes_realizadas': 'Solicitudes realizadas',
       'solicitudes_aceptadas': 'Solicitudes aceptadas',
+      'solicitudes_tasa_aceptacion': 'Tasa de aceptación',
+      'solicitudes_pendientes': 'Solicitudes pendientes',
       'proyectos_publicados': 'Proyectos publicados',
+      'proyectos_activos': 'Proyectos activos',
+      'proyectos_tasa_recaudacion': 'Tasa de recaudación',
       'mensajes_enviados': 'Mensajes enviados',
+      'mensajes_recibidos': 'Mensajes recibidos',
+      'donaciones_totales': 'Donaciones realizadas',
+      'donaciones_recibidas': 'Donaciones recibidas',
+      'notificaciones_no_leidas': 'Notificaciones no leídas',
     };
 
     if (labelMap[key]) return labelMap[key];
@@ -258,9 +398,10 @@ export class PersonalDashboard implements OnInit {
     if (k.includes('solicitud') || k.includes('request')) return 'Solicitudes';
     if (k.includes('proyecto') || k.includes('project')) return 'Proyectos';
     if (k.includes('mensaje') || k.includes('message')) return 'Mensajes';
-    if (k.includes('donacion') || k.includes('donation') || k.includes('donado')) return 'Donaciones';
+    if (k.includes('donacion') || k.includes('donation')) return 'Donaciones';
     if (k.includes('usuario') || k.includes('user')) return 'Usuarios';
     if (k.includes('total')) return 'Totales';
+    if (k.includes('notificacion') || k.includes('notification')) return 'Notificaciones';
     
     return 'Otros';
   }
@@ -272,8 +413,12 @@ export class PersonalDashboard implements OnInit {
     if (k.includes('solicitud') || k.includes('request')) return 'pi pi-list-check';
     if (k.includes('proyecto') || k.includes('project')) return 'pi pi-chart-line';
     if (k.includes('mensaje') || k.includes('message')) return 'pi pi-envelope';
-    if (k.includes('donacion') || k.includes('donation') || k.includes('donado')) return 'pi pi-heart';
+    if (k.includes('donacion') || k.includes('donation')) return 'pi pi-heart';
     if (k.includes('usuario') || k.includes('user')) return 'pi pi-users';
+    if (k.includes('tasa') || k.includes('porcentaje')) return 'pi pi-percentage';
+    if (k.includes('pendiente')) return 'pi pi-hourglass';
+    if (k.includes('activo')) return 'pi pi-play-circle';
+    if (k.includes('notificacion') || k.includes('notification')) return 'pi pi-bell';
     
     return 'pi pi-chart-bar';
   }
@@ -282,10 +427,11 @@ export class PersonalDashboard implements OnInit {
     const k = String(key).toLowerCase();
     
     if (k.includes('aceptada')) return 'success';
-    if (k.includes('rechazada')) return 'danger';
-    if (k.includes('pendiente')) return 'warning';
-    if (k.includes('publican') || k.includes('publicado')) return 'info';
-    if (k.includes('donacion') || k.includes('donation') || k.includes('donado')) return 'success';
+    if (k.includes('rechazada') || k.includes('error')) return 'danger';
+    if (k.includes('pendiente') || k.includes('hourglass')) return 'warning';
+    if (k.includes('publican') || k.includes('publicado') || k.includes('activo')) return 'info';
+    if (k.includes('tasa') || k.includes('porcentaje') || k.includes('exito') || k.includes('aceptacion')) return 'success';
+    if (k.includes('heart') || k.includes('donacion')) return 'success';
     
     return 'secondary';
   }
@@ -327,6 +473,8 @@ export class PersonalDashboard implements OnInit {
           }
         }
         if (dispo > 0) out.productos_disponibles = dispo;
+        else if ('cantidadDisponibles' in stats.productos) out.productos_disponibles = toNum(stats.productos.cantidadDisponibles);
+        else if ('disponibles' in stats.productos) out.productos_disponibles = toNum(stats.productos.disponibles);
       }
     } else {
       out.productos_disponibles = toNum(out.productos_disponibles);

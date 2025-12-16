@@ -109,6 +109,30 @@
   gap: 0.75rem;
 }
 
+.stat-header-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.stat-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.25rem 0.5rem;
+  background: var(--p-primary-color);
+  color: var(--p-primary-color-text);
+  border-radius: 4px;
+  text-transform: uppercase;
+  width: fit-content;
+
+  &.pending {
+    background: var(--p-warning-color);
+    color: var(--p-warning-color-text);
+  }
+}
+
 .stat-icon {
   font-size: 1.75rem;
   color: var(--p-primary-color);
@@ -121,7 +145,6 @@
   font-weight: 600;
   margin: 0;
   color: var(--p-text-color);
-  flex: 1;
 }
 
 .stat-card-body {
@@ -135,6 +158,17 @@
   font-size: 2.5rem;
   font-weight: 700;
   color: var(--p-primary-color);
+  line-height: 1;
+}
+
+.stat-card[data-key*="tasa"] .stat-value,
+.stat-card[data-key*="porcentaje"] .stat-value {
+  font-size: 2.2rem;
+  color: #10b981;
+}
+
+.stat-card[data-key*="pendiente"] .stat-value {
+  color: #f59e0b;
 }
 
 .stat-value-text {

@@ -21,8 +21,4 @@ export class Statistics {
   getOrganizationProjectStats(organizationId: number): Observable<any> {
     return this.httpClient.get(`${environment.apiUrl}${this.apiPath}/global/organizacion/${organizationId}/proyectos`);
   }
-
-  getTotalDonatedToProjects(userId: number): Observable<any> {
-    return this.httpClient.get(`${environment.apiUrl}${this.apiPath}/global/personal/${userId}/donaciones-proyectos`);
-  }
 }
