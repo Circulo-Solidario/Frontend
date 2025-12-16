@@ -42,6 +42,7 @@ export class PersonalDashboard implements OnInit {
   statItems: StatItem[] = [];
   groupedStats: Record<string, StatItem[]> = {};
   groupedStatsKeys: string[] = [];
+  totalDonatedToProjects: any = null;
 
   ngOnInit(): void {
     this.loginService.getLoggedUser().subscribe((user: any) => {
@@ -97,6 +98,16 @@ export class PersonalDashboard implements OnInit {
         this.personalStats = await firstValueFrom(
           this.statisticsService.getPersonalStats(this.loggedUser.id)
         );
+        
+        // Cargar también el total donado a proyectos
+        try {
+          this.totalDonatedToProjects = await firstValueFrom(
+            this.statisticsService.getTotalDonatedToProjects(this.loggedUser.id)
+          );
+        } catch (e) {
+          console.warn('No se pudo cargar el total donado a proyectos:', e);
+          this.totalDonatedToProjects = null;
+        }
       }
       
       console.info('personal-dashboard: raw personalStats payload', this.personalStats);
@@ -153,6 +164,26 @@ export class PersonalDashboard implements OnInit {
       this.groupedStats[group].push(item);
     });
 
+    // Agregar el total donado a proyectos si está disponible
+    if (this.totalDonatedToProjects != null && this.loggedUser.tipoUsuario !== 'ORGANIZACION') {
+      const donatedAmount = this.totalDonatedToProjects.totalDonado || this.totalDonatedToProjects.total_donado || this.totalDonatedToProjects || 0;
+      const item: StatItem = {
+        key: 'total_donado_proyectos',
+        label: this.getFriendlyLabel('total_donado_proyectos'),
+        value: donatedAmount,
+        icon: this.getIconForKey('total_donado_proyectos'),
+        severity: this.getSeverityForKey('total_donado_proyectos')
+      };
+      
+      this.statItems.push(item);
+      
+      const group = this.getGroupLabel('total_donado_proyectos');
+      if (!this.groupedStats[group]) {
+        this.groupedStats[group] = [];
+      }
+      this.groupedStats[group].push(item);
+    }
+
     this.groupedStatsKeys = Object.keys(this.groupedStats);
   }
 
@@ -195,6 +226,7 @@ export class PersonalDashboard implements OnInit {
       'total_proyectos': 'Proyectos totales',
       'total_mensajes': 'Mensajes totales',
       'total_donations': 'Donaciones totales',
+      'total_donado_proyectos': 'Total donado a proyectos',
       'productos_publicados': 'Productos publicados',
       'productos_donados': 'Productos donados',
       'solicitudes_realizadas': 'Solicitudes realizadas',
@@ -226,7 +258,7 @@ export class PersonalDashboard implements OnInit {
     if (k.includes('solicitud') || k.includes('request')) return 'Solicitudes';
     if (k.includes('proyecto') || k.includes('project')) return 'Proyectos';
     if (k.includes('mensaje') || k.includes('message')) return 'Mensajes';
-    if (k.includes('donacion') || k.includes('donation')) return 'Donaciones';
+    if (k.includes('donacion') || k.includes('donation') || k.includes('donado')) return 'Donaciones';
     if (k.includes('usuario') || k.includes('user')) return 'Usuarios';
     if (k.includes('total')) return 'Totales';
     
@@ -240,7 +272,7 @@ export class PersonalDashboard implements OnInit {
     if (k.includes('solicitud') || k.includes('request')) return 'pi pi-list-check';
     if (k.includes('proyecto') || k.includes('project')) return 'pi pi-chart-line';
     if (k.includes('mensaje') || k.includes('message')) return 'pi pi-envelope';
-    if (k.includes('donacion') || k.includes('donation')) return 'pi pi-heart';
+    if (k.includes('donacion') || k.includes('donation') || k.includes('donado')) return 'pi pi-heart';
     if (k.includes('usuario') || k.includes('user')) return 'pi pi-users';
     
     return 'pi pi-chart-bar';
@@ -253,6 +285,7 @@ export class PersonalDashboard implements OnInit {
     if (k.includes('rechazada')) return 'danger';
     if (k.includes('pendiente')) return 'warning';
     if (k.includes('publican') || k.includes('publicado')) return 'info';
+    if (k.includes('donacion') || k.includes('donation') || k.includes('donado')) return 'success';
     
     return 'secondary';
   }
