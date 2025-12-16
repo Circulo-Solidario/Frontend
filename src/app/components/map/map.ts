@@ -403,6 +403,13 @@ export class Map implements OnInit, AfterViewInit, OnDestroy {
           </button>
         </div>`;
       }
+    } else if (this.logedUser?.tipoUsuario === 'ADMINISTRADOR'){
+      popupContent = `<div class="dot-popup-content">
+          <p>${descripcion}</p>
+          <button class="btn-delete-point p-button p-button-outlined p-button-danger" data-dot-id="${id}">
+            <span class="p-button-label">Eliminar punto</span>
+          </button>
+        </div>`;
     }
 
     const marker = L.marker([latitud, longitud], { icon: dotIcon })
