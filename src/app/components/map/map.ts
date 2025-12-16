@@ -461,7 +461,8 @@ export class Map implements OnInit, AfterViewInit, OnDestroy {
     const pointData = {
       latitud: this.pendingPointLocation[0],
       longitud: this.pendingPointLocation[1],
-      descripcion: this.pointDescription
+      descripcion: this.pointDescription,
+      usuarioRegistroId: this.logedUser.id,
     };
 
     this.dotsService.postDot(pointData).subscribe({
@@ -506,7 +507,7 @@ export class Map implements OnInit, AfterViewInit, OnDestroy {
 
     this.isMarkingAsAttended = true;
 
-    this.dotsService.updateStateDot(this.pendingPointId, { estado: 'atendido' }).subscribe({
+    this.dotsService.updateStateDot(this.pendingPointId, { estado: 'atendido', usuarioAyudoId: this.logedUser.id }).subscribe({
       next: () => {
         this.isMarkingAsAttended = false;
         this.showMarkAsAttendedDialog = false;

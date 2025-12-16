@@ -79,7 +79,7 @@
           <div class="col-auto mt-4">
             <p-button class="me-4" label="Cancelar" severity="secondary" (onClick)="cancel()"
               [disabled]="(productForm.pristine && !changeImage) || setUploading" />
-            <p-button (onClick)="onSubmit()" [disabled]="productForm.invalid || !imagen || setUploading">
+            <p-button (onClick)="onSubmit()" [disabled]="productForm.invalid || !imagen || setUploading || !changeImage">
               Editar@if(setUploading){<i class="pi pi-spin pi-spinner"></i>}
             </p-button>
           </div>

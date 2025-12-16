@@ -161,7 +161,7 @@ export class EditProduct implements OnInit {
     this.fileUpload.clear();
     this.imagen = null;
     this.imagenUrl = null;
-    this.changeImage = false;
+    this.changeImage = true;
   }
 
   async onSubmit() {
@@ -246,7 +246,7 @@ export class EditProduct implements OnInit {
       categoriaId: this.originalData.categoria.id
     });
     this.changeImage = false;
-    this.imagen = this.originalData.urlImagen;
+    this.imagen = this.imagenUrl = this.originalData.urlImagen;
     this.productForm.markAsPristine();
   }
 }

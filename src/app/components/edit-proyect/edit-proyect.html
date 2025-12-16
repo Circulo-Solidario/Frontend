@@ -16,7 +16,12 @@
                 <div class="flex items-center justify-center flex-col">
                   <img role="presentation" [src]="imagenUrl" alt="Imagen cargada" />
                 </div>
-                } @else if(files.length > 0) {
+                } @else if(imagenUrl && !imagen){
+                  <div class="flex items-center justify-center flex-col">
+                  <img role="presentation" alt="Imagen actual" [src]="originalProyectImage" />
+                </div>
+                }
+                @else if(files.length > 0) {
                 @for (file of files; track $index) {
                 @if($index == 0){
                 <div class="flex items-center justify-center flex-col">
@@ -27,11 +32,7 @@
                 }
               </ng-template>
               <ng-template #empty>
-                @if (imagenUrl && !imagen) {
-                <div class="flex items-center justify-center flex-col">
-                  <img role="presentation" alt="Imagen actual" [src]="originalProyectImage" />
-                </div>
-                } @else if(!imagenUrl || !imagen){
+                @if(!imagenUrl && !imagen){
                 <div class="justify-content-center align-items-center empty-content no-image">
                   <i class="pi pi-file-arrow-up" style="font-size: 2.5rem"></i>
                   <p class="mt-6 mb-0">Carga una imagen</p>
@@ -41,8 +42,6 @@
             </p-fileupload>
             @if(!imagen && !imagenUrl){
             <p-button styleClass="mt-2" label="Elegir imagen" icon="pi pi-upload" (onClick)="choose()" />
-            }@else if(!imagen && imagenUrl) {
-            <p-button styleClass="mt-2" label="Cambiar imagen" icon="pi pi-refresh" (onClick)="choose()" />
             }@else {
             <p-button styleClass="mt-2" label="Quitar imagen" icon="pi pi-times" severity="danger"
               (onClick)="clearImage()" />
@@ -90,7 +89,7 @@
             <p-button class="me-4" label="Cancelar" severity="secondary" (onClick)="cancel()"
               [disabled]="proyectForm.pristine && !changeImage || setUploading" />
             <p-button (onClick)="onSubmit()"
-              [disabled]="proyectForm.invalid || (!imagen && !imagenUrl) || setUploading">
+              [disabled]="proyectForm.invalid || (!imagen && !imagenUrl) || setUploading || !changeImage">
               Guardar cambios@if(setUploading){<i class="pi pi-spin pi-spinner"></i>}
             </p-button>
           </div>
