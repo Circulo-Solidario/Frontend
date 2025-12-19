@@ -67,14 +67,21 @@ export class PersonalDashboard implements OnInit {
 
       // Usar diferentes endpoints según el tipo de usuario
       if (this.loggedUser.tipoUsuario === 'ORGANIZACION') {
+  this.personalStats = await firstValueFrom(
+    this.statisticsService.getOrganizationStats(this.loggedUser.id)
+  );
+}
+ else {
         this.personalStats = await firstValueFrom(
-          this.statisticsService.getOrganizationProjectStats(this.loggedUser.id)
-        );
-      } else {
-        this.personalStats = await firstValueFrom(
-          this.statisticsService.getPersonalStats(this.loggedUser.id)
-        );
+  this.statisticsService.getPersonalFullStats(this.loggedUser.id)
+);
+
       }
+// NUEVO ENDPOINT PERSONAL
+if (this.personalStats?.productos && this.personalStats?.donaciones) {
+  this.processNewPersonalStats(this.personalStats);
+  return;
+}
 
       if (this.personalStats && typeof this.personalStats === 'object') {
         this.personalStats = this.normalizePersonalStats(this.personalStats);
@@ -82,6 +89,14 @@ export class PersonalDashboard implements OnInit {
         this.processStats(this.personalStats);
       }
 
+      if (this.loggedUser.tipoUsuario === 'ORGANIZACION') {
+  this.processOrganizationStats(this.personalStats);
+} else {
+  this.personalStats = this.normalizePersonalStats(this.personalStats);
+  this.processStats(this.personalStats);
+}
+
+      
       if (!suppressToast) {
         this.toastService.showToast({
           severity: 'success',
@@ -300,6 +315,115 @@ export class PersonalDashboard implements OnInit {
         this.statItems.push(item);
       }
     }
+
+    /* =======================
+   ACTIVIDAD GENERAL
+======================= */
+this.addGroupItem('Actividad', {
+  key: 'acciones_totales',
+  label: 'Acciones solidarias',
+  value:
+    (this.personalStats.productos_publicados || 0) +
+    (this.personalStats.solicitudes_realizadas || 0) +
+    (this.personalStats.donaciones_totales || 0),
+  icon: 'pi pi-check-square',
+  severity: 'info'
+});
+
+this.addGroupItem('Actividad', {
+  key: 'interacciones_totales',
+  label: 'Interacciones totales',
+  value:
+    (this.personalStats.mensajes_enviados || 0) +
+    (this.personalStats.solicitudes_realizadas || 0),
+  icon: 'pi pi-comments',
+  severity: 'secondary'
+});
+
+/* =======================
+   PRODUCTOS
+======================= */
+this.addGroupItem('Productos', {
+  key: 'productos_gestionados',
+  label: 'Productos gestionados',
+  value:
+    (this.personalStats.productos_publicados || 0) +
+    (this.personalStats.productos_donados || 0),
+  icon: 'pi pi-box',
+  severity: 'info'
+});
+
+this.addGroupItem('Productos', {
+  key: 'productos_no_donados',
+  label: 'Productos no donados',
+  value: Math.max(
+    0,
+    (this.personalStats.productos_publicados || 0) -
+    (this.personalStats.productos_donados || 0)
+  ),
+  icon: 'pi pi-times-circle',
+  severity: 'warning'
+});
+
+/* =======================
+   SOLICITUDES
+======================= */
+this.addGroupItem('Solicitudes', {
+  key: 'solicitudes_fallidas',
+  label: 'Solicitudes no aceptadas',
+  value: Math.max(
+    0,
+    (this.personalStats.solicitudes_realizadas || 0) -
+    (this.personalStats.solicitudes_aceptadas || 0)
+  ),
+  icon: 'pi pi-ban',
+  severity: 'danger'
+});
+
+this.addGroupItem('Solicitudes', {
+  key: 'tasa_aceptacion',
+  label: 'Tasa de aceptación',
+  value: this.personalStats.solicitudes_realizadas
+    ? `${Math.round(
+        (this.personalStats.solicitudes_aceptadas /
+          this.personalStats.solicitudes_realizadas) * 100
+      )}%`
+    : '0%',
+  icon: 'pi pi-percentage',
+  severity: 'success'
+});
+
+/* =======================
+   DONACIONES
+======================= */
+this.addGroupItem('Donaciones', {
+  key: 'donaciones_promedio',
+  label: 'Donaciones promedio',
+  value: this.personalStats.donaciones_totales
+    ? Math.round(
+        (this.personalStats.puntos || 0) /
+          this.personalStats.donaciones_totales
+      )
+    : 0,
+  icon: 'pi pi-calculator',
+  severity: 'secondary'
+});
+
+/* =======================
+   COMPROMISO
+======================= 
+this.addGroupItem('Compromiso', {
+  key: 'nivel_compromiso',
+  label: 'Nivel de compromiso',
+  value:
+    (this.personalStats.productos_publicados || 0) > 5 ||
+    (this.personalStats.donaciones_totales || 0) > 5
+      ? 'Alto'
+      : 'Medio',
+  icon: 'pi pi-star',
+  severity: 'success'
+});*/
+
   }
 
   private shouldShowStat(key: string): boolean {
@@ -525,4 +649,216 @@ export class PersonalDashboard implements OnInit {
   goBack(): void {
     this.router.navigate(['/principal']);
   }
+
+  private processOrganizationStats(stats: any): void {
+  this.statItems = [];
+  this.groupedStats = {};
+
+  /* =======================
+     PROYECTOS
+  ======================= */
+  if (stats.proyectos) {
+    this.addGroupItem('Proyectos', {
+      key: 'total_proyectos',
+      label: 'Total de proyectos',
+      value: stats.proyectos.totalProyectos,
+      icon: 'pi pi-folder',
+      severity: 'info'
+    });
+
+    this.addGroupItem('Proyectos', {
+      key: 'proyectos_activos',
+      label: 'Proyectos activos',
+      value: stats.proyectos.proyectosActivos,
+      icon: 'pi pi-play-circle',
+      severity: 'success'
+    });
+
+    this.addGroupItem('Proyectos', {
+      key: 'tasa_exito',
+      label: 'Tasa de éxito',
+      value: `${stats.proyectos.tasaExito.toFixed(1)}%`,
+      icon: 'pi pi-percentage',
+      severity: stats.proyectos.tasaExito >= 70 ? 'success' : 'warning'
+    });
+
+    this.addGroupItem('Proyectos', {
+      key: 'total_recaudado',
+      label: 'Total recaudado',
+      value: `$${stats.proyectos.totalRecaudado.toLocaleString()}`,
+      icon: 'pi pi-dollar',
+      severity: 'success'
+    });
+  }
+
+  /* =======================
+     DONACIONES
+  ======================= */
+  if (stats.donaciones) {
+    this.addGroupItem('Donaciones', {
+      key: 'total_donaciones',
+      label: 'Cantidad de donaciones',
+      value: stats.donaciones.totalDonaciones,
+      icon: 'pi pi-heart',
+      severity: 'info'
+    });
+
+    this.addGroupItem('Donaciones', {
+      key: 'donacion_promedio',
+      label: 'Donación promedio',
+      value: `$${stats.donaciones.donacionPromedio.toFixed(2)}`,
+      icon: 'pi pi-chart-line',
+      severity: 'secondary'
+    });
+  }
+
+  /* =======================
+     DONADORES
+  ======================= */
+  if (stats.donadores) {
+    this.addGroupItem('Donadores', {
+      key: 'donadores_unicos',
+      label: 'Donadores únicos',
+      value: stats.donadores.totalDonadoresUnicos,
+      icon: 'pi pi-users',
+      severity: 'info'
+    });
+
+    this.addGroupItem('Donadores', {
+      key: 'retencion',
+      label: 'Retención de donadores',
+      value: `${stats.donadores.promedioRetencion.toFixed(1)}%`,
+      icon: 'pi pi-refresh',
+      severity: stats.donadores.promedioRetencion >= 50 ? 'success' : 'warning'
+    });
+  }
+
+  this.groupedStatsKeys = Object.keys(this.groupedStats);
+}
+
+private addGroupItem(group: string, item: StatItem): void {
+  if (!this.groupedStats[group]) {
+    this.groupedStats[group] = [];
+  }
+  this.groupedStats[group].push(item);
+  this.statItems.push(item);
+}
+private processNewPersonalStats(stats: any): void {
+  this.statItems = [];
+  this.groupedStats = {};
+
+  /* =======================
+     PRODUCTOS
+  ======================= */
+  const p = stats.productos;
+
+  this.addGroupItem('Productos', {
+    key: 'productos_publicados',
+    label: 'Productos publicados',
+    value: p.cantidadPublicados,
+    icon: 'pi pi-box',
+    severity: 'info'
+  });
+
+  this.addGroupItem('Productos', {
+    key: 'productos_donados',
+    label: 'Productos donados',
+    value: p.cantidadDonados,
+    icon: 'pi pi-check-circle',
+    severity: 'success'
+  });
+
+  this.addGroupItem('Productos', {
+    key: 'productos_solicitados',
+    label: 'Productos solicitados',
+    value: p.cantidadSolicitados,
+    icon: 'pi pi-hand-paper',
+    severity: 'warning'
+  });
+
+  this.addGroupItem('Productos', {
+    key: 'productos_recibidos',
+    label: 'Productos recibidos',
+    value: p.cantidadRecibidos,
+    icon: 'pi pi-inbox',
+    severity: 'secondary'
+  });
+
+  /* =======================
+     PERSONAS EN SITUACIÓN DE CALLE
+  ======================= */
+  const ps = stats.personasEnSituacionDeCalle;
+
+  this.addGroupItem('Personas en situación de calle', {
+    key: 'puntos_registrados',
+    label: 'Puntos registrados',
+    value: ps.cantidadPuntosRegistrados,
+    icon: 'pi pi-map-marker',
+    severity: 'info'
+  });
+
+  this.addGroupItem('Personas en situación de calle', {
+    key: 'puntos_ayudados',
+    label: 'Personas ayudadas',
+    value: ps.cantidadPuntosAyudados,
+    icon: 'pi pi-heart',
+    severity: 'success'
+  });
+
+  this.addGroupItem('Personas en situación de calle', {
+    key: 'ranking_ayuda',
+    label: 'Ranking de ayuda',
+    value: ps.ordenUsuario > 0 ? `#${ps.ordenUsuario}` : 'N/A',
+    icon: 'pi pi-star',
+    severity: ps.ordenUsuario <= 10 ? 'success' : 'info'
+  });
+
+  /* =======================
+     DONACIONES
+  ======================= */
+  const d = stats.donaciones;
+
+  this.addGroupItem('Donaciones', {
+    key: 'monto_total_donado',
+    label: 'Monto total donado',
+    value: `$${d.cantidadDonada.toLocaleString()}`,
+    icon: 'pi pi-dollar',
+    severity: 'success'
+  });
+
+  this.addGroupItem('Donaciones', {
+    key: 'donacion_mas_alta',
+    label: 'Donación más alta',
+    value: `$${d.donacionMasAlta.toLocaleString()}`,
+    icon: 'pi pi-arrow-up',
+    severity: 'info'
+  });
+
+  if (d.organizacionMasAyudada) {
+    this.addGroupItem('Donaciones', {
+      key: 'organizacion_favorita',
+      label: 'Organización más ayudada',
+      value: `${d.organizacionMasAyudada.nombreOrganizacion} ($${d.organizacionMasAyudada.monto.toLocaleString()})`,
+      icon: 'pi pi-building',
+      severity: 'secondary'
+    });
+  }
+
+  /* =======================
+     ACTIVIDAD DERIVADA
+  ======================= */
+  this.addGroupItem('Actividad', {
+    key: 'acciones_totales',
+    label: 'Acciones solidarias',
+    value:
+      p.cantidadPublicados +
+      p.cantidadDonados +
+      ps.cantidadPuntosAyudados,
+    icon: 'pi pi-check-square',
+    severity: 'info'
+  });
+
+  this.groupedStatsKeys = Object.keys(this.groupedStats);
+}
+
 }
