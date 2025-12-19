@@ -381,3 +381,7 @@ div.leaflet-container img.leaflet-tile {
 .legend-tooltip.p-tooltip-right .p-tooltip-arrow {
   border-right-color: rgba(0, 0, 0, 0.85) !important;
 }
+
+.leaflet-control-zoom{
+    display: none !important;
+}

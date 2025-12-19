@@ -390,14 +390,14 @@ export class Map implements OnInit, AfterViewInit, OnDestroy {
     if (estado === 'pendiente') {
       if (this.logedUser?.tipoUsuario === 'USUARIO') {
         popupContent = `<div class="dot-popup-content">
-          <p>${descripcion}</p>
-          <button class="btn-mark-attended p-button p-button-outlined p-button-secondary" data-dot-id="${id}">
+          <p class="mt-1 mb-2">${descripcion}</p>
+          <button class="btn-mark-attended p-button p-button-outlined" data-dot-id="${id}">
             <span class="p-button-label">Marcar como atendido</span>
           </button>
         </div>`;
       } else if (this.logedUser?.tipoUsuario === 'ADMINISTRADOR') {
         popupContent = `<div class="dot-popup-content">
-          <p>${descripcion}</p>
+          <p class="mt-1 mb-2">${descripcion}</p>
           <button class="btn-delete-point p-button p-button-outlined p-button-danger" data-dot-id="${id}">
             <span class="p-button-label">Eliminar punto</span>
           </button>
@@ -405,7 +405,7 @@ export class Map implements OnInit, AfterViewInit, OnDestroy {
       }
     } else if (this.logedUser?.tipoUsuario === 'ADMINISTRADOR'){
       popupContent = `<div class="dot-popup-content">
-          <p>${descripcion}</p>
+          <p class="mt-1 mb-2">${descripcion}</p>
           <button class="btn-delete-point p-button p-button-outlined p-button-danger" data-dot-id="${id}">
             <span class="p-button-label">Eliminar punto</span>
           </button>

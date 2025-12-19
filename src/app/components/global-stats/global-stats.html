@@ -26,7 +26,7 @@
               <div class="col-md-12">
                 <div class="stat-card">
                   <div class="stat-card-body">
-                    <h6 class="stat-card-label m-0">Usuarios Registrados</h6>
+                    <h6 class="stat-card-label m-0">Usuarios registrados</h6>
                     <h2 class="stat-card-value">{{ statsData.usuarios.cantidadRegistrados }}</h2>
                   </div>
                 </div>
@@ -35,7 +35,7 @@
             <div class="row flex-grow-1 d-flex align-items-center">
               <div class="col-md-12">
                 <div class="chart-card">
-                  <h6 class="chart-card-title m-0">Usuarios por Rol</h6>
+                  <h6 class="chart-card-title m-0">Roles de los usuarios</h6>
                   @if(hasData(statsData.usuarios.usuariosUserPorRol)) {
                   <p-chart type="bar" [data]="usuariosRolChart" [options]="usuariosRolChart.options"></p-chart>
                   } @else {
@@ -49,7 +49,7 @@
           <!-- Columna derecha: Gráfico de Torta -->
           <div class="col-md-6 mb-3">
             <div class="chart-card">
-              <h6 class="chart-card-title m-0">Tipos de Usuarios</h6>
+              <h6 class="chart-card-title m-0">Tipos de usuarios</h6>
               @if(hasData(statsData.usuarios.cantidadPorTipo)) {
               <p-chart type="pie" [data]="usuariosTipoChart" [options]="usuariosTipoChart.options"></p-chart>
               } @else {
@@ -63,7 +63,7 @@
 
     <!-- SECCIÓN PRODUCTOS -->
     <section class="stats-section mb-5">
-      <h2 class="section-title mb-4"><i class="pi pi-box me-3"></i>Productos</h2>
+      <h2 class="section-title mb-4"><i class="pi pi-gift me-3"></i>Productos</h2>
       
       <div class="container-fluid">
         <div class="row">
@@ -74,7 +74,7 @@
               <div class="col-md-12">
                 <div class="stat-card">
                   <div class="stat-card-body">
-                    <h6 class="stat-card-label m-0">Productos Publicados</h6>
+                    <h6 class="stat-card-label m-0">Productos publicados</h6>
                     <h2 class="stat-card-value">{{ statsData.productos.cantidadPublicados }}</h2>
                   </div>
                 </div>
@@ -85,7 +85,7 @@
             <div class="row mb-3 flex-grow-1 d-flex align-items-center">
               <div class="col-md-12">
                 <div class="chart-card">
-                  <h6 class="chart-card-title m-0">Productos por Categoría</h6>
+                  <h6 class="chart-card-title m-0">Productos publicados por categoría</h6>
                   @if(hasData(statsData.productos.cantidadPorCategoria)) {
                   <p-chart type="bar" [data]="productosCategoriaChart" [options]="productosCategoriaChart.options"></p-chart>
                   } @else {
@@ -99,22 +99,22 @@
             <div class="row mb-3 flex-shrink-0">
               <div class="col-md-12">
                 <div class="table-card">
-                  <h6 class="table-card-title m-0">Top 5 Usuarios con Más Productos Entregados</h6>
+                  <h6 class="table-card-title m-0">Top 5 usuarios con más productos entregados</h6>
                   @if(!isEmptyArray(statsData.productos.topUsuariosConMasEntregados)) {
                   <div class="table-responsive">
                     <table class="table table-sm">
                       <thead class="table-light">
                         <tr>
                           <th>Usuario</th>
-                          <th class="text-end">Productos Entregados</th>
+                          <th class="text-center">Productos entregados</th>
                         </tr>
                       </thead>
                       <tbody>
                         @for (usuario of statsData.productos.topUsuariosConMasEntregados; track usuario.usuarioId) {
                         <tr>
                           <td>{{ usuario.nombreUsuario }}</td>
-                          <td class="text-end">
-                            <span class="badge bg-success">{{ usuario.cantidadProductosEntregados }}</span>
+                          <td class="text-center">
+                            <span >{{ usuario.cantidadProductosEntregados }}</span>
                           </td>
                         </tr>
                         }
@@ -132,7 +132,7 @@
           <!-- Columna derecha: Gráfico de Torta -->
           <div class="col-md-6 mb-3 d-flex align-items-center">
             <div class="chart-card w-100">
-              <h6 class="chart-card-title m-0">Productos por Estado</h6>
+              <h6 class="chart-card-title m-0">Estados de las publicaciones</h6>
               @if(hasData(statsData.productos.cantidadPorEstado)) {
               <p-chart type="pie" [data]="productosEstadoChart" [options]="productosEstadoChart.options"></p-chart>
               } @else {
@@ -146,7 +146,7 @@
 
     <!-- SECCIÓN PROYECTOS SOLIDARIOS -->
     <section class="stats-section mb-5">
-      <h2 class="section-title mb-4"><i class="pi pi-heart me-3"></i>Proyectos Solidarios</h2>
+      <h2 class="section-title mb-4"><i class="pi pi-heart me-3"></i>Proyectos solidarios</h2>
       
       <div class="container-fluid">
         <div class="row">
@@ -157,7 +157,7 @@
               <div class="col-md-6">
                 <div class="stat-card">
                   <div class="stat-card-body">
-                    <h6 class="stat-card-label m-0">Proyectos Publicados</h6>
+                    <h6 class="stat-card-label m-0">Proyectos publicados</h6>
                     <h2 class="stat-card-value">{{ statsData.proyectosSolidarios.cantidadPublicados }}</h2>
                   </div>
                 </div>
@@ -165,8 +165,8 @@
               <div class="col-md-6">
                 <div class="stat-card">
                   <div class="stat-card-body">
-                    <h6 class="stat-card-label m-0">Total Recaudado</h6>
-                    <h2 class="stat-card-value">${{ statsData.proyectosSolidarios.totalRecaudado }}</h2>
+                    <h6 class="stat-card-label m-0">Total recaudado</h6>
+                    <h2 class="stat-card-value">AR${{ statsData.proyectosSolidarios.totalRecaudado }}</h2>
                   </div>
                 </div>
               </div>
@@ -176,22 +176,22 @@
             <div class="row mb-3 flex-shrink-0">
               <div class="col-md-12">
                 <div class="table-card">
-                  <h6 class="table-card-title m-0">Top 5 Usuarios con Más Donaciones</h6>
+                  <h6 class="table-card-title m-0">Top 5 usuarios con más donaciones</h6>
                   @if(!isEmptyArray(statsData.proyectosSolidarios.topUsuariosConMasDonaciones)) {
                   <div class="table-responsive">
                     <table class="table table-sm table-hover">
                       <thead class="table-light">
                         <tr>
                           <th>Usuario</th>
-                          <th class="text-end">Total Donado</th>
+                          <th class="text-center">Total donado</th>
                         </tr>
                       </thead>
                       <tbody>
                         @for (usuario of statsData.proyectosSolidarios.topUsuariosConMasDonaciones; track usuario.usuarioId) {
                         <tr>
                           <td>{{ usuario.nombreUsuario }}</td>
-                          <td class="text-end">
-                            <span class="badge bg-primary">${{ usuario.totalDonaciones }}</span>
+                          <td class="text-center">
+                            <span>AR${{ usuario.totalDonaciones }}</span>
                           </td>
                         </tr>
                         }
@@ -209,7 +209,7 @@
           <!-- Columna derecha: Gráfico de Barras de Estados -->
           <div class="col-md-6 mb-3 d-flex align-items-center">
             <div class="chart-card w-100">
-              <h6 class="chart-card-title m-0">Proyectos por Estado</h6>
+              <h6 class="chart-card-title m-0">Estado de los proyectos</h6>
               @if(hasData(statsData.proyectosSolidarios.cantidadPorEstado)) {
               <p-chart type="bar" [data]="proyectosEstadoChart" [options]="proyectosEstadoChart.options"></p-chart>
               } @else {
@@ -220,10 +220,10 @@
         </div>
 
         <!-- Gráfico: Recaudo por Día (Full Width) -->
-        <div class="row">
+        <!-- <div class="row">
           <div class="col-md-12">
             <div class="chart-card">
-              <h6 class="chart-card-title m-0">Recaudo por Día</h6>
+              <h6 class="chart-card-title m-0">Recaudo en el mes</h6>
               @if(hasData(statsData.proyectosSolidarios.recaudoPorDia)) {
               <p-chart type="bar" [data]="proyectosRecaudoChart" [options]="proyectosRecaudoChart.options"></p-chart>
               } @else {
@@ -231,20 +231,20 @@
               }
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </section>
 
     <!-- SECCIÓN PUNTOS (PERSONAS EN SITUACIÓN DE CALLE) -->
     <section class="stats-section mb-5">
-      <h2 class="section-title mb-4"><i class="pi pi-map-marker me-3"></i>Personas en Situación de Calle</h2>
+      <h2 class="section-title mb-4"><i class="pi pi-map-marker me-3"></i>Personas en situación de calle</h2>
       
       <div class="row">
         <!-- Card: Cantidad Total -->
         <div class="col-lg-3 col-md-6 mb-3">
           <div class="stat-card">
             <div class="stat-card-body">
-              <h6 class="stat-card-label m-0">Total Registrado</h6>
+              <h6 class="stat-card-label m-0">Total registrados</h6>
               <h2 class="stat-card-value">{{ statsData.puntos.cantidadTotal }}</h2>
             </div>
           </div>
@@ -253,7 +253,7 @@
         <!-- Gráfico: Puntos por Estado (Torta) -->
         <div class="col-lg-4 col-md-6 mb-3">
           <div class="chart-card">
-            <h6 class="chart-card-title m-0">Estado del Registro</h6>
+            <h6 class="chart-card-title m-0">Estados de puntos registrados</h6>
             @if(hasData(statsData.puntos.cantidadPorEstado)) {
             <p-chart type="pie" [data]="puntosEstadoChart" [options]="puntosEstadoChart.options"></p-chart>
             } @else {

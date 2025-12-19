@@ -120,7 +120,8 @@ export class ProductDetail implements OnInit {
               tipoNotificacion: 'NUEVA_SOLICITUD',
               deUsuario: this.logedUser.id,
               ausuario: this.productData.usuario.id,
-              mensaje: `Tienes una nueva solicitud del producto ${this.productData.nombre} desde el usuario ${this.logedUser.alias}`,
+              //mensaje: `Tienes una nueva solicitud del producto ${this.productData.nombre} desde el usuario ${this.logedUser.alias}`,
+              mensaje: `${this.logedUser.alias} te solicitó el producto ${this.productData.nombre}, dirígite a tus solicitudes para más información.`,
             })
             .subscribe();
           this.getProductData();

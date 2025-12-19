@@ -21,6 +21,7 @@ import { TextareaModule } from 'primeng/textarea';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { Notifications } from '../../services/notifications';
 
 @Component({
   selector: 'app-chat',
@@ -47,6 +48,7 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
   private router: Router = inject(Router);
   private location: Location = inject(Location);
   private messageSubscription?: Subscription;
+  private notificationService: Notifications = inject(Notifications);
   logedUser: any;
   chat: any;
   userChat: any;
@@ -135,7 +137,10 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
     });
   }
 
-  sendMessage() {
+  sendMessage(event?: any) {
+    if (event) {
+      event.preventDefault();
+    }
     if (!this.message.trim()) {
       return;
     }
@@ -149,6 +154,12 @@ export class Chat implements OnInit, OnDestroy, AfterViewChecked {
     this.messagesService.sendMessage(messageRequest).subscribe({
       next: (response: any) => {
         this.message = '';
+        this.notificationService.sendNotification({
+          deUsuario: this.logedUser.id,
+          ausuario: this.userChat.id,
+          tipoNotificacion: 'NUEVO_MENSAJE',
+          mensaje: `Tienes un nuevo mensaje de ${this.logedUser.alias} en el chat.`,
+        }).subscribe();
       },
       error: () => {
         this.toasts.showToast({

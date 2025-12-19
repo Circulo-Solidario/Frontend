@@ -22,7 +22,7 @@ interface StatItem {
   templateUrl: './personal-dashboard.html',
   styleUrl: './personal-dashboard.css',
   standalone: true,
-  imports: [CommonModule]
+  imports: [CommonModule],
 })
 export class PersonalDashboard implements OnInit {
   private statisticsService: Statistics = inject(Statistics);
@@ -50,44 +50,21 @@ export class PersonalDashboard implements OnInit {
         this.router.navigate(['/login']);
         return;
       }
-      this.loadPersonalStats();
-
-      // Suscribirse a eventos en tiempo real que pueden cambiar estadísticas
-      try {
-        this.subscriptions.push(
-          this.messagesService.messages$.subscribe((m) => {
-            if (m) this.loadPersonalStats(true);
-          })
-        );
-      } catch (e) {
-      }
-
-      try {
-        this.subscriptions.push(
-          this.notificationsService.notification$.subscribe((n) => {
-            if (n) this.loadPersonalStats(true);
-          })
-        );
-      } catch (e) {}
-
-      try {
-        this.subscriptions.push(
-          this.roomsService.reloadRooms$.subscribe((r) => {
-            if (r) this.loadPersonalStats(true);
-          })
-        );
-      } catch (e) {}
     });
+
+    this.loadPersonalStats();
+
+    // Suscribirse a eventos en tiempo real que pueden cambiar estadísticas    
   }
 
   ngOnDestroy(): void {
-    this.subscriptions.forEach(s => s.unsubscribe());
+    this.subscriptions.forEach((s) => s.unsubscribe());
   }
 
-  async loadPersonalStats(suppressToast = false): Promise<void> {
+  async loadPersonalStats(suppressToast = true): Promise<void> {
     try {
       this.loading = true;
-      
+
       // Usar diferentes endpoints según el tipo de usuario
       if (this.loggedUser.tipoUsuario === 'ORGANIZACION') {
         this.personalStats = await firstValueFrom(
@@ -98,15 +75,13 @@ export class PersonalDashboard implements OnInit {
           this.statisticsService.getPersonalStats(this.loggedUser.id)
         );
       }
-      
-      console.info('personal-dashboard: raw personalStats payload', this.personalStats);
 
       if (this.personalStats && typeof this.personalStats === 'object') {
         this.personalStats = this.normalizePersonalStats(this.personalStats);
         console.info('personal-dashboard: normalized personalStats', this.personalStats);
         this.processStats(this.personalStats);
       }
-      
+
       if (!suppressToast) {
         this.toastService.showToast({
           severity: 'success',
@@ -115,7 +90,6 @@ export class PersonalDashboard implements OnInit {
         });
       }
     } catch (error) {
-      console.error('Error al cargar estadísticas personales:', error);
       this.toastService.showToast({
         severity: 'error',
         summary: 'Error',
@@ -141,7 +115,7 @@ export class PersonalDashboard implements OnInit {
         label: this.getFriendlyLabel(key),
         value: value,
         icon: this.getIconForKey(key),
-        severity: this.getSeverityForKey(key)
+        severity: this.getSeverityForKey(key),
       };
 
       this.statItems.push(item);
@@ -161,20 +135,23 @@ export class PersonalDashboard implements OnInit {
 
   private addDerivedStats(): void {
     // Tasa de éxito de productos (productos donados / productos publicados)
-    if (this.personalStats && 
-        this.personalStats.productos_publicados != null && 
-        this.personalStats.productos_donados != null &&
-        this.personalStats.productos_publicados > 0) {
-      
-      const tasa = Math.round((this.personalStats.productos_donados / this.personalStats.productos_publicados) * 100);
+    if (
+      this.personalStats &&
+      this.personalStats.productos_publicados != null &&
+      this.personalStats.productos_donados != null &&
+      this.personalStats.productos_publicados > 0
+    ) {
+      const tasa = Math.round(
+        (this.personalStats.productos_donados / this.personalStats.productos_publicados) * 100
+      );
       const item: StatItem = {
         key: 'productos_tasa_exito',
         label: this.getFriendlyLabel('productos_tasa_exito'),
         value: `${tasa}%`,
         icon: 'pi pi-percentage',
-        severity: tasa >= 70 ? 'success' : tasa >= 40 ? 'info' : 'warning'
+        severity: tasa >= 70 ? 'success' : tasa >= 40 ? 'info' : 'warning',
       };
-      
+
       if (!this.groupedStats['Productos']) {
         this.groupedStats['Productos'] = [];
       }
@@ -183,20 +160,23 @@ export class PersonalDashboard implements OnInit {
     }
 
     // Tasa de aceptación de solicitudes (aceptadas / realizadas)
-    if (this.personalStats &&
-        this.personalStats.solicitudes_realizadas != null &&
-        this.personalStats.solicitudes_aceptadas != null &&
-        this.personalStats.solicitudes_realizadas > 0) {
-      
-      const tasa = Math.round((this.personalStats.solicitudes_aceptadas / this.personalStats.solicitudes_realizadas) * 100);
+    if (
+      this.personalStats &&
+      this.personalStats.solicitudes_realizadas != null &&
+      this.personalStats.solicitudes_aceptadas != null &&
+      this.personalStats.solicitudes_realizadas > 0
+    ) {
+      const tasa = Math.round(
+        (this.personalStats.solicitudes_aceptadas / this.personalStats.solicitudes_realizadas) * 100
+      );
       const item: StatItem = {
         key: 'solicitudes_tasa_aceptacion',
         label: this.getFriendlyLabel('solicitudes_tasa_aceptacion'),
         value: `${tasa}%`,
         icon: 'pi pi-check-circle',
-        severity: tasa >= 70 ? 'success' : tasa >= 40 ? 'info' : 'warning'
+        severity: tasa >= 70 ? 'success' : tasa >= 40 ? 'info' : 'warning',
       };
-      
+
       if (!this.groupedStats['Solicitudes']) {
         this.groupedStats['Solicitudes'] = [];
       }
@@ -205,20 +185,22 @@ export class PersonalDashboard implements OnInit {
     }
 
     // Productos pendientes por donar (creados - donados)
-    if (this.personalStats &&
-        this.personalStats.productos_publicados != null &&
-        this.personalStats.productos_donados != null) {
-      
-      const pendientes = this.personalStats.productos_publicados - this.personalStats.productos_donados;
+    if (
+      this.personalStats &&
+      this.personalStats.productos_publicados != null &&
+      this.personalStats.productos_donados != null
+    ) {
+      const pendientes =
+        this.personalStats.productos_publicados - this.personalStats.productos_donados;
       if (pendientes > 0) {
         const item: StatItem = {
           key: 'productos_pendientes_donar',
           label: 'Productos pendientes',
           value: pendientes,
           icon: 'pi pi-inbox',
-          severity: 'warning'
+          severity: 'warning',
         };
-        
+
         if (!this.groupedStats['Productos']) {
           this.groupedStats['Productos'] = [];
         }
@@ -228,20 +210,22 @@ export class PersonalDashboard implements OnInit {
     }
 
     // Solicitudes pendientes
-    if (this.personalStats &&
-        this.personalStats.solicitudes_realizadas != null &&
-        this.personalStats.solicitudes_aceptadas != null) {
-      
-      const pendientes = this.personalStats.solicitudes_realizadas - this.personalStats.solicitudes_aceptadas;
+    if (
+      this.personalStats &&
+      this.personalStats.solicitudes_realizadas != null &&
+      this.personalStats.solicitudes_aceptadas != null
+    ) {
+      const pendientes =
+        this.personalStats.solicitudes_realizadas - this.personalStats.solicitudes_aceptadas;
       if (pendientes > 0) {
         const item: StatItem = {
           key: 'solicitudes_pendientes',
           label: this.getFriendlyLabel('solicitudes_pendientes'),
           value: pendientes,
           icon: 'pi pi-hourglass',
-          severity: 'warning'
+          severity: 'warning',
         };
-        
+
         if (!this.groupedStats['Solicitudes']) {
           this.groupedStats['Solicitudes'] = [];
         }
@@ -251,17 +235,15 @@ export class PersonalDashboard implements OnInit {
     }
 
     // Proyectos activos
-    if (this.personalStats &&
-        this.personalStats.proyectos_publicados != null) {
-      
+    if (this.personalStats && this.personalStats.proyectos_publicados != null) {
       const item: StatItem = {
         key: 'proyectos_activos',
         label: this.getFriendlyLabel('proyectos_activos'),
         value: this.personalStats.proyectos_publicados,
         icon: 'pi pi-play-circle',
-        severity: 'info'
+        severity: 'info',
       };
-      
+
       if (!this.groupedStats['Proyectos']) {
         this.groupedStats['Proyectos'] = [];
       }
@@ -270,21 +252,20 @@ export class PersonalDashboard implements OnInit {
     }
 
     // Mensajes recibidos (si existe información de conversaciones)
-    if (this.personalStats &&
-        this.personalStats.mensajes_enviados != null) {
-      
+    if (this.personalStats && this.personalStats.mensajes_enviados != null) {
       // Estimación de mensajes recibidos (puede ser igual o basado en datos del backend)
-      const recibidos = this.personalStats.mensajes_recibidos || 
-                        Math.max(0, Math.round(this.personalStats.mensajes_enviados * 0.8));
-      
+      const recibidos =
+        this.personalStats.mensajes_recibidos ||
+        Math.max(0, Math.round(this.personalStats.mensajes_enviados * 0.8));
+
       const item: StatItem = {
         key: 'mensajes_recibidos',
         label: this.getFriendlyLabel('mensajes_recibidos'),
         value: recibidos,
         icon: 'pi pi-inbox',
-        severity: 'secondary'
+        severity: 'secondary',
       };
-      
+
       if (!this.groupedStats['Mensajes']) {
         this.groupedStats['Mensajes'] = [];
       }
@@ -293,24 +274,27 @@ export class PersonalDashboard implements OnInit {
     }
 
     // Ratio de donaciones (totales realizadas vs recibidas)
-    if (this.personalStats &&
-        (this.personalStats.total_donations != null || 
-         this.personalStats.donaciones_totales != null)) {
-      
-      const totalDonaciones = this.personalStats.total_donations || this.personalStats.donaciones_totales || 0;
+    if (
+      this.personalStats &&
+      (this.personalStats.total_donations != null || this.personalStats.donaciones_totales != null)
+    ) {
+      const totalDonaciones =
+        this.personalStats.total_donations || this.personalStats.donaciones_totales || 0;
       const item: StatItem = {
         key: 'donaciones_totales',
         label: this.getFriendlyLabel('donaciones_totales'),
         value: totalDonaciones,
         icon: 'pi pi-heart-fill',
-        severity: 'success'
+        severity: 'success',
       };
-      
+
       if (!this.groupedStats['Donaciones']) {
         this.groupedStats['Donaciones'] = [];
       }
       // Evitar duplicados
-      const exists = this.groupedStats['Donaciones'].some(s => s.key === 'donaciones_totales' || s.key === 'total_donations');
+      const exists = this.groupedStats['Donaciones'].some(
+        (s) => s.key === 'donaciones_totales' || s.key === 'total_donations'
+      );
       if (!exists) {
         this.groupedStats['Donaciones'].push(item);
         this.statItems.push(item);
@@ -351,49 +335,47 @@ export class PersonalDashboard implements OnInit {
 
   private getFriendlyLabel(key: string): string {
     const labelMap: Record<string, string> = {
-      'total_usuarios': 'Usuarios totales',
-      'total_products': 'Productos totales',
-      'total_requests': 'Solicitudes totales',
-      'total_proyectos': 'Proyectos totales',
-      'total_mensajes': 'Mensajes totales',
-      'total_donations': 'Donaciones totales',
-      'productos_publicados': 'Productos publicados',
-      'productos_donados': 'Productos donados',
-      'productos_disponibles': 'Productos disponibles',
-      'productos_tasa_exito': 'Tasa de éxito de productos',
-      'solicitudes_realizadas': 'Solicitudes realizadas',
-      'solicitudes_aceptadas': 'Solicitudes aceptadas',
-      'solicitudes_tasa_aceptacion': 'Tasa de aceptación',
-      'solicitudes_pendientes': 'Solicitudes pendientes',
-      'proyectos_publicados': 'Proyectos publicados',
-      'proyectos_activos': 'Proyectos activos',
-      'proyectos_tasa_recaudacion': 'Tasa de recaudación',
-      'mensajes_enviados': 'Mensajes enviados',
-      'mensajes_recibidos': 'Mensajes recibidos',
-      'donaciones_totales': 'Donaciones realizadas',
-      'donaciones_recibidas': 'Donaciones recibidas',
-      'notificaciones_no_leidas': 'Notificaciones no leídas',
+      total_usuarios: 'Usuarios totales',
+      total_products: 'Productos totales',
+      total_requests: 'Solicitudes totales',
+      total_proyectos: 'Proyectos totales',
+      total_mensajes: 'Mensajes totales',
+      total_donations: 'Donaciones totales',
+      productos_publicados: 'Productos publicados',
+      productos_donados: 'Productos donados',
+      productos_disponibles: 'Productos disponibles',
+      productos_tasa_exito: 'Tasa de éxito de productos',
+      solicitudes_realizadas: 'Solicitudes realizadas',
+      solicitudes_aceptadas: 'Solicitudes aceptadas',
+      solicitudes_tasa_aceptacion: 'Tasa de aceptación',
+      solicitudes_pendientes: 'Solicitudes pendientes',
+      proyectos_publicados: 'Proyectos publicados',
+      proyectos_activos: 'Proyectos activos',
+      proyectos_tasa_recaudacion: 'Tasa de recaudación',
+      mensajes_enviados: 'Mensajes enviados',
+      mensajes_recibidos: 'Mensajes recibidos',
+      donaciones_totales: 'Donaciones realizadas',
+      donaciones_recibidas: 'Donaciones recibidas',
+      notificaciones_no_leidas: 'Notificaciones no leídas',
     };
 
     if (labelMap[key]) return labelMap[key];
-    
+
     const snake = key
       .replace(/([a-z0-9])([A-Z])/g, '$1_$2')
       .replace(/[-\s]+/g, '_')
       .toLowerCase();
-    
+
     if (labelMap[snake]) return labelMap[snake];
 
-    const human = key
-      .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
-      .replace(/[_-]+/g, ' ');
-    
+    const human = key.replace(/([a-z0-9])([A-Z])/g, '$1 $2').replace(/[_-]+/g, ' ');
+
     return human.charAt(0).toUpperCase() + human.slice(1);
   }
 
   private getGroupLabel(key: string): string {
     const k = String(key).toLowerCase();
-    
+
     if (k.includes('producto')) return 'Productos';
     if (k.includes('solicitud') || k.includes('request')) return 'Solicitudes';
     if (k.includes('proyecto') || k.includes('project')) return 'Proyectos';
@@ -402,13 +384,13 @@ export class PersonalDashboard implements OnInit {
     if (k.includes('usuario') || k.includes('user')) return 'Usuarios';
     if (k.includes('total')) return 'Totales';
     if (k.includes('notificacion') || k.includes('notification')) return 'Notificaciones';
-    
+
     return 'Otros';
   }
 
   private getIconForKey(key: string): string {
     const k = String(key).toLowerCase();
-    
+
     if (k.includes('producto')) return 'pi pi-shopping-bag';
     if (k.includes('solicitud') || k.includes('request')) return 'pi pi-list-check';
     if (k.includes('proyecto') || k.includes('project')) return 'pi pi-chart-line';
@@ -419,20 +401,26 @@ export class PersonalDashboard implements OnInit {
     if (k.includes('pendiente')) return 'pi pi-hourglass';
     if (k.includes('activo')) return 'pi pi-play-circle';
     if (k.includes('notificacion') || k.includes('notification')) return 'pi pi-bell';
-    
+
     return 'pi pi-chart-bar';
   }
 
   private getSeverityForKey(key: string): StatItem['severity'] {
     const k = String(key).toLowerCase();
-    
+
     if (k.includes('aceptada')) return 'success';
     if (k.includes('rechazada') || k.includes('error')) return 'danger';
     if (k.includes('pendiente') || k.includes('hourglass')) return 'warning';
     if (k.includes('publican') || k.includes('publicado') || k.includes('activo')) return 'info';
-    if (k.includes('tasa') || k.includes('porcentaje') || k.includes('exito') || k.includes('aceptacion')) return 'success';
+    if (
+      k.includes('tasa') ||
+      k.includes('porcentaje') ||
+      k.includes('exito') ||
+      k.includes('aceptacion')
+    )
+      return 'success';
     if (k.includes('heart') || k.includes('donacion')) return 'success';
-    
+
     return 'secondary';
   }
 
@@ -452,9 +440,12 @@ export class PersonalDashboard implements OnInit {
     // productos_creados
     if (out.productos_creados == null) {
       if (stats.productos && typeof stats.productos === 'object') {
-        if ('cantidadPublicados' in stats.productos) out.productos_creados = toNum(stats.productos.cantidadPublicados);
-        else if ('cantidad_publicados' in stats.productos) out.productos_creados = toNum(stats.productos.cantidad_publicados);
-        else if ('cantidadPublicadosTotal' in stats.productos) out.productos_creados = toNum(stats.productos.cantidadPublicadosTotal);
+        if ('cantidadPublicados' in stats.productos)
+          out.productos_creados = toNum(stats.productos.cantidadPublicados);
+        else if ('cantidad_publicados' in stats.productos)
+          out.productos_creados = toNum(stats.productos.cantidad_publicados);
+        else if ('cantidadPublicadosTotal' in stats.productos)
+          out.productos_creados = toNum(stats.productos.cantidadPublicadosTotal);
       }
     } else {
       out.productos_creados = toNum(out.productos_creados);
@@ -473,8 +464,10 @@ export class PersonalDashboard implements OnInit {
           }
         }
         if (dispo > 0) out.productos_disponibles = dispo;
-        else if ('cantidadDisponibles' in stats.productos) out.productos_disponibles = toNum(stats.productos.cantidadDisponibles);
-        else if ('disponibles' in stats.productos) out.productos_disponibles = toNum(stats.productos.disponibles);
+        else if ('cantidadDisponibles' in stats.productos)
+          out.productos_disponibles = toNum(stats.productos.cantidadDisponibles);
+        else if ('disponibles' in stats.productos)
+          out.productos_disponibles = toNum(stats.productos.disponibles);
       }
     } else {
       out.productos_disponibles = toNum(out.productos_disponibles);
@@ -483,10 +476,17 @@ export class PersonalDashboard implements OnInit {
     // productos_solicitados_por_usuario
     if (out.productos_solicitados_por_usuario == null) {
       if (stats.solicitudes && typeof stats.solicitudes === 'object') {
-        if ('realizadas' in stats.solicitudes) out.productos_solicitados_por_usuario = toNum(stats.solicitudes.realizadas);
-        else if ('cantidad' in stats.solicitudes) out.productos_solicitados_por_usuario = toNum(stats.solicitudes.cantidad);
+        if ('realizadas' in stats.solicitudes)
+          out.productos_solicitados_por_usuario = toNum(stats.solicitudes.realizadas);
+        else if ('cantidad' in stats.solicitudes)
+          out.productos_solicitados_por_usuario = toNum(stats.solicitudes.cantidad);
       }
-      if (out.productos_solicitados_por_usuario == null && stats.productos && typeof stats.productos === 'object' && 'cantidadSolicitadas' in stats.productos) {
+      if (
+        out.productos_solicitados_por_usuario == null &&
+        stats.productos &&
+        typeof stats.productos === 'object' &&
+        'cantidadSolicitadas' in stats.productos
+      ) {
         out.productos_solicitados_por_usuario = toNum(stats.productos.cantidadSolicitadas);
       }
     } else {
@@ -499,7 +499,8 @@ export class PersonalDashboard implements OnInit {
         if ('enviados' in stats.mensajes) out.mensajes_enviados = toNum(stats.mensajes.enviados);
         else if ('total' in stats.mensajes) out.mensajes_enviados = toNum(stats.mensajes.total);
       }
-      if (out.mensajes_enviados == null && 'total_mensajes' in stats) out.mensajes_enviados = toNum(stats.total_mensajes);
+      if (out.mensajes_enviados == null && 'total_mensajes' in stats)
+        out.mensajes_enviados = toNum(stats.total_mensajes);
     } else {
       out.mensajes_enviados = toNum(out.mensajes_enviados);
     }
@@ -507,10 +508,13 @@ export class PersonalDashboard implements OnInit {
     // notificaciones_no_leidas
     if (out.notificaciones_no_leidas == null) {
       if (stats.notificaciones && typeof stats.notificaciones === 'object') {
-        if ('noLeidas' in stats.notificaciones) out.notificaciones_no_leidas = toNum(stats.notificaciones.noLeidas);
-        else if ('no_leidas' in stats.notificaciones) out.notificaciones_no_leidas = toNum(stats.notificaciones.no_leidas);
+        if ('noLeidas' in stats.notificaciones)
+          out.notificaciones_no_leidas = toNum(stats.notificaciones.noLeidas);
+        else if ('no_leidas' in stats.notificaciones)
+          out.notificaciones_no_leidas = toNum(stats.notificaciones.no_leidas);
       }
-      if (out.notificaciones_no_leidas == null && typeof stats.notificaciones === 'number') out.notificaciones_no_leidas = toNum(stats.notificaciones);
+      if (out.notificaciones_no_leidas == null && typeof stats.notificaciones === 'number')
+        out.notificaciones_no_leidas = toNum(stats.notificaciones);
     } else {
       out.notificaciones_no_leidas = toNum(out.notificaciones_no_leidas);
     }
@@ -522,4 +526,3 @@ export class PersonalDashboard implements OnInit {
     this.router.navigate(['/principal']);
   }
 }
-

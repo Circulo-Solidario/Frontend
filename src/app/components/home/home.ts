@@ -143,11 +143,12 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
         this.router.navigate(['/login']);
         return;
       }
-      this.getNotificationsHistory();
-      this.subscribeNotifications();
-      this.setMenu();
-      this.checkOrganizationValidationStatus();
+      
     });
+    this.getNotificationsHistory();
+    this.subscribeNotifications();
+    this.setMenu();
+    this.checkOrganizationValidationStatus();
     this.userMenu = [];
     // No mostrar 'Perfil' para administradores
     if (this.loggedUser?.tipoUsuario !== 'ADMINISTRADOR') {
@@ -182,6 +183,7 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
             command: () => {
               this.router.navigate(['/principal/publicar-producto']);
               this.visible = false;
+              
             },
           },
           {
@@ -529,7 +531,7 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
     // }
   }
 
-  markAsRead(notification: NotificationInter): void {
+  markAsRead(notification: NotificationInter, fromAllRead: boolean): void {
     this.notificationService.markReadNotification(notification.id!).subscribe({
       next: () => {
         notification.fechaVistaNotificacion = new Date().toISOString();
@@ -539,12 +541,40 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
         console.log('Error marcando notificación como leída...');
       },
     });
+    if(!fromAllRead){
+      switch (notification.tipoNotificacion) {
+        case 'NUEVA_SOLICITUD':        
+          {
+            this.router.navigate(['/principal/solicitudes'], {
+              state: { goMyRequestsTab: true }
+            });
+            break;
+          }
+        case 'SOLICITUD_ACEPTADA':
+          {
+            this.router.navigate(['/principal/chats'], {
+              state: { goMyProductsChatsTab: true }
+            });
+            break;
+          }
+        case 'NUEVO_MENSAJE':
+          {
+            this.router.navigate(['/principal/chats']);
+            break;
+          }
+        case 'NUEVA_DONACION':
+          {
+            this.router.navigate(['/principal/mis-proyectos']);
+            break;
+          }
+      }
+    } 
   }
 
   markAllAsRead(): void {
     this.notifications.forEach((notification) => {
       if (!notification.fechaVistaNotificacion && notification.id) {
-        this.markAsRead(notification);
+        this.markAsRead(notification, true);
         notification.fechaVistaNotificacion = new Date().toISOString();
       }
     });
@@ -596,21 +626,22 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
   toggleMenuItem(item: any): void {
     if (item.items && item.items.length > 0) {
       // Toggle del item actual
-      const wasExpanded = item.expanded;
       item.expanded = !item.expanded;
       
+      // Cerrar todos los demás items
       this.menu.forEach((menuItem: any) => {
         if (menuItem !== item && menuItem.items) {
           menuItem.expanded = false;
         }
       });
-      
-      if (wasExpanded && !this.menu.some(menuItem => menuItem.expanded && menuItem !== item)) {
-        item.expanded = false;
-      }
     } else {
       if (item.command) {
         item.command();
+        this.menu.forEach((menuItem: any) => {
+        if (menuItem !== item && menuItem.items) {
+          menuItem.expanded = false;
+        }
+      });
       }
     }
   }
@@ -621,6 +652,23 @@ export class Home implements OnInit, OnDestroy, AfterViewInit {
         menuItem.expanded = false;
       }
     });
+  }
+
+  onDrawerShow(): void {
+    this.menu.forEach((menuItem: any) => {
+      if (menuItem.items) {
+        menuItem.expanded = false;
+      }
+    });
+  }
+
+  onDrawerHide(): void {    
+    this.menu.forEach((menuItem: any) => {
+      if (menuItem.items) {
+        menuItem.expanded = false;
+      }
+    });
+    this.visible = false;
   }
 
   checkOrganizationValidationStatus(): void {
