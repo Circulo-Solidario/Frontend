@@ -7,6 +7,7 @@
 @media (max-width: 767px){
   .chat-list {
     border-right: 0 !important;
+    max-width: 100% !important;
   }
 }
 
@@ -29,6 +30,7 @@
   border-right: 1px solid var(--p-primary-color);
   min-height: 100%;
   min-width: 20vw;
+  max-width: 20vw;
 }
 
 ::ng-deep .p-tablist-tab-list,

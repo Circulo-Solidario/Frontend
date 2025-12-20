@@ -103,12 +103,10 @@ export class EditProyect implements OnInit {
       next: (response: any) => {
         this.originalData = response;
 
-        const fechaFin = new Date(this.reverseDate(this.originalData.fechaFin));
-
         this.proyectForm.setValue({
           nombre: this.originalData.nombre,
           descripcion: this.originalData.descripcion,
-          fechaFin: fechaFin,
+          fechaFin: this.originalData.fechaFin.replaceAll('-', '/'),
           objetivo: this.originalData.objetivo
         });
         
@@ -242,7 +240,7 @@ export class EditProyect implements OnInit {
       this.proyectForm.setValue({
         nombre: this.originalData.nombre,
         descripcion: this.originalData.descripcion,
-        fechaFin: new Date(this.reverseDate(this.originalData.fechaFin)),
+        fechaFin: this.originalData.fechaFin.replaceAll('-', '/'),
         objetivo: this.originalData.objetivo
       });
       

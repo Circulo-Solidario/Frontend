@@ -2,6 +2,14 @@
     .main-container {
         padding-top: 0 !important;
     }
+    .product-display-info {
+        display: none !important;
+    }
+    .user-display-info {
+        max-width: 15vw;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
 }
 
 .go-back-buttom {

@@ -8,6 +8,7 @@ import { Toasts } from '../../services/toasts';
 import { DataViewModule } from 'primeng/dataview';
 import { DividerModule } from 'primeng/divider';
 import { AvatarModule } from 'primeng/avatar';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-chat-list',
@@ -16,8 +17,9 @@ import { AvatarModule } from 'primeng/avatar';
     DataViewModule,
     DividerModule,
     AvatarModule,
-    RouterOutlet
-  ],
+    RouterOutlet,
+    ButtonModule
+],
   templateUrl: './chat-list.html',
   styleUrl: './chat-list.css'
 })
@@ -35,6 +37,7 @@ export class ChatList implements OnInit {
   defaultTab = "0";
   canSeeMyProductsChats: boolean = false;
   canSeeMyRequestsChats: boolean = false;
+  productDetailsVisible: any[] = [];
 
   @HostListener('window:resize')
   onResize() {
@@ -63,6 +66,10 @@ export class ChatList implements OnInit {
         this.canSeeMyRequestsChats = true;
         this.defaultTab = this.canSeeMyProductsChats ? '0' : '1';
       }
+
+      if(history.state.goMyProductsChatsTab){
+        this.defaultTab = '1';
+      }
       
     });
 
@@ -76,6 +83,15 @@ export class ChatList implements OnInit {
       this.getRequesterRooms();
       this.getDonorRooms();
     });
+  }
+
+  seeProductDetail(id: any, event: MouseEvent) {
+    event.stopPropagation();    
+    if(this.productDetailsVisible.includes(id)){
+      this.productDetailsVisible = this.productDetailsVisible.filter((prodId) => prodId !== id);
+      return;
+    }
+    this.productDetailsVisible.push(id);
   }
 
   getRequesterRooms() {

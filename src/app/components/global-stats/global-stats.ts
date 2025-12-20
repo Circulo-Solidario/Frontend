@@ -123,7 +123,7 @@ export class GlobalStats implements OnInit {
 
     // Gráfico de Usuarios por Tipo (Torta)
     this.usuariosTipoChart = {
-      labels: Object.keys(this.statsData.usuarios.cantidadPorTipo || {}).map(r => r.replaceAll('_', ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())),
+      labels: Object.keys(this.statsData.usuarios.cantidadPorTipo || {}).map(r => this.formatLabel(r)),
       datasets: [{
         data: Object.values(this.statsData.usuarios.cantidadPorTipo || {}),
         backgroundColor: [
@@ -153,7 +153,7 @@ export class GlobalStats implements OnInit {
 
     // Gráfico de Usuarios por Rol (Barras)
     this.usuariosRolChart = {
-      labels: Object.keys(this.statsData.usuarios.usuariosUserPorRol || {}).map(r => r.replaceAll('_', ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())),
+      labels: Object.keys(this.statsData.usuarios.usuariosUserPorRol || {}).map(r => this.formatLabel(r)),
       datasets: [{
         label: 'Cantidad de Usuarios',
         data: Object.values(this.statsData.usuarios.usuariosUserPorRol || {}),
@@ -193,7 +193,7 @@ export class GlobalStats implements OnInit {
 
     // Gráfico de Productos por Estado (Torta)
     this.productosEstadoChart = {
-      labels: Object.keys(this.statsData.productos.cantidadPorEstado || {}).map(r => r.replaceAll('_', ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())),
+      labels: Object.keys(this.statsData.productos.cantidadPorEstado || {}).map(r => this.formatLabel(r)),
       datasets: [{
         data: Object.values(this.statsData.productos.cantidadPorEstado || {}),
         backgroundColor: [
@@ -223,7 +223,7 @@ export class GlobalStats implements OnInit {
 
     // Gráfico de Productos por Categoría (Barras)
     this.productosCategoriaChart = {
-      labels: Object.keys(this.statsData.productos.cantidadPorCategoria || {}).map(r => r.replaceAll('_', ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())),
+      labels: Object.keys(this.statsData.productos.cantidadPorCategoria || {}).map(r => this.formatLabel(r)),
       datasets: [{
         label: 'Cantidad de Productos',
         data: Object.values(this.statsData.productos.cantidadPorCategoria || {}),
@@ -263,7 +263,7 @@ export class GlobalStats implements OnInit {
 
     // Gráfico de Proyectos por Estado (Barras)
     this.proyectosEstadoChart = {
-      labels: Object.keys(this.statsData.proyectosSolidarios.cantidadPorEstado || {}).map(r => r.replaceAll('_', ' ').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())),
+      labels: Object.keys(this.statsData.proyectosSolidarios.cantidadPorEstado || {}).map(r => this.formatLabel(r)),
       datasets: [{
         label: 'Cantidad de Proyectos',
         data: Object.values(this.statsData.proyectosSolidarios.cantidadPorEstado || {}),
@@ -317,7 +317,7 @@ export class GlobalStats implements OnInit {
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            display: false
+            display: false,
           }
         },
         scales: {
@@ -344,7 +344,7 @@ export class GlobalStats implements OnInit {
 
     // Gráfico de Puntos por Estado (Torta)
     this.puntosEstadoChart = {
-      labels: Object.keys(this.statsData.puntos.cantidadPorEstado || {}),
+      labels: Object.keys(this.statsData.puntos.cantidadPorEstado || {}).map(r => this.formatLabel(r)),
       datasets: [{
         data: Object.values(this.statsData.puntos.cantidadPorEstado || {}),
         backgroundColor: [
@@ -419,5 +419,12 @@ export class GlobalStats implements OnInit {
 
   private getPrimeNGColor(cssVariable: string): string {
     return getComputedStyle(document.documentElement).getPropertyValue(cssVariable).trim();
+  }
+
+  private formatLabel(text: string): string {
+    return text
+      .replaceAll('_', ' ')
+      .toLowerCase()
+      .replace(/^\w|\s\w/g, c => c.toUpperCase());
   }
 }

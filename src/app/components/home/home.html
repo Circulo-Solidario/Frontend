@@ -157,7 +157,7 @@
               @if(notifications.length > 0){ @for (notification of notifications; track $index) {
               <div
                 class="dropdown-item d-flex align-items-start p-2"
-                (click)="markAsRead(notification)"
+                (click)="markAsRead(notification, false)"
                 style="cursor: pointer"
               >
                 <div class="flex-grow-1">
@@ -229,7 +229,7 @@
       </div>
     </ng-template>
   </p-toolbar>
-  <p-drawer [(visible)]="visible" [closable]="false" (onHide)="visible = false">
+  <p-drawer [(visible)]="visible" [closable]="false" (onShow)="onDrawerShow()" (onHide)="onDrawerHide()">
     <ng-template #header>
       <div class="gap-2 d-flex" style="align-items: center">
         <svg
@@ -340,12 +340,24 @@
     </ng-template>
     <p-panelmenu [model]="menu" class="gap-2 d-flex justify-content-end">
       <ng-template #item let-item>
-        <div class="py-2 sidebar-button flex items-center">
-          <a class="items-center">
-            <i [class]="item.icon + ' text-inherit'" style="font-size: 1.2rem"></i>
-            <span class="ms-2 sidebar-text">
-              {{ item.label }}
-            </span>
+        <div class="ps-4 py-2 sidebar-button d-flex">
+          <a class="d-flex align-items-center flex-wrap align-content-center justify-content-between w-100">
+            <div>
+              <i [class]="item.icon + ' text-inherit'" style="font-size: 1.2rem"></i>
+              <span class="ms-2 sidebar-text">
+                {{ item.label }}
+              </span>
+            </div>
+            <div>
+              @if(item.items){
+              <i
+                class="pi pi-chevron-down  ms-auto me-4"
+                [ngClass]="{ 'rotate-180': item.expanded, 'rotate-0': !item.expanded }"
+                style="transition: transform 0.3s ease"
+              >
+              </i>
+              }
+            </div>
           </a>
         </div>        
       </ng-template>
@@ -357,17 +369,15 @@
           (click)="openTerms()"
           icon="pi pi-file"
           variant="text"
-
         />
         <p-button
           label="Preguntas frecuentes"
           (click)="toggleFaqs()"
           icon="pi pi-question"
           variant="text"
-
           class="mt-2"
         />
-        <div class="d-flex justify-content-center gap-2 mt-4" style="align-items: center">
+        <div class="d-flex justify-content-center gap-4 mt-4" style="align-items: center">
           <p-button [label]="loggedUser?.alias" (onClick)="goEditProfile()">
             <p-avatar
               [icon]="loggedUser?.urlImagen ? '' : 'pi pi-user fs-6'"

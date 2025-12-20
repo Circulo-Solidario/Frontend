@@ -72,6 +72,10 @@ export class RequestsList implements OnInit {
 
       this.getMyRequests();
       this.getRequestsOfMyProducts();
+
+      if(history.state.goMyRequestsTab){
+        this.defaultTab = '1';
+      } 
     });
   }
 
@@ -159,7 +163,8 @@ export class RequestsList implements OnInit {
           deUsuario: request.toUser.id,
           ausuario: request.fromUser.id,
           tipoNotificacion: TipoNotificaciones.SOLICITUD_ACEPTADA,
-          mensaje: `Tu solicitud para el producto ${product.nombre} ha sido aceptada.`
+          //mensaje: `Tu solicitud para el producto ${product.nombre} ha sido aceptada.`
+          mensaje: `${this.logedUser.alias} aceptó tu solicitud para el producto ${product.nombre}, dirígite a los chats para coordinar la entrega.`
         }).subscribe({
           next: () => {}
         });

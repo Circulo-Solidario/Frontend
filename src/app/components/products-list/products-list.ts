@@ -144,7 +144,8 @@ export class ProductsList implements OnInit {
             tipoNotificacion: 'NUEVA_SOLICITUD',
             deUsuario: this.logedUser.id,
             ausuario: item.usuario.id,
-            mensaje: `Tienes una nueva solicitud del producto ${item.nombre} desde el usuario ${this.logedUser.alias}`
+            //mensaje: `Nueva solicitud del producto ${item.nombre} desde el usuario ${this.logedUser.alias}`
+            mensaje: `${this.logedUser.alias} te solicitó el producto ${item.nombre}, dirígite a tus solicitudes para más información.`
           }).subscribe();
       },
       error: () => {

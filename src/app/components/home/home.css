@@ -243,6 +243,15 @@
     color: var(--p-text-color);
 }
 
+::ng-deep .p-drawer-content{
+    padding-right: 0.25rem ;
+    padding-left: 0.25rem;
+}
+
+::ng-deep .p-panelmenu-content-container li{
+    padding-top: 0.75rem !important;
+}
+
 ::ng-deep .p-popover {
   position: fixed !important;
   z-index: 2000 !important;
@@ -375,7 +384,6 @@
     margin: 0;
     display: flex;
     flex-direction: row;
-    gap: 1rem;
     align-items: center;
     justify-content: center;
     width: 100%;

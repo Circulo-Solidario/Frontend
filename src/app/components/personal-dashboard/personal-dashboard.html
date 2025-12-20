@@ -22,10 +22,7 @@
                 <div class="stat-card-header">
                   <i class="stat-icon" [class]="item.icon"></i>
                   <div class="stat-header-content">
-                    <h4 class="stat-label">{{ item.label }}</h4>
-                    @if(item.key.includes('tasa') || item.key.includes('porcentaje')) {
-                      <span class="stat-badge">Métrica</span>
-                    }
+                  <h4 class="stat-label">{{ item.label }}</h4>
                     @if(item.key.includes('pendiente')) {
                       <span class="stat-badge pending">Atención</span>
                     }

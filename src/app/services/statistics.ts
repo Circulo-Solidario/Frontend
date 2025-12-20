@@ -7,18 +7,35 @@ import { environment } from '../environments/environment';
   providedIn: 'root',
 })
 export class Statistics {
-  private readonly httpClient: HttpClient = inject(HttpClient);
+  private readonly httpClient = inject(HttpClient);
   private readonly apiPath = '/estadisticas';
 
+  /** 🌍 Estadísticas globales */
   getGlobalStats(): Observable<any> {
-    return this.httpClient.get(`${environment.apiUrl}${this.apiPath}/global`);
+    return this.httpClient.get(
+      `${environment.apiUrl}${this.apiPath}/global`
+    );
   }
 
+  /** 👤 Estadísticas personales */
   getPersonalStats(userId: number): Observable<any> {
-    return this.httpClient.get(`${environment.apiUrl}${this.apiPath}/global/personal/${userId}`);
+    return this.httpClient.get(
+      `${environment.apiUrl}${this.apiPath}/personal/${userId}`
+    );
   }
 
-  getOrganizationProjectStats(organizationId: number): Observable<any> {
-    return this.httpClient.get(`${environment.apiUrl}${this.apiPath}/global/organizacion/${organizationId}/proyectos`);
+  /** 🏢 Estadísticas organización */
+  getOrganizationStats(orgId: number): Observable<any> {
+    return this.httpClient.get(
+      `${environment.apiUrl}${this.apiPath}/organizacion/${orgId}`
+    );
   }
+
+  // Estadísticas personales completas (nuevo endpoint)
+getPersonalFullStats(userId: number): Observable<any> {
+  return this.httpClient.get<any>(
+    `${environment.apiUrl}/estadisticas/personales/${userId}`
+  );
+}
+
 }

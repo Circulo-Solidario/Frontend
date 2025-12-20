@@ -23,6 +23,7 @@
             [rounded]="true"
             severity="secondary"
             class="control-btn"
+            [raised]="true"
             title="Marcar un punto"
             (onClick)="openPickPointMenu($event)">
           </p-button>
@@ -32,6 +33,7 @@
             [rounded]="true"
             severity="secondary"
             class="control-btn"
+            [raised]="true"
             title="Ver leyenda"
             (onClick)="openLegendMenu($event)">
           </p-button>
@@ -43,6 +45,7 @@
           [rounded]="true" 
           severity="secondary"
           (onClick)="zoomIn()"
+          [raised]="true"
           class="control-btn"
           title="Aumentar zoom">
         </p-button>
@@ -51,6 +54,7 @@
           [rounded]="true" 
           severity="secondary"
           (onClick)="zoomOut()"
+          [raised]="true"
           class="control-btn"
           title="Disminuir zoom">
         </p-button>
@@ -59,6 +63,7 @@
           [rounded]="true" 
           severity="secondary"
           (onClick)="centerToCurrentLocation()"
+          [raised]="true"
           class="control-btn"
           title="Centrar en mi ubicación">
         </p-button>
@@ -76,17 +81,17 @@
   [style]="{ width: '90%', maxWidth: '500px' }">
   
   <div class="dialog-content">
-    <label for="description" class="block mb-2">Descripción *</label>
+    <label for="description" class="block mb-2">Descripción <span class="text-danger">*</span></label>
     <textarea
       pInputText
       id="description"
       [(ngModel)]="pointDescription"
       rows="5"
       [maxlength]="maxDescriptionLength"
-      placeholder="Describe la situación o necesidad del punto..."
-      class="w-100"
+      placeholder="Describe la situación o necesidad..."
+      class="w-100 mt-2"
       style="resize: none; font-family: inherit;"></textarea>
-    <small class="text-muted d-block mt-2">
+    <small class="text-secondary d-block mt-2">
       {{ pointDescription.length }} / {{ maxDescriptionLength }} caracteres
     </small>
   </div>

@@ -2,7 +2,8 @@
   <div class="container-fluid d-flex flex-column justify-content-start align-items-stretch h-100 p-0">
     <div class="d-flex p-0 mb-4 flex-shrink-0">
       <h1 class="d-flex align-items-center m-0">
-        <i class="pi pi-chevron-left me-3 go-back-buttom" (click)="goHome()"></i> Chats
+        @if(!shouldShowMobileVersion()){
+        <i class="pi pi-chevron-left me-3 go-back-buttom" (click)="goHome()"></i>} Chats
       </h1>
     </div>
     <div class="d-flex p-0 flex-grow-1 overflow-hidden">
@@ -25,21 +26,49 @@
                   @for (chat of myProductsChats; track $index) { @if($index != 0){
                   <p-divider />
                   }
-                  <div class="d-flex flex-row justify-content-between px-2 py-3 chat-link" (click)="loadChat(chat)">
-                    <div class="col-auto align-content-center me-2">
+                  <div class="chat-link" (click)="loadChat(chat)">
+                  <div class="d-flex align-items-center px-2 py-3 " 
+                  [class.pb-0]="productDetailsVisible.includes(chat?.solicitud.id)">
+                    <div class="col-auto me-2">
                       @if(chat.solicitud.solicitante.urlImagen){
                       <p-avatar size="large" shape="circle" [image]="chat.solicitud.solicitante.urlImagen" />
                       }@else {
                       <p-avatar size="large" shape="circle" icon="pi pi-user" />
                       }
                     </div>
-                    <div class="col">
-                      <div class="flex-md-column justify-content-evenly align-items-start gap-2">
-                        <div class="fw-medium fs-5">
-                          {{ chat.solicitud.solicitante.alias }}
+                    <div class="col-auto d-block">
+                      <div class="fw-medium fs-5">
+                        {{ chat?.solicitud.solicitante.alias }}
+                      </div>
+                      <span class="fw-medium text-secondary fs-6">
+                        {{ chat?.solicitud.solicitante.nombreApellido }}
+                      </span>
+                    </div>
+                    <div class="col d-flex justify-content-end me-2">
+                      <p-button [icon]="productDetailsVisible.includes(chat?.solicitud.id) ? 'pi pi-angle-up' : 'pi pi-angle-down'" variant="outlined" severity="secondary" raised="true" [rounded]="true" 
+                      (click)="seeProductDetail(chat?.solicitud.id, $event)"/>
+                    </div>                    
+                  </div>
+                  @if(productDetailsVisible.includes(chat?.solicitud.id)){
+                    <div class="col-12 px-2 py-3 product-detail-card">
+                      <div class="fw-semibold fs-6 mb-2">Producto solicitado</div>
+                      <div class="d-flex flex-row align-items-center">
+                        @if(chat?.solicitud.producto.urlImagen){
+                        <p-avatar size="large" shape="circle" [image]="chat?.solicitud.producto.urlImagen" />
+                        }@else {
+                        <p-avatar size="large" shape="circle" icon="pi pi-box" />
+                        }
+                        <div class="ms-3 d-block">
+                          <div class="fw-medium fs-5">
+                            {{ chat?.solicitud.producto.nombre }}
+                          </div>
+                          <span class="fw-medium text-secondary fs-6">
+                            {{ chat?.solicitud.producto.categoria.nombre }}
+                          </span>
                         </div>
                       </div>
                     </div>
+                  }
                   </div>
                   }
                 </ng-template>
@@ -76,21 +105,49 @@
                   @for (chat of myRequetsChats; track $index) { @if($index != 0){
                   <p-divider />
                   }
-                  <div class="d-flex flex-row justify-content-between px-2 py-3 chat-link" (click)="loadChat(chat)">
-                    <div class="col-auto align-content-center me-2">
-                      @if(chat.solicitud.donador.urlImagen){
-                      <p-avatar size="large" shape="circle" [image]="chat.solicitud.donador.urlImagen" />
+                  <div class="chat-link" (click)="loadChat(chat)">
+                  <div class="d-flex align-items-center px-2 py-3" 
+                  [class.pb-0]="productDetailsVisible.includes(chat?.solicitud.id)">
+                    <div class="col-auto me-2">
+                      @if(chat?.solicitud.donador.urlImagen){
+                      <p-avatar size="large" shape="circle" [image]="chat?.solicitud.donador.urlImagen" />
                       }@else {
                       <p-avatar size="large" shape="circle" icon="pi pi-gift" />
                       }
                     </div>
-                    <div class="col">
-                      <div class="flex-md-column justify-content-evenly align-items-start gap-2">
+                    <div class="col-auto d-block">
                         <div class="fw-medium fs-5">
                           {{ chat.solicitud.donador.alias }}
                         </div>
+                        <span class="fw-medium text-secondary fs-6">
+                          {{ chat?.solicitud.donador.nombreApellido }}
+                        </span>
+                    </div>
+                    <div class="col d-flex justify-content-end me-2">
+                      <p-button [icon]="productDetailsVisible.includes(chat?.solicitud.id) ? 'pi pi-angle-up' : 'pi pi-angle-down'" variant="outlined" severity="secondary" raised="true" [rounded]="true" 
+                      (click)="seeProductDetail(chat?.solicitud.id, $event)"/>
+                    </div> 
+                  </div>
+                  @if(productDetailsVisible.includes(chat?.solicitud.id)){
+                    <div class="col-12 px-2 py-3 product-detail-card">
+                      <div class="fw-semibold fs-6 mb-2">Producto solicitado</div>
+                      <div class="d-flex flex-row align-items-center">
+                        @if(chat?.solicitud.producto.urlImagen){
+                        <p-avatar size="large" shape="circle" [image]="chat?.solicitud.producto.urlImagen" />
+                        }@else {
+                        <p-avatar size="large" shape="circle" icon="pi pi-box" />
+                        }
+                        <div class="ms-3 d-block">
+                          <div class="fw-medium fs-5">
+                            {{ chat?.solicitud.producto.nombre }}
+                          </div>
+                          <span class="fw-medium text-secondary fs-6">
+                            {{ chat?.solicitud.producto.categoria.nombre }}
+                          </span>
+                        </div>
                       </div>
                     </div>
+                  }
                   </div>
                   }
                 </ng-template>

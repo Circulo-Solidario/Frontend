@@ -13,9 +13,17 @@
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--p-text-color);
-  border-left: 4px solid var(--p-primary-color);
-  padding-left: 1rem;
+  display: flex;
+  align-items: center;
   margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 3px solid var(--p-primary-color);
+}
+
+.section-title i {
+  font-size: 1.75rem;
+  color: var(--p-primary-color);
+  margin-right: 0.75rem;
 }
 
 .go-back-buttom {
@@ -27,9 +35,10 @@
   background: var(--p-surface-card);
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.06);
   transition: all 0.3s ease;
   border: 1px solid var(--p-content-border-color);
+  border-left: 5px solid var(--color-bg-1);
   height: 100%;
   max-height: max-content;
   min-height: max-content;
@@ -63,8 +72,9 @@
   background: var(--p-surface-card);
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.06);
   border: 1px solid var(--p-content-border-color);
+  border-left: 5px solid var(--color-bg-1);
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -102,8 +112,9 @@
   background: var(--p-surface-card);
   border-radius: 12px;
   padding: 1.5rem;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.06);
   border: 1px solid var(--p-content-border-color);
+  border-left: 5px solid var(--color-bg-1);
   overflow-x: auto;
 }
 
